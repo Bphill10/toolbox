@@ -18,15 +18,16 @@
   .tile.gold { border-top-color:var(--gold); background:var(--goldsoft); }
   .tile .v { color:var(--navy); font-size:21px; font-weight:700; }
   .tile .k { color:var(--navy); font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; margin:2px 0 4px; }
-  .tile .d { color:var(--muted); font-size:12px; }
+  .tile .d { color:var(--muted); font-size:12px; margin-top:2px; }
   .watch { background:var(--goldsoft); border:1px solid #ecd3a6; border-left:4px solid var(--gold); padding:9px 12px; margin:10px 0; }
   .wrap { overflow-x:auto; }
   table { border-collapse:collapse; width:100%; }
   th { color:var(--navy); font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; text-align:left; padding:6px 8px; border-bottom:2px solid var(--navy); vertical-align:bottom; }
-  td { padding:7px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  td { padding:8px 9px; border-bottom:1px solid #e3e8ee; vertical-align:top; }
   .n { text-align:right; }
   tr.key td { background:var(--soft); font-weight:700; }
   .m { display:block; color:var(--muted); font-size:11px; font-weight:400; }
+  .tile { min-height:0; }
   .small { color:var(--muted); font-size:11.5px; margin:6px 0 0; }
   .cols { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
   ul.change { margin:0; padding-left:18px; }
@@ -44,9 +45,9 @@
   @page { size:letter; margin:0.4in 0.45in; }
   @media print {
     .print { display:none; }
-    body { background:#fff; font-size:11px; line-height:1.32; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    body { background:#fff; font-size:12.5px; line-height:1.4; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
     h1 { font-size:21px; } h2 { margin:13px 0 6px; } .tile .v { font-size:18px; } .tile .d { font-size:11px; }
-    td { padding:3px 6px; } th { padding:3px 6px; } h2 { margin:10px 0 5px; } .method { margin-top:10px; padding-top:6px; } ul.change li { margin:0 0 4px; } .m { font-size:10px; } .small, .method { font-size:10px; }
+    td { padding:5px 7px; } th { padding:5px 7px; } h2 { margin:16px 0 7px; } .method { margin-top:10px; padding-top:6px; } ul.change li { margin:0 0 4px; } .m { font-size:10px; } .small, .method { font-size:11px; }
     .tiles { grid-template-columns:repeat(4,1fr); } .cols { grid-template-columns:1fr 1fr; gap:24px; }
     table, .tiles, .watch, .cols, .keep { break-inside:avoid; }
     h2 { break-after:avoid; }
@@ -60,63 +61,62 @@
 
 <p class="conf">Confidential · Prepared for Mastronardi Produce · Contains licensed survey data</p>
 <h1>Director, Total Rewards, Compensation Strategy &amp; Analytics: compensation analysis</h1>
-<p class="sub">Offer recommendation at Director level, United States · Prepared 13 October 2026 by Ben Phillips · Market is an equal-weight average of Radford Q3 2026 (published 15 August 2026, level M5, Compensation family) and IPAS (level M4, compensation and benefits)</p>
+<p class="sub">Director level · United States · Prepared 13 October 2026 by Ben Phillips · Market: Radford (M5, Compensation) and IPAS (M4)*, averaged</p>
 
 <h2>Recommendation</h2>
 <div class="tiles">
-  <div class="tile"><div class="v">$230,000</div><div class="k">Base salary</div><div class="d">1.04 of the blended market median ($221,500); about the 59th percentile</div></div>
-  <div class="tile"><div class="v">35% · $80,500</div><div class="k">Target bonus</div><div class="d">market median target is 22%, top quarter 25%</div></div>
-  <div class="tile"><div class="v">$310,500</div><div class="k">Total target cash</div><div class="d">17% above the blended market median ($265,667)</div></div>
-  <div class="tile gold"><div class="v">1.04</div><div class="k">Market ratio (total direct comp)</div><div class="d">$310,500 with equity at $0, against blended market TDC of $297,561 that includes equity; about the 55th percentile</div></div>
+  <div class="tile"><div class="v">$230,000</div><div class="k">Base salary</div><div class="d">1.04 of market median · 59th percentile</div></div>
+  <div class="tile"><div class="v">35%</div><div class="k">Target bonus · $80,500</div><div class="d">market median 22%, top quarter 25%</div></div>
+  <div class="tile"><div class="v">$310,500</div><div class="k">Total target cash</div><div class="d">1.17 of market median</div></div>
+  <div class="tile gold"><div class="v">1.04</div><div class="k">Market ratio, total direct comp</div><div class="d">no equity offered ($0) · 55th percentile</div></div>
 </div>
-<p>Base is set at the role's base cap of $230,000. With a 35% target bonus, total target cash is $310,500. Mastronardi does not offer equity, so long-term incentive is $0 and total direct compensation is also $310,500, a market ratio of 1.04 against the blended Radford and IPAS market. The role maps to Radford M5 and IPAS M4 (Director).</p>
-<div class="watch"><b>Why above the median.</b> This role builds a rewards function from scratch: executive compensation design, job architecture, enterprise salary ranges, incentive governance, and the dashboards and analytics behind them. That scope prices in the upper half of the Director market. <b>Watch the bonus.</b> At 35% the target is above the market's top quarter (25%). At the market's own 22%, the same base gives total target cash of $280,600, still above the median.</div>
+<div class="watch"><b>Why above the median:</b> the role builds the rewards function from scratch, from executive pay and job architecture to incentive governance and analytics. <b>Watch the bonus:</b> 35% is above the market's top quarter; at the market's 22%, total cash is $280,600, still above the median.</div>
 
 <h2>Authority range at a 35% bonus</h2>
 <div class="wrap"><table>
-  <tr><th>Level of offer</th><th class="n">Base</th><th class="n">Bonus at target</th><th class="n">Total target cash</th><th class="n">Base market ratio</th><th class="n">TDC market ratio</th><th>Base position</th></tr>
-  <tr><td>Open</td><td class="n">$215,000</td><td class="n">$75,250</td><td class="n">$290,250</td><td class="n">0.97</td><td class="n">0.98</td><td>about the 42nd percentile</td></tr>
-  <tr><td>Strong candidate</td><td class="n">$222,500</td><td class="n">$77,875</td><td class="n">$300,375</td><td class="n">1.00</td><td class="n">1.01</td><td>about the 51st percentile</td></tr>
-  <tr class="key"><td>Recommended and ceiling (the role's base cap)</td><td class="n">$230,000</td><td class="n">$80,500</td><td class="n">$310,500</td><td class="n">1.04</td><td class="n">1.04</td><td>about the 59th percentile</td></tr>
+  <tr><th>Level of offer</th><th class="n">Base</th><th class="n">Bonus</th><th class="n">Total cash</th><th class="n">Base ratio</th><th class="n">TDC ratio</th><th class="n">Base percentile</th></tr>
+  <tr><td>Open</td><td class="n">$215,000</td><td class="n">$75,250</td><td class="n">$290,250</td><td class="n">0.97</td><td class="n">0.98</td><td class="n">42nd</td></tr>
+  <tr><td>Strong candidate</td><td class="n">$222,500</td><td class="n">$77,875</td><td class="n">$300,375</td><td class="n">1.00</td><td class="n">1.01</td><td class="n">51st</td></tr>
+  <tr class="key"><td>Recommended (base cap)</td><td class="n">$230,000</td><td class="n">$80,500</td><td class="n">$310,500</td><td class="n">1.04</td><td class="n">1.04</td><td class="n">59th</td></tr>
 </table></div>
-<p class="small">Market ratios are against the blended Radford and IPAS median. Sign-on: if the candidate forfeits a bonus, up to about 15% of base ($34,500), with a 12-month clawback. Anything above the recommended level needs approval under the offer rules.</p>
+<p class="small">Sign-on, if a bonus is forfeited: up to about 15% of base ($34,500), 12-month clawback. Above the recommended level needs approval.</p>
 
 <h2>Position to market</h2>
 <div class="wrap"><table>
-  <tr><th>Market ratio (offer ÷ market median)</th><th class="n">Offer</th><th class="n">Radford Compensation</th><th class="n">IPAS Comp &amp; Benefits*</th><th class="n">Blended (average)</th><th>Position</th></tr>
-  <tr><td>Base salary</td><td class="n">$230,000</td><td class="n">1.04 <span class="m">vs $221,450</span></td><td class="n">1.04 <span class="m">vs $221,550</span></td><td class="n">1.04 <span class="m">vs $221,500</span></td><td>about the 59th percentile</td></tr>
-  <tr><td>Total target cash</td><td class="n">$310,500</td><td class="n">1.16 <span class="m">vs $268,145</span></td><td class="n">1.18 <span class="m">vs $263,189</span></td><td class="n">1.17 <span class="m">vs $265,667</span></td><td>upper half of the market</td></tr>
-  <tr class="key"><td>Total direct compensation (equity $0)</td><td class="n">$310,500</td><td class="n">1.03 <span class="m">vs $300,039</span></td><td class="n"><span class="m">equity not reported</span></td><td class="n">1.04 <span class="m">vs $297,561</span></td><td>about the 55th percentile</td></tr>
+  <tr><th>Market ratio</th><th class="n">Offer</th><th class="n">Radford</th><th class="n">IPAS*</th><th class="n">Average</th></tr>
+  <tr><td>Base salary</td><td class="n">$230,000</td><td class="n">1.04 <span class="m">$221,450</span></td><td class="n">1.04 <span class="m">$221,550</span></td><td class="n">1.04 <span class="m">$221,500</span></td></tr>
+  <tr><td>Total target cash</td><td class="n">$310,500</td><td class="n">1.16 <span class="m">$268,145</span></td><td class="n">1.18 <span class="m">$263,189</span></td><td class="n">1.17 <span class="m">$265,667</span></td></tr>
+  <tr class="key"><td>Total direct comp (equity $0)</td><td class="n">$310,500</td><td class="n">1.03 <span class="m">$300,039</span></td><td class="n">—</td><td class="n">1.04 <span class="m">$297,561</span></td></tr>
 </table></div>
-<p class="small">A market ratio of 1.00 is the market median. The headline ratio is total direct compensation: with no equity offered, long-term incentive is $0, while the market includes equity. IPAS does not report equity, so blended TDC adds Radford's market equity ($31,894) to the blended total cash. On that basis the package sits at 1.04, just above the median.<br>* IPAS is not an exact match: its consolidated compensation and benefits job is broader than this role, so it serves as a general comparison rather than a like-for-like match.</p>
+<p class="small">Ratio = offer ÷ market median; 1.00 is the median. Market total direct comp includes equity; IPAS does not report it, so the average uses Radford's equity ($31,894).<br>* IPAS is not an exact match: its compensation and benefits job is broader than this role, so it is a general comparison.</p>
 
 <div class="pno">Page 1 of 2</div>
 </div>
 <div class="page">
-<h2 style="margin-top:0">Total direct compensation: offer vs market, with equity</h2>
+<h2 style="margin-top:0">Total direct compensation, with equity</h2>
 <div class="wrap"><table>
-  <tr><th>Component</th><th class="n">This offer</th><th class="n">Radford Compensation median</th><th class="n">IPAS Comp &amp; Benefits median*</th><th class="n">Blended (average)</th></tr>
+  <tr><th>Component</th><th class="n">This offer</th><th class="n">Radford</th><th class="n">IPAS*</th><th class="n">Average</th></tr>
   <tr><td>Base salary</td><td class="n">$230,000</td><td class="n">$221,450</td><td class="n">$221,550</td><td class="n">$221,500</td></tr>
-  <tr><td>Target bonus</td><td class="n">$80,500 (35%)</td><td class="n">22% target</td><td class="n"><span class="m">not reported</span></td><td class="n">22% (Radford)</td></tr>
+  <tr><td>Target bonus</td><td class="n">35%</td><td class="n">22%</td><td class="n">—</td><td class="n">22%†</td></tr>
   <tr><td>Target total cash</td><td class="n">$310,500</td><td class="n">$268,145</td><td class="n">$263,189</td><td class="n">$265,667</td></tr>
-  <tr><td>Equity (long-term incentive)</td><td class="n">$0 <span class="m">not offered</span></td><td class="n">$31,894</td><td class="n"><span class="m">not reported</span></td><td class="n">$31,894 (Radford)</td></tr>
-  <tr class="key"><td>Total direct compensation</td><td class="n">$310,500</td><td class="n">$300,039</td><td class="n"></td><td class="n">$297,561</td></tr>
-  <tr class="key"><td>Market ratio (offer ÷ market TDC)</td><td class="n"></td><td class="n">1.03</td><td class="n"></td><td class="n">1.04</td></tr>
+  <tr><td>Equity</td><td class="n">$0</td><td class="n">$31,894</td><td class="n">—</td><td class="n">$31,894†</td></tr>
+  <tr class="key"><td>Total direct compensation</td><td class="n">$310,500</td><td class="n">$300,039</td><td class="n">—</td><td class="n">$297,561</td></tr>
+  <tr class="key"><td>Market ratio</td><td class="n"></td><td class="n">1.03</td><td class="n">—</td><td class="n">1.04</td></tr>
 </table></div>
-<p class="small">Market equity is Radford's median TDC less median total cash, so it averages in people who receive none (recipients' median: $69,981). The offer's bonus does the work equity does: total cash is about $45,000 above the blended median, more than the $31,894 of market equity.</p>
+<p class="small">The bonus does the work equity does in the market: total cash is about $45,000 above the average median, more than the $31,894 of market equity. Market equity averages in people who receive none; the median for recipients is $69,981.</p>
 
-<h2>What the market says (United States, Director level, current fiscal year)</h2>
+<h2>Market data, Director level</h2>
 <div class="wrap"><table>
-  <tr><th>Survey (level)</th><th class="n">People / companies</th><th class="n">Base 25th / 50th / 75th</th><th class="n">Target bonus % 25th / 50th / 75th</th><th class="n">Target total cash 50th</th><th class="n">Equity (LTI) 50th, recipients</th><th class="n">Target total direct 25th / 50th / 75th</th></tr>
-  <tr><td>Radford Compensation (HR.CBCO, M5)</td><td class="n">636 / 448</td><td class="n">$200,750 / $221,450 / $247,000</td><td class="n">20% / 22% / 25%</td><td class="n">$268,145</td><td class="n">$69,981 (31% of base)</td><td class="n">$258,225 / $300,039 / $365,420</td></tr>
-  <tr><td>IPAS Comp &amp; Benefits (AHY, M4)*</td><td class="n">230 / 66</td><td class="n">$203,210 / $221,550 / $241,697</td><td class="n"><span class="m">not reported</span></td><td class="n">$263,189</td><td class="n"><span class="m">not reported</span></td><td class="n"><span class="m">not reported</span></td></tr>
-  <tr class="key"><td>Blended (average)</td><td class="n"></td><td class="n">$201,980 / $221,500 / $244,349</td><td class="n">20% / 22% / 25% (Radford)</td><td class="n">$265,667</td><td class="n">$69,981 (Radford)</td><td class="n">$297,561 median</td></tr>
+  <tr><th>Survey</th><th class="n">People / companies</th><th class="n">Base 25th / 50th / 75th</th><th class="n">Bonus 25th / 50th / 75th</th><th class="n">Total cash 50th</th><th class="n">Total direct 25th / 50th / 75th</th></tr>
+  <tr><td>Radford Compensation (M5)</td><td class="n">636 / 448</td><td class="n">$200,750 / $221,450 / $247,000</td><td class="n">20% / 22% / 25%</td><td class="n">$268,145</td><td class="n">$258,225 / $300,039 / $365,420</td></tr>
+  <tr><td>IPAS Comp &amp; Benefits (M4)*</td><td class="n">230 / 66</td><td class="n">$203,210 / $221,550 / $241,697</td><td class="n">—</td><td class="n">$263,189</td><td class="n">—</td></tr>
+  <tr class="key"><td>Average</td><td class="n"></td><td class="n">$201,980 / $221,500 / $244,349</td><td class="n">20% / 22% / 25%†</td><td class="n">$265,667</td><td class="n">$297,561 median</td></tr>
 </table></div>
-<p class="small">Blended is an equal-weight average of Radford and IPAS; where IPAS does not report a measure, Radford is used. * IPAS is a general comparison, not an exact match: its job is broader than this role.</p>
+<p class="small">Equal-weight average of Radford and IPAS. — not reported by IPAS. † Radford figure used where IPAS does not report.</p>
 
 <div class="cols">
   <div>
-    <h2>Value of the bonus (base $230,000)</h2>
+    <h2>Value of the bonus</h2>
     <table>
       <tr><th>Payout</th><th class="n">Total cash</th></tr>
       <tr><td>0% of target</td><td class="n">$230,000</td></tr>
@@ -124,30 +124,30 @@
       <tr><td>100% of target</td><td class="n">$310,500</td></tr>
       <tr><td>150% of target (maximum)</td><td class="n">$350,750</td></tr>
     </table>
-    <h2>Other options considered</h2>
+    <h2>Bonus options at a $230,000 base</h2>
     <table>
-      <tr><th>Base</th><th class="n">Bonus</th><th class="n">Total cash</th><th class="n">vs median</th></tr>
-      <tr><td>$230,000</td><td class="n">22%</td><td class="n">$280,600</td><td class="n">106%</td></tr>
-      <tr><td>$230,000</td><td class="n">25%</td><td class="n">$287,500</td><td class="n">108%</td></tr>
-      <tr><td>$230,000</td><td class="n">30%</td><td class="n">$299,000</td><td class="n">113%</td></tr>
-      <tr class="key"><td>$230,000</td><td class="n">35%</td><td class="n">$310,500</td><td class="n">117%</td></tr>
+      <tr><th>Bonus</th><th class="n">Total cash</th><th class="n">vs median</th></tr>
+      <tr><td>22%</td><td class="n">$280,600</td><td class="n">1.06</td></tr>
+      <tr><td>25%</td><td class="n">$287,500</td><td class="n">1.08</td></tr>
+      <tr><td>30%</td><td class="n">$299,000</td><td class="n">1.13</td></tr>
+      <tr class="key"><td>35%</td><td class="n">$310,500</td><td class="n">1.17</td></tr>
     </table>
   </div>
   <div>
     <h2>What could change the number</h2>
     <ul class="change">
-      <li><b>Bonus level.</b> The market median target is 22% and the 75th percentile 25%. At 22%, a $230,000 base gives total target cash of $280,600, still above the median.</li>
-      <li><b>Scope.</b> Building the function from scratch is what places the base above the median rather than at it.</li>
-      <li><b>No equity.</b> Long-term incentive is $0, so TDC equals total target cash: 1.04 of blended market TDC.</li>
-      <li><b>Survey choice.</b> Radford leans toward technology companies but fits this role's analytics skill set; IPAS lands within $100 of it on median base.</li>
-      <li><b>Blending surveys.</b> Good practice blends like-for-like matches, and a hybrid role has none exact, which is why IPAS is a general comparison. Broader cuts would lower the number: Radford's compensation and benefits family pays $213,200 vs $221,450 median base because it includes benefits roles, so it is left out.</li>
-      <li><b>Location.</b> These figures are US. A Canada-based role would need a Canadian cut.</li>
-      <li><b>Timing.</b> Survey data is not aged; for an offer more than six months out, add about 3% a year (an assumption).</li>
+      <li><b>Bonus level.</b> At the market's 22%, total cash is $280,600, still above the median.</li>
+      <li><b>Scope.</b> Building the function from scratch is what puts the base above the median.</li>
+      <li><b>No equity.</b> Total direct comp equals total cash, 1.04 of a market that includes equity.</li>
+      <li><b>Survey choice.</b> Radford leans toward tech but fits the role's analytics skill set; IPAS is within $100 of it on median base.</li>
+      <li><b>Blending.</b> Good practice blends like-for-like matches, and a hybrid role has no exact one. Broader cuts would lower the number: Radford's comp and benefits family pays $213,200 vs $221,450 median base because it includes benefits roles, so it is left out.</li>
+      <li><b>Location.</b> US figures. A Canada-based role needs a Canadian cut.</li>
+      <li><b>Timing.</b> Data is not aged; past six months, add about 3% a year (an assumption).</li>
     </ul>
   </div>
 </div>
 
-<p class="method">Method. The role maps to Radford M5 (Director) and IPAS M4. The market is an equal-weight average of the two; where IPAS does not report a measure, Radford is used. Measures: current fiscal year base, target bonus percent, target total cash and target total direct compensation (long-term incentive set to $0, as no equity is offered). Percentiles are interpolated linearly between published points. Prepared by Ben Phillips with a benchmarking tool he built. Market data is licensed and shared for this hiring discussion only.</p>
+<p class="method">Method: Radford M5 (Director) and IPAS M4, averaged with equal weight; Radford fills measures IPAS does not report. Measures are current fiscal year base, target bonus, target total cash and target total direct compensation, with equity at $0. Percentiles are interpolated between published points. Prepared by Ben Phillips with a benchmarking tool he built. Licensed market data, shared for this hiring discussion only.</p>
 
 <div class="pno">Page 2 of 2</div>
 </div>
