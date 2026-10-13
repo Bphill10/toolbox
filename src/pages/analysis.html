@@ -30,10 +30,9 @@
   .m { display:block; color:var(--muted); font-size:11px; font-weight:400; }
   .tile { min-height:0; }
   .r { display:block; color:var(--navy); font-weight:700; font-size:12px; margin-top:2px; }
-  table.mkt td.n { white-space:nowrap; font-size:10.5px; padding-left:6px; padding-right:6px; }
-  table.mkt th.n { padding-left:6px; padding-right:6px; }
-  table.mkt td:first-child { font-size:12.5px; }
+  table.mkt td.n { white-space:nowrap; width:20%; }
   table.mkt td:last-child, table.mkt th:last-child { background:var(--greensoft); }
+  .thsub { display:block; font-weight:400; letter-spacing:0; text-transform:none; color:var(--muted); font-size:10px; margin-top:2px; }
   .small { color:var(--muted); font-size:11.5px; margin:6px 0 0; }
   .cols { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
   ul.change { margin:0; padding-left:18px; }
@@ -51,15 +50,15 @@
   @page { size:letter; margin:0.4in 0.45in; }
   @media print {
     .print { display:none; }
-    table.mkt td.n, table.mkt th.n { font-size:10px; padding-left:4px; padding-right:4px; } table.mkt td:first-child { font-size:11px; }
+
     body { background:#fff; font-size:12.5px; line-height:1.4; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
     h1 { font-size:21px; } h2 { margin:13px 0 6px; } .tile .v { font-size:18px; } .tile .d { font-size:11px; }
-    td { padding:5px 7px; } th { padding:5px 7px; } h2 { margin:16px 0 7px; } .method { margin-top:10px; padding-top:6px; } ul.change li { margin:0 0 4px; } .m { font-size:10px; } .small, .method { font-size:11px; }
+    td { padding:4px 7px; } th { padding:4px 7px; } h2 { margin:13px 0 6px; } .method { margin-top:6px; padding-top:4px; } .page { break-after:avoid; } ul.change li { margin:0 0 4px; } .m { font-size:10px; } .small, .method { font-size:11px; }
     .tiles { grid-template-columns:repeat(4,1fr); } .cols { grid-template-columns:1fr 1fr; gap:24px; }
     table, .tiles, .watch, .cols, .keep { break-inside:avoid; }
     h2 { break-after:avoid; }
     .page + .page { break-before:page; }
-    .pno { font-size:9.5px; margin-top:8px; } .page { box-shadow:none; margin:0; padding:0; max-width:none; } }
+    .pno { font-size:9.5px; margin-top:2px; } .page { box-shadow:none; margin:0; padding:0; max-width:none; } }
 </style>
 </head>
 <body>
@@ -114,12 +113,12 @@
 
 <h2>Market data, Director level</h2>
 <div class="wrap"><table class="mkt">
-  <tr><th>Measure</th><th class="n">Radford Compensation (M5)</th><th class="n">IPAS Comp &amp; Benefits (M4)*</th><th class="n">Average</th></tr>
-  <tr><td>People / companies</td><td class="n">636 / 448</td><td class="n">230 / 66</td><td class="n"></td></tr>
-  <tr><td>Base 25th / 50th / 75th</td><td class="n">$200,750 / $221,450 / $247,000</td><td class="n">$203,210 / $221,550 / $241,697</td><td class="n"><b>$201,980 / $221,500 / $244,349</b></td></tr>
-  <tr><td>Bonus 25th / 50th / 75th</td><td class="n">20% / 22% / 25%</td><td class="n">—</td><td class="n"><b>20% / 22% / 25%†</b></td></tr>
-  <tr><td>Total cash 50th</td><td class="n">$268,145</td><td class="n">$263,189</td><td class="n"><b>$265,667</b></td></tr>
-  <tr><td>Total direct 25th / 50th / 75th</td><td class="n">$258,225 / $300,039 / $365,420</td><td class="n">—</td><td class="n"><b>$297,561 median</b></td></tr>
+  <tr><th>Median <span class="thsub">25th – 75th below</span></th><th class="n">Radford (M5)</th><th class="n">IPAS (M4)*</th><th class="n">Average</th></tr>
+  <tr><td>Sample, people / companies</td><td class="n">636 / 448</td><td class="n">230 / 66</td><td class="n"></td></tr>
+  <tr><td>Base salary</td><td class="n">$221,450<span class="m">$200,750 – $247,000</span></td><td class="n">$221,550<span class="m">$203,210 – $241,697</span></td><td class="n"><b>$221,500</b><span class="m">$201,980 – $244,349</span></td></tr>
+  <tr><td>Target bonus</td><td class="n">22%<span class="m">20% – 25%</span></td><td class="n">—</td><td class="n"><b>22%†</b><span class="m">20% – 25%</span></td></tr>
+  <tr><td>Total cash</td><td class="n">$268,145</td><td class="n">$263,189</td><td class="n"><b>$265,667</b></td></tr>
+  <tr><td>Total direct comp</td><td class="n">$300,039<span class="m">$258,225 – $365,420</span></td><td class="n">—</td><td class="n"><b>$297,561</b><span class="m">$258,225 – $365,420†</span></td></tr>
 </table></div>
 <p class="small">Equal-weight average of Radford and IPAS. — not reported by IPAS. † Radford figure used where IPAS does not report.</p>
 
