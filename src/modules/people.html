@@ -1,0 +1,10 @@
+<!-- One tool = one file. The section's data-page is its URL (#people);
+     data-title is the i18n key used for its nav link. -->
+<section data-page="people" data-title="nav.people">
+  <h2 data-t="people.heading">People</h2>
+  <ul id="people-list"></ul>
+  <script>
+    document.getElementById('people-list').innerHTML = DATA.people
+      .map(p => `<li><b>${p.name}</b> — ${p.role}</li>`).join('');
+  </script>
+</section>

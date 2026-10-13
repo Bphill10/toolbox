@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toolbox</title>
+<style>
+  :root { --bg:#fafafa; --fg:#1a1a1a; --muted:#666; --line:#ddd; --accent:#2b6cb0; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#16181c; --fg:#eee; --muted:#999; --line:#333; --accent:#63b3ed; } }
+  * { box-sizing:border-box; }
+  body { margin:0; font:16px/1.5 system-ui, sans-serif; background:var(--bg); color:var(--fg); }
+  header { display:flex; gap:12px; align-items:center; flex-wrap:wrap; padding:12px 16px; border-bottom:1px solid var(--line); }
+  header h1 { font-size:18px; margin:0 auto 0 0; }
+  nav a { color:var(--accent); margin-right:12px; text-decoration:none; }
+  main { padding:16px; max-width:800px; margin:0 auto; }
+  section[data-page] { display:none; }
+  section[data-page].on { display:block; }
+</style>
+<script>window.DATA = {"people": [{"name": "Example Person", "role": "Replace me", "email": ""}]};</script>
+</head>
+<body>
+<header>
+  <h1 data-t="app.title">Toolbox</h1>
+  <nav id="nav"></nav>
+  <select id="lang" aria-label="Language"></select>
+</header>
+<main>
+  <section data-page="home" data-title="nav.home">
+    <h2 data-t="home.heading">Welcome</h2>
+    <p data-t="home.intro">Pick a tool above.</p>
+  </section>
+
+  <!-- people.html -->
+<!-- One tool = one file. The section's data-page is its URL (#people);
+     data-title is the i18n key used for its nav link. -->
+<section data-page="people" data-title="nav.people">
+  <h2 data-t="people.heading">People</h2>
+  <ul id="people-list"></ul>
+  <script>
+    document.getElementById('people-list').innerHTML = DATA.people
+      .map(p => `<li><b>${p.name}</b> — ${p.role}</li>`).join('');
+  </script>
+</section>
+</main>
+
+
+<script>
+// Translations. Add a language by adding a block; add a string by adding a key
+// to every block. Any element with data-t="key" gets its text replaced.
+const I18N = {
+  en: {
+    'app.title': 'Toolbox',
+    'nav.home': 'Home',
+    'nav.people': 'People',
+    'home.heading': 'Welcome',
+    'home.intro': 'Pick a tool above.',
+    'people.heading': 'People',
+  },
+  es: {
+    'app.title': 'Caja de herramientas',
+    'nav.home': 'Inicio',
+    'nav.people': 'Personas',
+    'home.heading': 'Bienvenido',
+    'home.intro': 'Elige una herramienta arriba.',
+    'people.heading': 'Personas',
+  },
+};
+
+function applyLang(lang) {
+  const t = I18N[lang] || I18N.en;
+  document.documentElement.lang = lang;
+  for (const el of document.querySelectorAll('[data-t]')) {
+    if (t[el.dataset.t]) el.textContent = t[el.dataset.t];
+  }
+  try { localStorage.setItem('lang', lang); } catch {}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const sel = document.getElementById('lang');
+  for (const code of Object.keys(I18N)) sel.add(new Option(code.toUpperCase(), code));
+  let saved = 'en';
+  try { saved = localStorage.getItem('lang') || 'en'; } catch {}
+  sel.value = saved;
+  sel.onchange = () => applyLang(sel.value);
+  applyLang(saved);
+});
+</script>
+<script>
+  // Shell: builds the nav from every section, switches pages on #hash.
+  const pages = [...document.querySelectorAll('section[data-page]')];
+  const nav = document.getElementById('nav');
+  for (const p of pages) {
+    const a = document.createElement('a');
+    a.href = '#' + p.dataset.page;
+    a.dataset.t = p.dataset.title;
+    a.textContent = p.dataset.page;
+    nav.appendChild(a);
+  }
+  function show() {
+    const id = location.hash.slice(1) || 'home';
+    for (const p of pages) p.classList.toggle('on', p.dataset.page === id);
+  }
+  addEventListener('hashchange', show);
+  show();
+</script>
+</body>
+</html>
