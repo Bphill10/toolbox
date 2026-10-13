@@ -1,54 +1,51 @@
 #!/usr/bin/env python3
-"""Stitch src/ back into one self-contained index.html.
+"""Stitch src/ back into the one self-contained page.
 
-  src/index.html      shell; holds the markers below
-  src/modules/*.html  one file per tool, inlined at <!-- @modules --> (A-Z order)
-  src/data/*.json     inlined at <!-- @data --> as window.DATA.<filename>
-  src/i18n.js         inlined at <!-- @i18n -->
+  src/index.html      the shell: header, home page, module loader
+  src/modules/*.html  one file per tool (comp, offer, merit, ...)
+  src/data/*          shared data the tools read (people, grades, ...)
+  src/i18n.js         translations
 
-Run:  python3 build.py      -> writes index.html
-Edit files in src/, never index.html — it is overwritten on every build.
+src/index.html marks where each file goes with {{include:<path under src/>}}.
+Run:  python3 build.py   -> writes dist/index.html
+Edit files in src/; dist/ is regenerated on every build (and on every Vercel deploy).
 """
-import json
+import re
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).parent
 SRC = ROOT / "src"
-OUT = ROOT / "index.html"
+OUT = ROOT / "dist" / "index.html"
+MARK = re.compile(r"\{\{include:([^}]+)\}\}")
+
+
+def read(p):
+    return p.read_bytes().decode("utf-8")  # keep line endings exactly as written
 
 
 def main():
-    shell = (SRC / "index.html").read_text(encoding="utf-8")
+    shell = read(SRC / "index.html")
+    used = set()
 
-    modules = "\n".join(
-        f"<!-- {p.name} -->\n" + p.read_text(encoding="utf-8").strip()
-        for p in sorted((SRC / "modules").glob("*.html"))
-    )
+    def include(m):
+        rel = m.group(1)
+        p = SRC / rel
+        if not p.is_file():
+            sys.exit(f"build failed: src/index.html includes {rel}, which does not exist")
+        used.add(p.resolve())
+        return read(p)
 
-    data = {}
-    for p in sorted((SRC / "data").glob("*.json")):
-        try:
-            data[p.stem] = json.loads(p.read_text(encoding="utf-8"))
-        except json.JSONDecodeError as e:
-            sys.exit(f"build failed: {p.relative_to(ROOT)} is not valid JSON ({e})")
-    # Data must load before modules run their scripts, so it goes in <head>.
-    data_js = "<script>window.DATA = " + json.dumps(data, ensure_ascii=False).replace("</", "<\\/") + ";</script>"
+    out = MARK.sub(include, shell)
 
-    i18n = "<script>\n" + (SRC / "i18n.js").read_text(encoding="utf-8").strip() + "\n</script>"
+    # A module file nobody includes is almost always a forgotten marker.
+    for p in sorted((SRC / "modules").glob("*.html")):
+        if p.resolve() not in used:
+            sys.exit(f"build failed: {p.relative_to(ROOT)} is not included anywhere in src/index.html")
 
-    for marker in ("<!-- @modules -->", "<!-- @data -->", "<!-- @i18n -->"):
-        if shell.count(marker) != 1:
-            sys.exit(f"build failed: src/index.html must contain {marker} exactly once")
-
-    shell = shell.replace("<!-- @data -->", "")
-    shell = shell.replace("</head>", data_js + "\n</head>", 1)
-    out = (shell.replace("<!-- @modules -->", modules)
-                .replace("<!-- @i18n -->", i18n))
-
-    OUT.write_text(out, encoding="utf-8")
-    n = len(list((SRC / "modules").glob("*.html")))
-    print(f"built index.html — {n} module(s), {len(data)} data file(s), {len(out):,} bytes")
+    OUT.parent.mkdir(exist_ok=True)
+    OUT.write_bytes(out.encode("utf-8"))
+    print(f"built dist/index.html: {len(used)} files stitched, {len(out.encode('utf-8')):,} bytes")
 
 
 if __name__ == "__main__":
