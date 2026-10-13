@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Director, Total Rewards · Pay to Hire</title>
+<title>Director, Total Rewards · Compensation Analysis</title>
 <style>
   :root { --navy:#13294b; --ink:#1f2933; --muted:#5f6b7a; --line:#c9d1dc; --soft:#eef3f9; --gold:#b7791f; --goldsoft:#fdf6ea; --bg:#fff; }
   * { box-sizing:border-box; }
@@ -38,6 +38,7 @@
     .cols { grid-template-columns:1fr; gap:0; }
     h1 { font-size:21px; }
   }
+  .pno { text-align:right; color:var(--muted); font-size:11px; margin-top:14px; }
   .print { position:fixed; top:16px; right:16px; background:var(--navy); color:#fff; border:0; border-radius:6px; padding:10px 16px; font:600 14px "Segoe UI", system-ui, sans-serif; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.2); }
   .print:hover { background:#1d3a66; }
   @page { size:letter; margin:0.4in 0.45in; }
@@ -49,7 +50,8 @@
     .tiles { grid-template-columns:repeat(4,1fr); } .cols { grid-template-columns:1fr 1fr; gap:24px; }
     table, .tiles, .watch, .cols, .keep { break-inside:avoid; }
     h2 { break-after:avoid; }
-    .p2 { break-before:page; } .page { box-shadow:none; margin:0; padding:0; max-width:none; } }
+    .page + .page { break-before:page; }
+    .pno { font-size:9.5px; margin-top:8px; } .page { box-shadow:none; margin:0; padding:0; max-width:none; } }
 </style>
 </head>
 <body>
@@ -57,7 +59,7 @@
 <div class="page">
 
 <p class="conf">Confidential · Prepared for Mastronardi Produce · Contains licensed survey data</p>
-<h1>Director, Total Rewards, Compensation Strategy &amp; Analytics: pay to hire</h1>
+<h1>Director, Total Rewards, Compensation Strategy &amp; Analytics: compensation analysis</h1>
 <p class="sub">Offer recommendation at Director level, United States · Prepared 13 October 2026 by Ben Phillips · Radford Q3 2026 (published 15 August 2026), survey level M5, Compensation and Compensation &amp; Benefits families</p>
 
 <h2>Recommendation</h2>
@@ -88,7 +90,10 @@
 </table></div>
 <p class="small">A market ratio of 1.00 is the market median. Base sits just above the median at 1.04 to 1.08; total cash runs higher, at 1.16 to 1.20, because the 35% bonus target is above market.</p>
 
-<h2 class="p2">Total direct compensation</h2>
+<div class="pno">Page 1 of 2</div>
+</div>
+<div class="page">
+<h2 style="margin-top:0">Total direct compensation</h2>
 <div class="wrap"><table>
   <tr><th>Component</th><th class="n">Recommended</th><th class="n">Market median</th><th>Note</th></tr>
   <tr><td>Base salary</td><td class="n">$230,000</td><td class="n">$213,000 to $221,000</td><td>Offer sits at 104% to 108% of the median</td></tr>
@@ -146,6 +151,7 @@
 
 <p class="method">Method. The role maps to Radford M5 (Director) and IPAS M4. Measures: current fiscal year base, target bonus percent, target total cash, long-term incentive value (recipients only) and target total direct compensation. Percentiles are interpolated linearly between published points. Prepared by Ben Phillips with a benchmarking tool he built. Market data is licensed and shared for this hiring discussion only.</p>
 
+<div class="pno">Page 2 of 2</div>
 </div>
 </body>
 </html>
