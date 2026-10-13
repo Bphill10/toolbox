@@ -26,6 +26,7 @@
   td { padding:7px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
   .n { text-align:right; }
   tr.key td { background:var(--soft); font-weight:700; }
+  .m { display:block; color:var(--muted); font-size:11px; font-weight:400; }
   .small { color:var(--muted); font-size:11.5px; margin:6px 0 0; }
   .cols { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
   ul.change { margin:0; padding-left:18px; }
@@ -39,12 +40,12 @@
   }
   .print { position:fixed; top:16px; right:16px; background:var(--navy); color:#fff; border:0; border-radius:6px; padding:10px 16px; font:600 14px "Segoe UI", system-ui, sans-serif; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.2); }
   .print:hover { background:#1d3a66; }
-  @page { size:letter; margin:0.5in; }
+  @page { size:letter; margin:0.4in 0.45in; }
   @media print {
     .print { display:none; }
-    body { background:#fff; font-size:11.5px; line-height:1.38; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    body { background:#fff; font-size:11px; line-height:1.32; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
     h1 { font-size:21px; } h2 { margin:13px 0 6px; } .tile .v { font-size:18px; } .tile .d { font-size:11px; }
-    td { padding:4px 7px; } th { padding:4px 7px; } .small, .method { font-size:10px; }
+    td { padding:3px 6px; } th { padding:3px 6px; } h2 { margin:10px 0 5px; } .method { margin-top:10px; padding-top:6px; } ul.change li { margin:0 0 4px; } .m { font-size:10px; } .small, .method { font-size:10px; }
     .tiles { grid-template-columns:repeat(4,1fr); } .cols { grid-template-columns:1fr 1fr; gap:24px; }
     table, .tiles, .watch, .cols, .keep { break-inside:avoid; }
     h2 { break-after:avoid; }
@@ -71,14 +72,23 @@
 
 <h2>Authority range at a 35% bonus</h2>
 <div class="wrap"><table>
-  <tr><th>Level of offer</th><th class="n">Base</th><th class="n">Bonus at target</th><th class="n">Total target cash</th><th class="n">% of market median</th><th>Base position</th></tr>
-  <tr><td>Open</td><td class="n">$215,000</td><td class="n">$75,250</td><td class="n">$290,250</td><td class="n">110%</td><td>about the median</td></tr>
-  <tr><td>Strong candidate</td><td class="n">$222,500</td><td class="n">$77,875</td><td class="n">$300,375</td><td class="n">114%</td><td>about the 51st to 62nd percentile</td></tr>
-  <tr class="key"><td>Recommended and ceiling (the role's base cap)</td><td class="n">$230,000</td><td class="n">$80,500</td><td class="n">$310,500</td><td class="n">118%</td><td>about the 58th to 72nd percentile</td></tr>
+  <tr><th>Level of offer</th><th class="n">Base</th><th class="n">Bonus at target</th><th class="n">Total target cash</th><th class="n">Base market ratio</th><th class="n">Cash market ratio</th><th>Base position</th></tr>
+  <tr><td>Open</td><td class="n">$215,000</td><td class="n">$75,250</td><td class="n">$290,250</td><td class="n">0.97 to 1.01</td><td class="n">1.10</td><td>about the median</td></tr>
+  <tr><td>Strong candidate</td><td class="n">$222,500</td><td class="n">$77,875</td><td class="n">$300,375</td><td class="n">1.00 to 1.04</td><td class="n">1.14</td><td>about the 51st to 62nd percentile</td></tr>
+  <tr class="key"><td>Recommended and ceiling (the role's base cap)</td><td class="n">$230,000</td><td class="n">$80,500</td><td class="n">$310,500</td><td class="n">1.04 to 1.08</td><td class="n">1.18</td><td>about the 58th to 72nd percentile</td></tr>
 </table></div>
 <p class="small">Sign-on: if the candidate forfeits a bonus, up to about 15% of base ($34,500), with a 12-month clawback. Anything above the recommended level needs approval under the offer rules.</p>
 
-<h2>Total direct compensation</h2>
+<h2>Position to market</h2>
+<div class="wrap"><table>
+  <tr><th>Market ratio (offer ÷ market median)</th><th class="n">Offer</th><th class="n">Radford Compensation (CBCO)</th><th class="n">Radford Comp &amp; Benefits (CBMF)</th><th class="n">IPAS Comp &amp; Benefits</th><th>Position</th></tr>
+  <tr class="key"><td>Base salary</td><td class="n">$230,000</td><td class="n">1.04 <span class="m">vs $221,450</span></td><td class="n">1.08 <span class="m">vs $213,200</span></td><td class="n">1.04 <span class="m">vs $221,550</span></td><td>about the 58th to 72nd percentile</td></tr>
+  <tr><td>Total target cash</td><td class="n">$310,500</td><td class="n">1.16 <span class="m">vs $268,145</span></td><td class="n">1.20 <span class="m">vs $258,000</span></td><td class="n">1.18 <span class="m">vs $263,189</span></td><td>upper half of the market</td></tr>
+  <tr><td>Total direct compensation</td><td class="n">$335,500</td><td class="n">1.12 <span class="m">vs $300,039</span></td><td class="n">1.22 <span class="m">vs $276,000</span></td><td class="n"></td><td>about the 64th to 74th percentile</td></tr>
+</table></div>
+<p class="small">A market ratio of 1.00 is the market median. Base sits just above the median at 1.04 to 1.08; total cash runs higher, at 1.16 to 1.20, because the 35% bonus target is above market.</p>
+
+<h2 class="p2">Total direct compensation</h2>
 <div class="wrap"><table>
   <tr><th>Component</th><th class="n">Recommended</th><th class="n">Market median</th><th>Note</th></tr>
   <tr><td>Base salary</td><td class="n">$230,000</td><td class="n">$213,000 to $221,000</td><td>Offer sits at 104% to 108% of the median</td></tr>
@@ -87,7 +97,7 @@
   <tr><td>Long-term incentive, annualized</td><td class="n">$25,000 (11%)</td><td class="n">$51,000 to $70,000</td><td>Median among recipients (25% to 31% of base); about 53% to 68% of employees are eligible</td></tr>
   <tr class="key"><td>Total direct compensation</td><td class="n">$335,500</td><td class="n">$276,000 to $300,000</td><td>About the 64th to 74th percentile; market median includes people without an incentive</td></tr>
 </table></div>
-<div class="wrap p2" style="margin-top:10px"><table>
+<div class="wrap" style="margin-top:10px"><table>
   <tr><th>If annualized long-term incentive is</th><th class="n">None</th><th class="n">$25,000 (11% of base)</th><th class="n">$50,000 (22% of base)</th></tr>
   <tr><td>Total direct compensation</td><td class="n">$310,500</td><td class="n">$335,500</td><td class="n">$360,500</td></tr>
   <tr><td>Position against the market</td><td class="n">about the 54th to 64th percentile</td><td class="n">about the 64th to 74th percentile</td><td class="n">about the 73rd percentile to above the 75th</td></tr>
@@ -134,7 +144,7 @@
   </div>
 </div>
 
-<p class="method">Method. The role maps to Radford M5 (Director) and IPAS M4 in the level framework. Measures used from the Radford export: current fiscal year base salary; target cash incentives as a percent of base; target total cash; total long-term incentive value (annual or ongoing; recipients only); target total compensation (target total direct compensation). Percentile positions are interpolated linearly between published percentiles. Prepared by Ben Phillips with a benchmarking tool he built. Market data is licensed and shared for this hiring discussion only.</p>
+<p class="method">Method. The role maps to Radford M5 (Director) and IPAS M4. Measures: current fiscal year base, target bonus percent, target total cash, long-term incentive value (recipients only) and target total direct compensation. Percentiles are interpolated linearly between published points. Prepared by Ben Phillips with a benchmarking tool he built. Market data is licensed and shared for this hiring discussion only.</p>
 
 </div>
 </body>
