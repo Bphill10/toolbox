@@ -3,94 +3,127 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Compensation Analysis · Director, Total Rewards</title>
+<title>Director, Total Rewards · Pay to Hire</title>
 <style>
-  :root { --ink:#1d2430; --muted:#5b6572; --line:#d9dee5; --head:#f2f4f7; --accent:#2f6b4f; --bg:#fff; }
+  :root { --navy:#13294b; --ink:#1f2933; --muted:#5f6b7a; --line:#c9d1dc; --soft:#eef3f9; --gold:#b7791f; --goldsoft:#fdf6ea; --bg:#fff; }
   * { box-sizing:border-box; }
-  body { margin:0; background:#eef1f4; color:var(--ink); font:16px/1.55 Georgia, "Times New Roman", serif; }
-  main { max-width:860px; margin:24px auto; background:var(--bg); padding:40px 48px; box-shadow:0 1px 4px rgba(0,0,0,.08); }
-  h1 { font:600 26px/1.25 system-ui, -apple-system, "Segoe UI", sans-serif; margin:0 0 6px; }
-  h2 { font:600 19px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif; margin:34px 0 10px; color:var(--accent); border-bottom:1px solid var(--line); padding-bottom:6px; }
-  .byline { color:var(--muted); font:14px system-ui, sans-serif; margin:0 0 4px; }
-  .note { color:var(--muted); font-style:italic; margin:0 0 8px; }
-  .wrap { overflow-x:auto; margin:14px 0; }
-  table { border-collapse:collapse; width:100%; font:14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
-  th, td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
-  th { background:var(--head); font-weight:600; }
-  td.n, th.n { text-align:right; white-space:nowrap; }
-  tr.key td { font-weight:700; background:#eef6f1; }
-  ul { padding-left:22px; }
-  li { margin:4px 0; }
-  @media (max-width:640px) { main { margin:0; padding:24px 16px; box-shadow:none; } h1 { font-size:22px; } }
-  @media print { body { background:#fff; } main { box-shadow:none; margin:0; padding:0; } }
+  body { margin:0; background:#e9edf2; color:var(--ink); font:13.5px/1.45 "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif; }
+  .page { max-width:860px; margin:20px auto; background:var(--bg); padding:36px 44px 30px; box-shadow:0 1px 4px rgba(0,0,0,.1); }
+  .conf { color:var(--gold); font-weight:700; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; margin:0 0 6px; }
+  h1 { color:var(--navy); font-size:25px; line-height:1.2; margin:0 0 4px; }
+  .sub { color:var(--muted); margin:0 0 10px; padding-bottom:10px; border-bottom:2px solid var(--navy); }
+  h2 { color:var(--navy); font-size:11.5px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; margin:20px 0 8px; }
+  .tiles { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:10px; }
+  .tile { border:1px solid var(--line); border-top:3px solid var(--navy); background:var(--soft); padding:10px 12px; }
+  .tile.gold { border-top-color:var(--gold); background:var(--goldsoft); }
+  .tile .v { color:var(--navy); font-size:21px; font-weight:700; }
+  .tile .k { color:var(--navy); font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; margin:2px 0 4px; }
+  .tile .d { color:var(--muted); font-size:12px; }
+  .watch { background:var(--goldsoft); border:1px solid #ecd3a6; border-left:4px solid var(--gold); padding:9px 12px; margin:10px 0; }
+  .wrap { overflow-x:auto; }
+  table { border-collapse:collapse; width:100%; }
+  th { color:var(--navy); font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; text-align:left; padding:6px 8px; border-bottom:2px solid var(--navy); vertical-align:bottom; }
+  td { padding:7px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  .n { text-align:right; }
+  tr.key td { background:var(--soft); font-weight:700; }
+  .small { color:var(--muted); font-size:11.5px; margin:6px 0 0; }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+  ul.change { margin:0; padding-left:18px; }
+  ul.change li { margin:0 0 7px; }
+  .method { color:var(--muted); font-size:11px; border-top:1px solid var(--line); margin-top:18px; padding-top:8px; }
+  @media (max-width:700px) {
+    .page { margin:0; padding:22px 16px; box-shadow:none; }
+    .tiles { grid-template-columns:1fr 1fr; }
+    .cols { grid-template-columns:1fr; gap:0; }
+    h1 { font-size:21px; }
+  }
+  @media print { body { background:#fff; } .page { box-shadow:none; margin:0; padding:0; max-width:none; } }
 </style>
 </head>
 <body>
-<main>
-<h1>Pay to Hire: Director, Total Rewards, Compensation Strategy &amp; Analytics</h1>
-<p class="byline">Ben Phillips · October 13, 2026</p>
-<p class="note">Compensation analysis prepared by Ben Phillips. United States, Director level, 2026 survey data, rounded.</p>
+<div class="page">
+
+<p class="conf">Confidential · Prepared for Mastronardi Produce · Contains licensed survey data</p>
+<h1>Director, Total Rewards, Compensation Strategy &amp; Analytics: pay to hire</h1>
+<p class="sub">Offer recommendation at Director level, United States · Prepared 13 October 2026 by Ben Phillips · Radford Q3 2026 (published 15 August 2026), survey level M5, Compensation and Compensation &amp; Benefits families</p>
 
 <h2>Recommendation</h2>
-<p>A <b>$230,000 base with a 35% target bonus</b> gives <b>$310,500 in target total cash</b>. Adding a cash long-term incentive of about $25,000 a year brings total direct compensation to <b>$335,500</b>. The role is priced at Director level. The recommendation sits in the upper half of the Director range because the role builds the function from scratch.</p>
-<div class="wrap"><table>
-  <tr><th>Level of offer</th><th class="n">Base</th><th class="n">Bonus at 35%</th><th class="n">Target total cash</th><th class="n">vs Director median ($263,000)</th></tr>
-  <tr><td>Open (about the base median)</td><td class="n">$215,000</td><td class="n">$75,250</td><td class="n">$290,250</td><td class="n">110%</td></tr>
-  <tr><td>Strong candidate</td><td class="n">$222,500</td><td class="n">$77,875</td><td class="n">$300,375</td><td class="n">114%</td></tr>
-  <tr class="key"><td>Recommended and ceiling (the role's base cap)</td><td class="n">$230,000</td><td class="n">$80,500</td><td class="n">$310,500</td><td class="n">118%</td></tr>
-</table></div>
-<p>Sign-on: if the candidate forfeits a bonus, up to about 15% of base ($34,500), with a 12-month clawback.</p>
+<div class="tiles">
+  <div class="tile"><div class="v">$230,000</div><div class="k">Base salary</div><div class="d">104% to 108% of the market base median; about the 58th to 72nd percentile</div></div>
+  <div class="tile"><div class="v">35% · $80,500</div><div class="k">Target bonus</div><div class="d">market median target is 22%, top quarter 25%</div></div>
+  <div class="tile"><div class="v">$310,500</div><div class="k">Total target cash</div><div class="d">16% to 20% above the market median</div></div>
+  <div class="tile gold"><div class="v">$335,500</div><div class="k">Total direct compensation</div><div class="d">with $25,000 a year of cash long-term incentive; about the 64th to 74th percentile</div></div>
+</div>
+<p>Base is set at the role's base cap of $230,000. With a 35% target bonus, total target cash is $310,500, in the upper half of the market. Adding an annualized cash long-term incentive of about $25,000 (11% of base) brings total direct compensation to $335,500. The role maps to survey level M5 (Director).</p>
+<div class="watch"><b>Why above the median.</b> This role builds a rewards function from scratch: executive compensation design, job architecture, enterprise salary ranges, incentive governance, and the dashboards and analytics behind them. That scope prices in the upper half of the Director market. <b>Watch the bonus.</b> At 35% the target is above the market's top quarter (25%). At the market's own 22%, the same base gives total target cash of $280,600, still above the median.</div>
 
-<h2>What the role asks for</h2>
-<p>The title is Director, but the job description describes building a rewards function from the ground up. Most Director roles run programs that already exist. This one is asked to create them:</p>
-<ul>
-  <li><b>Executive compensation design</b> for a private company: base philosophy, annual incentive, long-term and retention incentives, payout rules and scenario modeling for leadership discussions</li>
-  <li><b>Job architecture and salary ranges</b> across the enterprise: levels, midpoints, range widths, geographic differences and promotion guidelines</li>
-  <li><b>Dashboards and analytics</b> that show range use, market position, incentive spend, pay equity, retention risk and offer competitiveness</li>
-  <li><b>Incentive governance</b>: design, approval processes, calendars, calculations and communication</li>
-  <li><b>Decision rules leaders can apply consistently</b>, built with the ELT, Finance, Legal, HR and Talent Acquisition</li>
-</ul>
-<p>The job description also calls for "a risk-taker who has developed processes where none existed." That scope is why the recommendation sits in the upper half of the Director range rather than at the median.</p>
-
-<h2>What the market pays</h2>
-<p>At the recommended $310,500, target total cash sits about 18% above the Director median, in the upper half of the Director market.</p>
+<h2>Authority range at a 35% bonus</h2>
 <div class="wrap"><table>
-  <tr><th>US compensation leaders, Director level, 2026</th><th class="n">25th percentile</th><th class="n">Median</th><th class="n">75th percentile</th></tr>
-  <tr><td>Base salary</td><td class="n">$190,000 to $201,000</td><td class="n">$213,000 to $221,000</td><td class="n">$233,000 to $247,000</td></tr>
-  <tr><td>Target bonus</td><td class="n">20%</td><td class="n">22%</td><td class="n">25% to 26%</td></tr>
-  <tr><td>Target total cash</td><td class="n"></td><td class="n">about $263,000</td><td class="n"></td></tr>
+  <tr><th>Level of offer</th><th class="n">Base</th><th class="n">Bonus at target</th><th class="n">Total target cash</th><th class="n">% of market median</th><th>Base position</th></tr>
+  <tr><td>Open</td><td class="n">$215,000</td><td class="n">$75,250</td><td class="n">$290,250</td><td class="n">110%</td><td>about the median</td></tr>
+  <tr><td>Strong candidate</td><td class="n">$222,500</td><td class="n">$77,875</td><td class="n">$300,375</td><td class="n">114%</td><td>about the 51st to 62nd percentile</td></tr>
+  <tr class="key"><td>Recommended and ceiling (the role's base cap)</td><td class="n">$230,000</td><td class="n">$80,500</td><td class="n">$310,500</td><td class="n">118%</td><td>about the 58th to 72nd percentile</td></tr>
 </table></div>
-<p>The figures are rounded from 2026 US survey data. That survey leans toward technology companies, which tend to pay more than general industry. It was chosen on purpose: the analytics, dashboard and modeling work in this job description is the skill set those companies pay for. A general-industry comparison would put the Director median lower. Running both cuts side by side is a standard step before a final offer.</p>
-<p>The structure is deliberate. The base sits modestly above the Director median, and the bonus is set above the usual range. More of the pay is at risk, so the top of the package is earned only when Mastronardi performs.</p>
-<p>The bonus target is the open lever. With base fixed at $230,000:</p>
-<div class="wrap"><table>
-  <tr><th>Target bonus</th><th class="n">22% (market median)</th><th class="n">25% (market top quarter)</th><th class="n">30%</th><th class="n">35% (recommended)</th></tr>
-  <tr><td>Target total cash</td><td class="n">$280,600</td><td class="n">$287,500</td><td class="n">$299,000</td><td class="n">$310,500</td></tr>
-  <tr><td>vs Director median</td><td class="n">107%</td><td class="n">109%</td><td class="n">114%</td><td class="n">118%</td></tr>
-</table></div>
+<p class="small">Sign-on: if the candidate forfeits a bonus, up to about 15% of base ($34,500), with a 12-month clawback. Anything above the recommended level needs approval under the offer rules.</p>
 
-<h2>Built for a private company</h2>
-<p>The recommendation uses no equity. Mastronardi is family owned, and the job description asks for incentives that reward "enterprise performance, individual contribution, retention, and long-term value creation" in a private company.</p>
-<p>In place of equity, it uses a <b>cash long-term incentive of about $25,000 a year</b>, paid on a multi-year cycle and tied to company results. That is about 11% of base, below the market norm at this level. The form, whether deferred cash, a retention award or performance units, would follow the company's own incentive framework.</p>
+<h2>Total direct compensation</h2>
 <div class="wrap"><table>
-  <tr><th>If the long-term incentive is</th><th class="n">None</th><th class="n">$25,000</th><th class="n">$50,000</th></tr>
+  <tr><th>Component</th><th class="n">Recommended</th><th class="n">Market median</th><th>Note</th></tr>
+  <tr><td>Base salary</td><td class="n">$230,000</td><td class="n">$213,000 to $221,000</td><td>Offer sits at 104% to 108% of the median</td></tr>
+  <tr><td>Target bonus</td><td class="n">$80,500 (35%)</td><td class="n">$47,000 to $49,000 (22%)</td><td>35% is above the 75th percentile (25% to 26%)</td></tr>
+  <tr class="key"><td>Total target cash</td><td class="n">$310,500</td><td class="n">$258,000 to $268,000</td><td>16% to 20% above the median</td></tr>
+  <tr><td>Long-term incentive, annualized</td><td class="n">$25,000 (11%)</td><td class="n">$51,000 to $70,000</td><td>Median among recipients (25% to 31% of base); about 53% to 68% of employees are eligible</td></tr>
+  <tr class="key"><td>Total direct compensation</td><td class="n">$335,500</td><td class="n">$276,000 to $300,000</td><td>About the 64th to 74th percentile; market median includes people without an incentive</td></tr>
+</table></div>
+<div class="wrap" style="margin-top:10px"><table>
+  <tr><th>If annualized long-term incentive is</th><th class="n">None</th><th class="n">$25,000 (11% of base)</th><th class="n">$50,000 (22% of base)</th></tr>
   <tr><td>Total direct compensation</td><td class="n">$310,500</td><td class="n">$335,500</td><td class="n">$360,500</td></tr>
+  <tr><td>Position against the market</td><td class="n">about the 54th to 64th percentile</td><td class="n">about the 64th to 74th percentile</td><td class="n">about the 73rd percentile to above the 75th</td></tr>
 </table></div>
-<p>The 35% bonus is paid against enterprise goals, under governance the ELT approves.</p>
+<p class="small">Mastronardi is privately held, so the long-term incentive is modeled as cash, not equity; its form would follow the company's incentive framework. Percentile positions are interpolated between the published 25th, 50th and 75th percentiles of target total direct compensation.</p>
 
-<h2>What the tool shows against the job description</h2>
-<p>The analysis above came from a tool I built. It turns raw survey data into a one-page offer recommendation in minutes. Each part of it answers a line in the job description.</p>
+<h2>What the market says (United States, Director level, current fiscal year)</h2>
 <div class="wrap"><table>
-  <tr><th>The job description asks for</th><th>What the tool does</th></tr>
-  <tr><td>Offer competitiveness and executive offer support</td><td>Prices any role against the market and sets an open, recommended, strong candidate and ceiling offer</td></tr>
-  <tr><td>Decision rules leaders can apply consistently</td><td>Writes the authority range and approval rule onto every recommendation</td></tr>
-  <tr><td>Scenario modeling for leadership</td><td>Shows what each bonus payout, long-term incentive level and base/bonus mix does to total pay</td></tr>
-  <tr><td>Market benchmarking</td><td>Matches internal grades to survey levels, compares two survey families and cross-checks a second survey</td></tr>
-  <tr><td>Pay equity and internal consistency</td><td>Flags internal equity checks and withholds pay when fewer than five people hold a grade</td></tr>
-  <tr><td>Leader communication</td><td>Writes in plain language and puts warnings up front, such as "base sits below the 25th percentile"</td></tr>
-  <tr><td>Private company incentives</td><td>Models long-term incentive as cash, with no equity assumed</td></tr>
+  <tr><th>Radford family (level M5)</th><th class="n">People / companies</th><th class="n">Base 25th / 50th / 75th</th><th class="n">Target bonus % 25th / 50th / 75th</th><th class="n">Target total cash 50th</th><th class="n">Long-term incentive 50th</th><th class="n">Target total direct 25th / 50th / 75th</th></tr>
+  <tr><td>Compensation (HR.CBCO)</td><td class="n">636 / 448</td><td class="n">$200,750 / $221,450 / $247,000</td><td class="n">20% / 22% / 25%</td><td class="n">$268,145</td><td class="n">$69,981 (31% of base)</td><td class="n">$258,225 / $300,039 / $365,420</td></tr>
+  <tr><td>Compensation and benefits (HR.CBMF)</td><td class="n">381 / 298</td><td class="n">$190,000 / $213,200 / $232,587</td><td class="n">20% / 21.5% / 25.8%</td><td class="n">$258,000</td><td class="n">$51,199 (25% of base)</td><td class="n">$235,997 / $276,000 / $337,150</td></tr>
 </table></div>
-<p>It also lists what could change the number: bonus level, scope, location, the age of the survey data and internal equity. Those are the questions an ELT member asks before approving an offer. The live dashboard demo runs on made-up sample data, because licensed survey figures don't leave the compensation team.</p>
-</main>
+<p class="small">Cross-check: IPAS consolidated compensation and benefits (AHY, level M4 Director, 230 people, 66 companies) shows base $203,210 / $221,550 / $241,697 and target total cash $263,189 at the median, in line with the Radford figures. Base figures use the current fiscal year; people and companies are for the base measure (CBCO 697 / 485, CBMF 400 / 312).</p>
+
+<div class="cols">
+  <div>
+    <h2>Value of the bonus (base $230,000)</h2>
+    <table>
+      <tr><th>Payout</th><th class="n">Total cash</th></tr>
+      <tr><td>0% of target</td><td class="n">$230,000</td></tr>
+      <tr><td>50% of target</td><td class="n">$270,250</td></tr>
+      <tr><td>100% of target</td><td class="n">$310,500</td></tr>
+      <tr><td>200% of target</td><td class="n">$391,000</td></tr>
+    </table>
+    <h2>Other options considered</h2>
+    <table>
+      <tr><th>Base</th><th class="n">Bonus</th><th class="n">Total cash</th><th class="n">vs median</th></tr>
+      <tr><td>$230,000</td><td class="n">22%</td><td class="n">$280,600</td><td class="n">107%</td></tr>
+      <tr><td>$230,000</td><td class="n">25%</td><td class="n">$287,500</td><td class="n">109%</td></tr>
+      <tr><td>$230,000</td><td class="n">30%</td><td class="n">$299,000</td><td class="n">114%</td></tr>
+      <tr class="key"><td>$230,000</td><td class="n">35%</td><td class="n">$310,500</td><td class="n">118%</td></tr>
+    </table>
+  </div>
+  <div>
+    <h2>What could change the number</h2>
+    <ul class="change">
+      <li><b>Bonus level.</b> The market median target is 22% and the 75th percentile 25% to 26%. At 22%, a $230,000 base gives total target cash of $280,600, still above the median.</li>
+      <li><b>Scope.</b> Building the function from scratch, including executive pay design, job architecture, ranges and analytics, is what places the base above the median rather than at it.</li>
+      <li><b>Private company.</b> No equity is assumed. Long-term incentive is cash, tied to enterprise results.</li>
+      <li><b>Survey choice.</b> Radford leans toward technology companies, which pay more than general industry. It fits the analytics and modeling skill set this role asks for; a general-industry cut would sit lower.</li>
+      <li><b>Location.</b> These figures are US. A Canada-based role would need a Canadian cut.</li>
+      <li><b>Timing.</b> Survey data is not aged. For an offer more than about six months after the survey date, age by roughly 3% a year (an assumption, not data).</li>
+    </ul>
+  </div>
+</div>
+
+<p class="method">Method. The role maps to Radford M5 (Director) and IPAS M4 in the level framework. Measures used from the Radford export: current fiscal year base salary; target cash incentives as a percent of base; target total cash; total long-term incentive value (annual or ongoing; recipients only); target total compensation (target total direct compensation). Percentile positions are interpolated linearly between published percentiles. Prepared by Ben Phillips with a benchmarking tool he built. Market data is licensed and shared for this hiring discussion only.</p>
+
+</div>
 </body>
 </html>
