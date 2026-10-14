@@ -270,5 +270,35 @@ html[data-theme] .hero p{font-size:16px !important;margin-top:10px !important}
 html[data-theme] .hero .heroBtns{margin-top:18px !important}
 #mgiOverview{margin-top:-104px}
 .kcards .kc{padding-top:14px;padding-bottom:14px}
+html[data-theme] .hero h1{font-size:40px !important}
+html[data-theme] .hero .hwrap2{padding:20px 24px 14px !important}
+html[data-theme] .hero{padding-bottom:112px !important}
+.fsec{margin-top:16px}
+.fcard{padding:14px 16px 12px}
+.fcard p{min-height:0}
+.fcard .fb{margin-top:8px}
+.fcard .fb img{width:86px}
+.mappanel{margin-top:16px;padding:16px 22px;grid-template-columns:minmax(0,.75fr) minmax(0,1.9fr) minmax(0,.95fr);gap:16px}
+.mappanel h2{font-size:24px;margin-bottom:12px}
+.mappanel p{margin-top:10px}
+.mappanel .crow{padding-top:5px;padding-bottom:5px;border-radius:11px}
+.mappanel .mp-r{display:grid;gap:6px}
+.mappanel .crow .flag{width:30px;height:30px}
+.mappanel .mp-n b{font-size:24px}
+html[data-theme] .hero h1{font-size:38px !important;max-width:780px !important}
+html[data-theme] .hero{padding-bottom:104px !important}
+html[data-theme] .hero .heroBtns{margin-top:14px !important}
+.heroFine{margin-top:10px !important}
+.fcard .fb img{width:74px}
+.fcard .fb{margin-top:4px}
+.kcards .kc{padding-top:12px;padding-bottom:12px}
+.kt .ki{width:40px;height:40px}
+.kt b{font-size:26px}
+.kb{margin-top:10px}
+.kb .spk{height:30px}
+.fcard .fb img{width:64px}
+.fcard h3{font-size:15px}
+.mappanel{grid-template-columns:minmax(0,.8fr) minmax(0,1.6fr) minmax(0,.95fr)}
+.mappanel h2{font-size:22px}
 }
 html{scroll-padding-top:64px}
