@@ -550,15 +550,25 @@ const CAT={
 };
 
 const MODS=[
+  /* soon:true shows the tool greyed out with "Coming soon"; delete soon:true to release it */
   {id:'jdmatch', url:'/jdmatch/', icon:'⇄', grad:'linear-gradient(135deg,#0F7A57,#067451)', desktop:true, group:'data'},
   {id:'positioning', url:'/positioning/', icon:'◎', grad:'linear-gradient(135deg,#0F7A57,#067451)', desktop:true, group:'data'},
   {id:'archbuild', icon:'▤', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
   {id:'jdlib', icon:'✎', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
   {id:'ranges', icon:'▥', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
   {id:'career', icon:'⇗', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
+  {id:'succession', soon:true, url:'/succession/', icon:'⇡', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
+  {id:'orgchart', soon:true, url:'/orgchart/', icon:'⊤', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
   {id:'lti', icon:'◔', grad:'linear-gradient(135deg,#E3C27A,#B8923D)', desktop:true, group:'inc'},
+  {id:'sti', soon:true, icon:'◈', grad:'linear-gradient(135deg,#E3C27A,#B8923D)', desktop:true, group:'inc'},
+  {id:'perf', soon:true, icon:'◎', grad:'linear-gradient(135deg,#E3C27A,#B8923D)', desktop:true, group:'inc'},
   {id:'analysis', icon:'◫', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
   {id:'ghr', icon:'▦', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
+  {id:'merit', soon:true, icon:'▲', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
+  {id:'aisavings', soon:true, url:'/aisavings/', icon:'⌛', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
+  {id:'trs', soon:true, url:'/trs/', icon:'★', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
+  {id:'offer', soon:true, icon:'✉', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
+  {id:'harvest', soon:true, icon:'❖', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
 ];
 let LANG='en', REG='all', CURMOD=null, JAMEMBER=null;
 let JAMEMBERDOC=null;
@@ -573,11 +583,12 @@ function applyLang(){
   renderCards();
   broadcast({pl_lang:LANG});
 }
-const GROUPS={data:'Step 1 · Market data, then competitive assessment · weeks 1 to 8',jobs:'Step 2 · Global job architecture, careers and succession · months 1 to 4',inc:'Step 3 · Long-term incentive (LTI) · months 3 to 9',ana:'Step 4 · Analytics · months 6 to 12'};
+const GROUPS={data:'Step 1 · Market data, then competitive assessment · weeks 1 to 8',jobs:'Step 2 · Global job architecture, careers and succession · months 1 to 4',inc:'Step 3 · Incentives · months 3 to 9',ana:'Step 4 · Analytics and everyday pay tools · months 6 to 12'};
 function renderCards(){
   var out='',last='';
   MODS.forEach(function(m){
     if(m.group&&m.group!==last){ last=m.group; out+='<div class="grp" id="grp-'+m.group+'">'+(GROUPS[m.group]||'')+'</div>'; }
+    if(m.soon){ out+='<div class="card soon" aria-disabled="true" data-g="'+(m.group||'')+'"><span class="soonTag">Coming soon</span><h3>'+t('m_'+m.id)+'</h3><p>'+t('m_'+m.id+'_d')+'</p><div class="cf"><span class="arr" aria-hidden="true">&rarr;</span>'+(window.MGI_ILL?MGI_ILL(m.id):'')+'</div></div>'; return; }
     out+='<div class="card" role="button" tabindex="0" data-g="'+(m.group||'')+'" onclick="openMod(\''+m.id+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openMod(\''+m.id+'\')}"><h3>'+t('m_'+m.id)+'</h3><p>'+t('m_'+m.id+'_d')+'</p><div class="cf"><span class="arr" aria-hidden="true">&rarr;</span>'+(window.MGI_ILL?MGI_ILL(m.id):'')+'</div></div>';
   });
   $('#cards').innerHTML=out;
@@ -780,6 +791,7 @@ applyLang=function(){
   jaChrome(!same);
 }
 async function openMod(id){
+  { const _m=MODS.find(x=>x.id===id); if(_m&&_m.soon&&!/[?&]preview=1/.test(location.search)) return; }  /* unreleased tools stay closed (add ?preview=1 to try them) */
   var g=jaGroup(id);
   CURMOD=id;
   $('#modTitle').textContent=t('m_'+id);

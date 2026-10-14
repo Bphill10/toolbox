@@ -78,7 +78,7 @@
 <div class="w" style="padding:0 16px">
   <div class="vtabs"><button data-v="chart" class="on">Chart</button><button data-v="levels">Levels and layers</button><button data-v="mgmt">Management</button></div>
   <div id="v-chart">
-  <div class="tools"><div class="search"><input id="q" placeholder="Search by name or job title" autocomplete="off"><div class="hits" id="hits" hidden></div></div><span class="stat" id="stat"></span></div>
+  <div class="tools"><div class="search"><input id="q" aria-label="Search people" placeholder="Search by name or job title" autocomplete="off"><div class="hits" id="hits" hidden></div></div><span class="stat" id="stat"></span></div>
   <div class="legend" id="legend"></div>
   <div class="crumbs" id="crumbs"></div>
   <div class="tree" id="tree"></div>
@@ -105,7 +105,7 @@ size(root);
 const color = p => COLORS[famOf[p.k]] || '#0B4A36';
 
 function card(p, top){
-  return '<div class="node'+(top?' top':'')+'" data-i="'+p.i+'" style="--c:'+color(p)+'"><div class="av">'+esc(p.init)+'</div><div class="nm">'+esc(p.name)+'</div><div class="tt">'+esc(p.t)+'</div><div class="tt">'+esc(p.loc)+'</div>'
+  return '<div class="node'+(top?' top':'')+'" data-i="'+p.i+'"'+(top?'':' tabindex="0" role="button" aria-label="Show '+esc(p.name)+'s team"')+' style="--c:'+color(p)+'"><div class="av">'+esc(p.init)+'</div><div class="nm">'+esc(p.name)+'</div><div class="tt">'+esc(p.t)+'</div><div class="tt">'+esc(p.loc)+'</div>'
     + '<div class="ft"><span><b>'+p.kids.length+'</b> direct</span><span><b>'+size(p).toLocaleString()+'</b> in team</span></div></div>';
 }
 let cur = root;
@@ -118,7 +118,7 @@ function show(p){
     + card(p, true)
     + (kids.length ? '<div class="vline"></div><div class="kids">'+kids.map(k => card(k)).join('')+'</div>' : '<p class="more">No direct reports.</p>')
     + (p.kids.length > 60 ? '<p class="more">Showing 60 of '+p.kids.length+' direct reports. Search to find anyone.</p>' : '');
-  document.querySelectorAll('[data-i]').forEach(el => el.onclick = () => show(P[+el.dataset.i]));
+  document.querySelectorAll('[data-i]').forEach(el => { el.onclick = () => show(P[+el.dataset.i]); el.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(P[+el.dataset.i]); } }; });
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 $('#q').oninput = () => {
@@ -170,9 +170,9 @@ function levels(){
     + '<div class="kpi"><b>'+gs.filter(g => g !== '—').length+'</b><span>grades in use across 4 career tracks; '+(G['—'] ? G['—'].n : 0)+' people have no job code to grade</span></div>'
     + '<div class="kpi'+(spread.length?' warn':'')+'"><b>'+spread.length+'</b><span>grades that sit three or more layers apart in different parts of the company</span></div></div>'
     + '<h2>Layers: how far each person sits from the CEO</h2><p class="lead">Layer 1 is the CEO. A company of about 3,000 usually works well with six or seven layers; every extra layer slows decisions and adds a manager’s pay without adding output.</p>'
-    + tbl([['Layer'],['People',1],[''],['Managers',1],['Avg span',1],['Avg pay',1]], Object.entries(L).map(([d,x]) => '<tr><td><b>Layer '+d+'</b>'+(d==1?'<span class="sub">CEO</span>':'')+'</td><td class="n">'+x.n.toLocaleString()+'</td><td style="width:30%">'+bar(x.n, maxN)+'</td><td class="n">'+x.m+'</td><td class="n">'+(x.m ? (x.r/x.m).toFixed(1) : '—')+'</td><td class="n">'+fmtK(x.pay/x.pn)+'</td></tr>'))
+    + tbl([['Layer'],['People',1],[''],['Managers',1],['Avg span',1],['Avg pay',1]], Object.entries(L).map(([d,x]) => '<tr><td><b>Layer '+d+'</b>'+(d==1?'<span class="sub">CEO</span>':'')+'</td><td class="n">'+x.n.toLocaleString()+'</td><td style="width:30%">'+bar(x.n, maxN)+'</td><td class="n">'+x.m+'</td><td class="n">'+(x.m ? (x.r/x.m).toFixed(1) : '—')+'</td><td class="n">'+(x.pn < 5 ? '<span title="Fewer than 5 people">n&lt;5</span>' : fmtK(x.pay/x.pn))+'</td></tr>'))
     + '<h2>Levels: headcount and pay by grade</h2><p class="lead">The job architecture’s grades from the top down. Pay should rise steadily from grade to grade; managers sitting low in the grades, or the same grade landing at very different layers, are the things to look at.</p>'
-    + tbl([['Grade'],['People',1],[''],['Managers',1],['Avg layer',1],['Avg pay',1]], gs.map(g => { const x = G[g]; return '<tr><td><b>'+g+'</b><span class="sub">'+TRACK[g[0]]+'</span></td><td class="n">'+x.n.toLocaleString()+'</td><td style="width:30%">'+bar(x.n, maxG)+'</td><td class="n">'+x.m+'</td><td class="n">'+(x.d/x.n).toFixed(1)+'</td><td class="n">'+(x.pay ? fmtK(x.pay/x.n) : '—')+'</td></tr>'; }))
+    + tbl([['Grade'],['People',1],[''],['Managers',1],['Avg layer',1],['Avg pay',1]], gs.map(g => { const x = G[g]; return '<tr><td><b>'+g+'</b><span class="sub">'+TRACK[g[0]]+'</span></td><td class="n">'+x.n.toLocaleString()+'</td><td style="width:30%">'+bar(x.n, maxG)+'</td><td class="n">'+x.m+'</td><td class="n">'+(x.d/x.n).toFixed(1)+'</td><td class="n">'+(!x.pay ? '—' : x.n < 5 ? '<span title="Fewer than 5 people">n&lt;5</span>' : fmtK(x.pay/x.n))+'</td></tr>'; }))
     + '<div class="two" style="margin-top:16px"><div><h2>Layers by job family</h2>'
     + tbl([['Family'],['People',1],['Deepest layer',1],['Avg layer',1],['People per manager',1]], Object.entries(F).sort((a,b) => b[1].n - a[1].n).map(([f,x]) => '<tr><td><b>'+f+'</b></td><td class="n">'+x.n.toLocaleString()+'</td><td class="n">'+x.max+'</td><td class="n">'+(x.sum/x.n).toFixed(1)+'</td><td class="n">'+(x.m ? (x.n/x.m).toFixed(1) : '—')+'</td></tr>'))
     + '</div><div><h2>Grades spread across layers</h2>'
@@ -200,7 +200,7 @@ function mgmt(){
     + '<h2>Span of control</h2><p class="lead">A common guide is about 5 to 8 reports for managers of professionals and specialists, and 15 or more for supervisors of crews doing the same work. Very narrow spans add cost and layers; very wide ones leave people unmanaged and supervisors stretched.</p>'
     + tbl([['Direct reports'],['Managers',1],[''],['Share',1]], B.map((b,i) => '<tr><td><b>'+b[0]+'</b></td><td class="n">'+counts[i]+'</td><td style="width:45%">'+bar(counts[i], maxC, i < 2 || i === 6)+'</td><td class="n">'+Math.round(100*counts[i]/mgrs.length)+'%</td></tr>'))
     + '<div class="two" style="margin-top:6px"><div><h2>Narrow spans to review</h2><p class="lead">One or two reports, executives left out. A manager over a single manager (“one over one”) is an extra layer; a manager over one or two specialists is often a title given as a promotion, or a team that could merge with the one next to it.</p>'
-    + tbl([['Manager'],['Grade',1],['Reports',1],['Avg pay',1]], narrow.slice(0, 15).map(p => '<tr><td>'+link(p)+'<span class="sub">'+esc(p.t)+' · '+esc(p.loc)+'</span></td><td class="n">'+grade(p)+'</td><td class="n">'+p.kids.length+'</td><td class="n">'+fmtK(payOf(p))+'</td></tr>'))
+    + tbl([['Manager'],['Grade',1],['Reports',1],['Avg pay',1]], narrow.slice(0, 15).map(p => '<tr><td>'+link(p)+'<span class="sub">'+esc(p.t)+' · '+esc(p.loc)+'</span></td><td class="n">'+grade(p)+'</td><td class="n">'+p.kids.length+'</td><td class="n">'+((JOB[p.k] || {}).hc < 5 ? '<span title="Job has fewer than 5 people">n&lt;5</span>' : fmtK(payOf(p)))+'</td></tr>'))
     + (narrow.length > 15 ? '<p class="note">Showing 15 of '+narrow.length+', highest paid first.</p>' : '')
     + '</div><div><h2>Very wide spans to review</h2><p class="lead">More than 30 direct reports. Fine for a crew lead on one line; a sign a lead hand or second supervisor is missing anywhere else.</p>'
     + (wide.length ? tbl([['Manager'],['Grade',1],['Reports',1]], wide.slice(0, 15).map(p => '<tr><td>'+link(p)+'<span class="sub">'+esc(p.t)+' · '+esc(p.loc)+'</span></td><td class="n">'+grade(p)+'</td><td class="n">'+p.kids.length+'</td></tr>')) : '<div class="card">No manager has more than 30 direct reports.</div>')

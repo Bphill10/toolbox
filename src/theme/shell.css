@@ -239,3 +239,11 @@ html[data-theme=dark] .fcard .fb img{filter:brightness(.82) saturate(.95)}
 #appSteps ol{margin:0;padding-left:20px}#appSteps li{margin:6px 0;line-height:1.5}
 #appActions button{border-radius:10px !important;background:var(--card) !important;color:var(--ink) !important;border-color:var(--line) !important}
 #appInstall{background:#067451 !important;border-color:#067451 !important;color:#fff !important}
+
+/* tools not released yet */
+html[data-theme] .card.soon{cursor:default;position:relative;background:var(--soft) !important;box-shadow:none !important;border-style:dashed !important}
+html[data-theme] .card.soon:hover{transform:none;border-color:var(--line) !important}
+html[data-theme] .card.soon h3,html[data-theme] .card.soon p{color:var(--ink3) !important}
+html[data-theme] .card.soon .ill{filter:grayscale(1);opacity:.45}
+.soonTag{align-self:flex-start;margin:0 0 8px;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#8A6A1F;background:#F7EFD9;border:1px solid #E9D79F;border-radius:999px;padding:3px 9px}
+html[data-theme=dark] .soonTag{color:#E8C77A;background:rgba(213,183,108,.12);border-color:rgba(213,183,108,.3)}

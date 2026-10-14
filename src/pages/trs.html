@@ -39,8 +39,8 @@
   .lg span { color:var(--muted); font-size:12.5px; }
   .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
   .card { border:1px solid var(--line); border-radius:12px; padding:14px 16px; break-inside:avoid; }
-  .card h3 { margin:0 0 8px; font:600 16px Inter, "Segoe UI", Arial, sans-serif; display:flex; align-items:center; gap:8px; }
-  .card h3 .dot { margin-top:0; }
+  .card h3, .card h2.h3 { margin:0 0 8px; font:600 16px Inter, "Segoe UI", Arial, sans-serif; display:flex; align-items:center; gap:8px; }
+  .card h3 .dot, .card h2.h3 .dot { margin-top:0; }
   table { border-collapse:collapse; width:100%; font-size:14px; }
   td { padding:5px 0; border-bottom:1px dashed var(--track); vertical-align:top; }
   td.n { text-align:right; white-space:nowrap; padding-left:10px; font-variant-numeric:tabular-nums; }
@@ -185,7 +185,7 @@ function render(){
     + '<div class="donut">'+donut+'</div></div>'
     + '<div class="body"><p class="msg">'+first+', thank you for everything you bring to our greenhouses and our customers. Your paycheque is only part of the story: this statement shows the full value of what you earn with us, from health coverage and retirement savings to time off and the extras that come with growing great food together.</p>'
     + '<div class="legend">'+groups.filter(g => g.sum > 0).map(g => '<div class="lg"><i class="dot" style="background:'+g.col+'"></i><div><b>'+fmt(g.sum,cur)+'</b><span>'+g.n+' · '+Math.round(100*g.sum/total)+'%</span></div></div>').join('')+'</div>'
-    + '<div class="grid">'+groups.filter(g => g.sum > 0).map(g => '<div class="card"><h3><i class="dot" style="background:'+g.col+'"></i>'+g.n+'</h3><table>'
+    + '<div class="grid">'+groups.filter(g => g.sum > 0).map(g => '<div class="card"><h2 class="h3"><i class="dot" style="background:'+g.col+'"></i>'+g.n+'</h2><table>'
         + g.rows.filter(x => x[1] > 0).map(x => '<tr><td>'+x[0]+'<span class="sub">'+x[2]+'</span></td><td class="n">'+fmt(x[1],cur)+'</td></tr>').join('')
         + '<tr class="t"><td>Total</td><td class="n">'+fmt(g.sum,cur)+'</td></tr></table></div>').join('')+'</div>'
     + '<div class="growth"><div><b>'+(r.next ? (LITE.roles.find(x => x.k === r.next) || {}).t || 'Next level' : 'Leadership track')+'</b><span>A typical next step from your role</span></div>'

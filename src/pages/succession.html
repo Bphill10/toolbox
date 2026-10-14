@@ -34,6 +34,7 @@
   .sub { display:block; color:var(--muted); font-size:12px; }
   .pill { display:inline-block; border-radius:999px; padding:2px 9px; font-size:12px; font-weight:700; white-space:nowrap; color:#fff; margin:0 4px 4px 0; }
   .risk { font-weight:700; } .r-High { color:var(--none); } .r-Medium { color:var(--later); } .r-Low { color:var(--now); }
+  html[data-theme=dark] .r-High { color:#F0776A; } html[data-theme=dark] .r-Medium { color:#E8C77A; } html[data-theme=dark] .r-Low { color:#4FD9A0; }
   .nine { display:grid; grid-template-columns:24px repeat(3,1fr); grid-template-rows:repeat(3,92px) 22px; gap:5px; }
   .cell { border-radius:8px; padding:6px 7px; font-size:11.5px; overflow:hidden; }
   .cell b { display:block; font-size:11px; letter-spacing:.04em; }
@@ -130,7 +131,7 @@ function render(){
   // nine-box
   const box = {}; allS.forEach(s => { const key = s.pot + '-' + s.perf; (box[key] = box[key] || []).push(s); });
   const NAMES = { '3-1':'Enigma','3-2':'Growth employee','3-3':'Future leader','2-1':'Dilemma','2-2':'Core player','2-3':'High performer','1-1':'Under-performer','1-2':'Effective','1-3':'Trusted professional' };
-  const BG = { '3-3':'#0F8A5F','3-2':'#3FA77D','2-3':'#3FA77D','2-2':'#8CC7A9','3-1':'#E9C46A','1-3':'#8CC7A9','1-2':'#CFE3D7','2-1':'#F2D7A6','1-1':'#F1B9AE' };
+  const BG = { '3-3':'#0B7A54','3-2':'#2E7D5E','2-3':'#2E7D5E','2-2':'#8CC7A9','3-1':'#E9C46A','1-3':'#8CC7A9','1-2':'#CFE3D7','2-1':'#F2D7A6','1-1':'#F1B9AE' };
   let g = '';
   for (const pot of [3,2,1]) { g += '<div class="ax y">'+['','Low','Medium','High'][pot]+' potential</div>'; for (const perf of [1,2,3]) { const k = pot+'-'+perf, list = box[k] || []; g += '<div class="cell" style="background:'+BG[k]+';color:'+(['3-3','3-2','2-3'].includes(k)?'#fff':'#16241e')+'"><b>'+NAMES[k]+'</b><span class="n">'+list.length+'</span></div>'; } }
   g += '<div></div><div class="ax">Low performance</div><div class="ax">Medium</div><div class="ax">High performance</div>';

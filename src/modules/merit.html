@@ -120,7 +120,7 @@ input[type=range]{width:100%;accent-color:var(--blue);padding:0;height:18px}
 .printonly{display:none}
 .filters{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(5,minmax(0,1fr)) auto;gap:10px;align-items:end;margin-bottom:10px}
 .filters .fld select,.filters .fld input{height:28px}
-@media(max-width:999px){#kpis{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+@media(max-width:999px){#kpis{grid-template-columns:repeat(4,minmax(0,1fr))!important}}@media(max-width:600px){#kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:900px){.top{grid-template-columns:minmax(0,1fr)}.f4{grid-template-columns:repeat(2,minmax(0,1fr))}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.mx{grid-template-columns:96px repeat(5,minmax(0,1fr)) 64px}}
 @media print{
  .noprint,#secRoll,#secPlan,.stk .sp{display:none!important}
