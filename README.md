@@ -23,3 +23,5 @@ A module file that is not included anywhere fails the build, so a tool cannot go
 the others in `src/index.html`, and add its card to the shell's module list.
 
 **Don't edit `dist/`**: the next build overwrites it.
+
+**Page views:** Vercel Web Analytics, via the `/_vercel/insights/script.js` tag in the head of each page (plain HTML, so no npm package).
