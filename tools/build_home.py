@@ -43,30 +43,31 @@ for i in range(n):
     if ctry[i]: site_c[loc[i]][ctry[i]] += 1
 ctry = [c or (site_c[loc[i]].most_common(1)[0][0] if site_c[loc[i]] else "US") for i, c in enumerate(ctry)]
 
-win = list(range(M - 12, M))
-hc = {k: [0] * 12 for k in ("ALL", "US", "CA", "MX")}
-payroll = [0.0] * 12
+win = list(range(M - 13, M))   # 13 points: this month and the same month a year ago
+hc = {k: [0] * 13 for k in ("ALL", "US", "CA", "MX")}
+payroll = [0.0] * 13
+seen = [0] * 13                 # everyone in the HR data up to each month (current and former)
 for i in range(n):
+    first = next((m for m in range(M) if present(i, m)), M)
     for j, m in enumerate(win):
         if present(i, m):
             hc["ALL"][j] += 1; hc[ctry[i]][j] += 1; payroll[j] += usd[i]
+        if first <= m: seen[j] += 1
 sites = Counter((loc[i], ctry[i]) for i in range(n) if sta[i] == "Active")
 payc = Counter()
 for i in range(n):
     if sta[i] == "Active": payc[ctry[i]] += usd[i]
-out = {"months": [months[m] for m in win], "hc": hc, "payroll": [round(p) for p in payroll], "payc": {k: round(v) for k, v in payc.items()},
+out = {"months": [months[m] for m in win], "hc": hc, "payroll": [round(p) for p in payroll], "seen": seen, "payc": {k: round(v) for k, v in payc.items()},
        "sites": sorted([{"name": s, "c": c, "hc": k} for (s, c), k in sites.items()], key=lambda x: -x["hc"])}
 # Briefing figures, computed the same way the tools compute them (How Competitive Should We Be,
 # Org Chart, AI Time Savings), so the home screen and the tools always agree.
 wf = json.loads((ROOT / "src/data/workforce.json").read_text())
 repl = lambda pay: 16 if pay < 30000 else 20 if pay < 50000 else 21 if pay < 100000 else 50 if pay < 200000 else 100
-# family level, exactly as the family view of How Competitive Should We Be: average pay, weighted turnover
-fam = defaultdict(lambda: {"hc": 0, "payroll": 0.0, "lv": 0.0, "rs": 0.0, "rn": 0})
+# job by job, then summed: the same in every view of How Competitive Should We Be
+fam = defaultdict(lambda: {"hc": 0, "tc": 0.0, "rs": 0.0, "rn": 0})
 for j in wf["jobs"]:
-    f = fam[j["tw"]]; f["hc"] += j["hc"]; f["payroll"] += j["hc"] * j["pay"]; f["lv"] += j["hc"] * j["turnover"]
+    f = fam[j["tw"]]; f["hc"] += j["hc"]; f["tc"] += j["hc"] * j["turnover"] / 100 * j["pay"] * repl(j["pay"]) / 100
     if j["ratio"]: f["rs"] += j["ratio"] * j["hc"]; f["rn"] += j["hc"]
-for f in fam.values():
-    pay = f["payroll"] / f["hc"]; f["tc"] = f["hc"] * (f["lv"] / f["hc"]) / 100 * pay * repl(pay) / 100
 tc = sum(f["tc"] for f in fam.values()); top = max(fam.items(), key=lambda kv: kv[1]["tc"])
 below = [k for k, f in fam.items() if f["rn"] and f["rs"] / f["rn"] < 0.97]
 grade = {j["k"]: j["g"] for j in wf["jobs"]}
@@ -76,6 +77,6 @@ CAT = {"Executive": (85, 6), "Management": (65, 5), "Professional": (75, 7), "Su
 ai = sum(j["hc"] * CAT[j["cat"]][0] / 100 * 2080 * CAT[j["cat"]][1] / 100 for j in wf["jobs"])
 out["brief"] = {"turnoverCost": round(tc), "topFam": top[0], "topShare": round(100 * top[1]["tc"] / tc), "famsBelow": len(below), "fams": len(fam),
                 "belowNames": sorted(below), "narrow": narrow, "aiHours": round(ai), "roles": len(wf["jobs"]),
-                "records": n, "former": sum(1 for x in sta if x == "Terminated")}
+                "records": n, "priced": sum(j["hc"] for j in wf["jobs"]), "former": sum(1 for x in sta if x == "Terminated")}
 (ROOT / "src/data/home.json").write_text(json.dumps(out, separators=(",", ":")))
 print(out["months"][0], out["months"][-1], out["hc"]["ALL"], len(out["sites"]), out["brief"])

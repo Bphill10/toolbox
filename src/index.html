@@ -555,18 +555,9 @@ const MODS=[
   {id:'jdlib', icon:'✎', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
   {id:'ranges', icon:'▥', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
   {id:'career', icon:'⇗', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
-  {id:'succession', url:'/succession/', icon:'⇡', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
-  {id:'orgchart', url:'/orgchart/', icon:'⊤', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
-  {id:'sti', icon:'◈', grad:'linear-gradient(135deg,#E3C27A,#B8923D)', desktop:true, group:'inc'},
   {id:'lti', icon:'◔', grad:'linear-gradient(135deg,#E3C27A,#B8923D)', desktop:true, group:'inc'},
-  {id:'perf', icon:'◎', grad:'linear-gradient(135deg,#E3C27A,#B8923D)', desktop:true, group:'inc'},
-  {id:'ghr', icon:'▦', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
   {id:'analysis', icon:'◫', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
-  {id:'merit', icon:'▲', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
-  {id:'aisavings', url:'/aisavings/', icon:'⌛', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
-  {id:'trs', url:'/trs/', icon:'★', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
-  {id:'offer', icon:'✉', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
-  {id:'harvest', icon:'❖', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
+  {id:'ghr', icon:'▦', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
 ];
 let LANG='en', REG='all', CURMOD=null, JAMEMBER=null;
 let JAMEMBERDOC=null;
@@ -581,7 +572,7 @@ function applyLang(){
   renderCards();
   broadcast({pl_lang:LANG});
 }
-const GROUPS={data:'Step 1 · Market data, then competitive assessment · weeks 1 to 8',jobs:'Step 2 · Global job architecture, careers and succession · months 1 to 4',inc:'Step 3 · Incentives: STI, then LTI · months 3 to 9',ana:'Step 4 · Analytics and everyday pay tools · months 6 to 12'};
+const GROUPS={data:'Step 1 · Market data, then competitive assessment · weeks 1 to 8',jobs:'Step 2 · Global job architecture, careers and succession · months 1 to 4',inc:'Step 3 · Long-term incentive (LTI) · months 3 to 9',ana:'Step 4 · Analytics · months 6 to 12'};
 function renderCards(){
   var out='',last='';
   MODS.forEach(function(m){
@@ -628,7 +619,9 @@ async function modUrl(id){
   if(id==='pricing'){ html='<script>window.__PRICING_VIEW=1;<\/script>'+html; }
       const th='<style id="mgiTheme">'+document.getElementById('mgi-mod-css').textContent+'</style><script>'+document.getElementById('mgi-theme-js').textContent+'</scr'+'ipt>';
       const own='<script>document.documentElement.classList.add('+(srcId==='ghr'?'"mgi-own"':'"mgi-mod"')+')</scr'+'ipt>';
-      const u=URL.createObjectURL(new Blob([own+__JA_BOOT+html+th],{type:'text/html'}));
+      /* theme goes into <head> so a module paints in the right theme from the first frame */
+      const hd=/<head(\s[^>]*)?>/i.exec(html); if(hd){ html=html.slice(0,hd.index+hd[0].length)+own+th+html.slice(hd.index+hd[0].length); }
+      const u=URL.createObjectURL(new Blob([__JA_BOOT+html+(hd?'':own+th)],{type:'text/html'}));
   urlCache[id]=u; return u;
 }
 function jaGroup(id){ for(var i=0;i<MODS.length;i++){ if(MODS[i].id===id && MODS[i].members) return MODS[i]; } return null; }

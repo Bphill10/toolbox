@@ -1,8 +1,8 @@
 /* Home screen: navigation, KPI cards, the world map with every site, featured modules,
-   the executive briefing and the quick tour. Every number comes from the demo data files. */
+   and the quick tour. Every number comes from the demo data files. */
 (function(){
   var H = JSON.parse(document.getElementById('mgi-home').textContent);
-  var B = H.brief;
+  var B = H.brief;   // priced / records / former counts
   var $ = function(s){ return document.querySelector(s); };
   var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
   var fmt = function(n){ return Math.round(n).toLocaleString('en-US'); };
@@ -12,7 +12,7 @@
   var open = function(id){ if (window.openMod) openMod(id); };
 
   /* ---- navigation ---- */
-  var NAV = [['top','Home'],['grp-data','Market data'],['grp-jobs','Jobs and careers'],['grp-inc','Incentives'],['grp-ana','Analytics'],['brief','Briefing'],['/roadmap/','Roadmap']];
+  var NAV = [['top','Home'],['grp-data','Market data'],['grp-jobs','Jobs and careers'],['grp-inc','LTI'],['grp-ana','Analytics'],['/roadmap/','Roadmap']];
   var nav = document.createElement('nav'); nav.className = 'mgiNav'; nav.setAttribute('aria-label', 'Sections');
   nav.innerHTML = NAV.map(function(n, i){ return '<a href="' + (n[0][0] === '/' ? n[0] : '#' + n[0]) + '" data-t="' + n[0] + '"' + (i === 0 ? ' class="on" aria-current="true"' : '') + '>' + n[1] + '</a>'; }).join('');
   var logo = $('header .logo'); if (logo) logo.insertAdjacentElement('afterend', nav);
@@ -25,8 +25,7 @@
   $('#exploreBtn').addEventListener('click', function(e){ e.preventDefault(); jump('featured'); });
   function spy(){
     var cur = 'top';
-    ['grp-data','grp-jobs','grp-inc','grp-ana','brief'].forEach(function(id){ var el = document.getElementById(id); if (el && el.getBoundingClientRect().top < 160) cur = id; });
-    if (document.getElementById('brief').getBoundingClientRect().top < 160 && document.getElementById('grp-data').getBoundingClientRect().top > 160) cur = 'brief';
+    ['grp-data','grp-jobs','grp-inc','grp-ana'].forEach(function(id){ var el = document.getElementById(id); if (el && el.getBoundingClientRect().top < 160) cur = id; });
     nav.querySelectorAll('a').forEach(function(a){ var on = a.dataset.t === cur; a.classList.toggle('on', on); if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
   }
   window.addEventListener('scroll', spy, { passive:true });
@@ -46,9 +45,9 @@
     bld:'<svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4 21V5.5L12 3v18h-2v-3H7v3zm3-13h1.6v1.8H7zm2.4 0H11v1.8H9.4zM7 11.3h1.6v1.8H7zm2.4 0H11v1.8H9.4zM7 14.6h1.6v1.8H7zm2.4 0H11v1.8H9.4zM13 21V9l7 2.2V21zm2-7.6h1.5v1.6H15zm2.5 0H19v1.6h-1.5zM15 16.6h1.5v1.6H15zm2.5 0H19v1.6h-1.5z"/></svg>'
   };
   var K = [
-    ['one', people, 'Employees priced', '<span class="dl">' + (d12 >= 0 ? '▲' : '▼') + ' ' + Math.abs(d12).toFixed(1) + '%</span> vs 12 months ago', bars(hc)],
+    ['one', B.priced, 'Employees priced', '<span class="dl">' + (d12 >= 0 ? '▲' : '▼') + ' ' + Math.abs(d12).toFixed(1) + '%</span> vs 12 months ago', bars(hc)],
     ['glb', 3, 'Countries', 'Canada, United States, Mexico', bars(['MX','CA','US'].map(function(c){ return byC[c].hc; }))],
-    ['two', B.records, 'People in HR data', fmt(people) + ' active · ' + fmt(B.former) + ' former', bars(H.hc.ALL.map(function(v, i){ return v + i * 40; }))],
+    ['two', B.records, 'People in HR data', fmt(people) + ' current · ' + fmt(B.former) + ' former', bars(H.seen)],
     ['bld', H.sites.length, 'Sites', 'greenhouses, packing, distribution, offices', bars(H.sites.slice(0, 12).map(function(s){ return s.hc; }).reverse())]
   ];
 
@@ -63,24 +62,14 @@
     + '<button type="button" class="crow" data-r="all"><span class="flag f-ALL" aria-hidden="true">ALL</span><span class="cn"><b>All regions</b><small>the whole company</small></span><span class="chev" aria-hidden="true">›</span></button>';
 
   /* ---- featured modules (artwork from the approved design kit) ---- */
-  var FEAT = [['jdmatch','Job Matcher','Find the right match with confidence.','job_matcher'],['positioning','Market Positioning','Set your pay strategy with real data.','market_positioning'],['archbuild','Job Architecture','Build a connected career framework.','job_architecture'],['career','Career Pathing','Show what is possible for every employee.','career_pathing'],['succession','Succession Planning','Identify and develop tomorrow’s leaders.','succession_planning'],['orgchart','Org Chart','Visualize your organization.','org_chart']];
-
-  /* ---- executive briefing: demo figures, each linked to the tool that calculates it ---- */
-  var BRIEF = [
-    ['Turnover', '$' + (B.turnoverCost / 1e6).toFixed(2) + 'M a year', 'What replacing leavers costs at today’s turnover. ' + famName(B.topFam) + ' is ' + B.topShare + '% of it.', 'positioning', 'How competitive should we be'],
-    ['Market position', B.famsBelow + ' of ' + B.fams + ' families', 'pay below the market median: ' + B.belowNames.map(famName).join(', ') + '.', 'ranges', 'Job titles and pay ranges'],
-    ['Structure', fmt(B.narrow) + ' managers', 'below executive level lead only one or two people. A structure review is worth doing.', 'orgchart', 'Org chart'],
-    ['AI', fmt(B.aiHours) + ' hours', 'a year AI could give back across every job, about ' + Math.round(B.aiHours / 2080) + ' full-time equivalents.', 'aisavings', 'AI time savings']
-  ];
+  var FEAT = [['jdmatch','Job Matcher','Benchmark every job against the market.','job_matcher'],['archbuild','Job Architecture','Build a connected career framework.','job_architecture'],['jdlib','JD Creator','Write job descriptions from one template.','jd_creator'],['career','Career Pathing','Show what is possible for every employee.','career_pathing'],['lti','Long-Term Incentive','Design an executive LTI plan.','lti'],['ghr','Analytics','Workforce and pay KPIs in one view.','analytics']];
 
   var ov = document.getElementById('mgiOverview');
   ov.innerHTML = '<div class="kcards">' + K.map(function(k){ return '<div class="kc"><div class="kt"><span class="ki" aria-hidden="true">' + ICON[k[0]] + '</span><div><b data-n="' + k[1] + '">' + fmt(k[1]) + '</b><span>' + k[2] + '</span></div></div><div class="kb"><small>' + k[3] + '</small>' + k[4] + '</div></div>'; }).join('') + '</div>'
-    + '<div class="mappanel"><div class="mp-l"><h2>A global workforce with a shared purpose.</h2><div class="mp-n"><div><b>3</b><span>Countries</span></div><div><b>' + H.sites.length + '</b><span>Sites</span></div><div><b>' + fmt(people) + '</b><span>People</span></div></div><p>Pick a country to filter every tool to it.</p></div>'
+    + '<div class="mappanel"><div class="mp-l"><h2>A global workforce with a shared purpose.</h2><div class="mp-n"><div><b>3</b><span>Countries</span></div><div><b>' + H.sites.length + '</b><span>Sites</span></div><div><b>' + fmt(people) + '</b><span>People</span></div></div><p>Pick a country to focus the dashboards on it.</p></div>'
     + '<div class="mapbox">' + mapSvg + '</div><div class="mp-r">' + rows + '</div></div>'
-    + '<section class="fsec" id="featured" aria-label="Featured modules"><div class="fgrid">' + FEAT.map(function(f){ return '<button type="button" class="fcard" data-m="' + f[0] + '"><h3>' + f[1] + '</h3><p>' + f[2] + '</p><span class="fb"><span class="achip" aria-hidden="true">&rarr;</span><img src="img/mgi/' + f[3] + '.svg" alt="" width="118" height="83" loading="lazy"></span></button>'; }).join('') + '</div></section>'
-    + '<section class="brief" id="brief" aria-label="Executive briefing"><div class="bhead"><h2>Executive briefing</h2><small>Fictional demo data. Each figure opens the tool that calculates it.</small></div><div class="bgrid">'
-    + BRIEF.map(function(b){ return '<div class="bcard"><span class="bk">' + b[0] + '</span><b>' + b[1] + '</b><p>' + b[2] + '</p><a role="button" tabindex="0" data-m="' + b[3] + '">' + b[4] + ' &rarr;</a></div>'; }).join('') + '</div></section>';
-  ov.querySelectorAll('[data-m]').forEach(function(el){ el.addEventListener('click', function(){ open(el.dataset.m); }); el.addEventListener('keydown', function(e){ if (e.key === 'Enter') open(el.dataset.m); }); });
+    + '<section class="fsec" id="featured" aria-label="Featured modules"><div class="fgrid">' + FEAT.map(function(f){ return '<button type="button" class="fcard" data-m="' + f[0] + '"><h3>' + f[1] + '</h3><p>' + f[2] + '</p><span class="fb"><span class="achip" aria-hidden="true">&rarr;</span><img src="img/mgi/' + f[3] + '.svg" alt="" width="118" height="83" loading="lazy"></span></button>'; }).join('') + '</div></section>';
+  ov.querySelectorAll('[data-m]').forEach(function(el){ el.addEventListener('click', function(){ open(el.dataset.m); }); });
   var main = $('.main'); if (main) { var h = document.createElement('h2'); h.className = 'alltools'; h.textContent = 'All tools'; var c = document.getElementById('cards'); main.insertBefore(h, c); }
 
   function markReg(){ var cur = ($('#regSel') || {}).value || 'all'; ov.querySelectorAll('.crow').forEach(function(b){ b.classList.toggle('on', b.dataset.r === cur); b.setAttribute('aria-pressed', b.dataset.r === cur); }); }
@@ -99,11 +88,12 @@
 
   /* ---- quick tour ---- */
   var TOUR = [
-    ['Step 1 · Market data', 'Start with the market', 'Every job is matched to the salary survey with a confidence score, then How Competitive Should We Be sets a pay stance for each family against what turnover costs.', 'market_positioning', 'jdmatch', 'Open Job Matcher'],
-    ['Step 2 · Job architecture', 'One framework for every job', 'Families, levels and ranges across the US, Canada and Mexico, so offers, promotions and merit follow the same rules everywhere.', 'job_architecture', 'archbuild', 'Open Job Architecture'],
-    ['Step 2 · Careers', 'Show people where they can go', 'Every role’s next steps, what each move is worth, the skills to build and who is ready now.', 'career_pathing', 'career', 'Open Career Pathing'],
-    ['Step 2 · Succession', 'Know who is ready', 'Critical roles, vacancy risk and successors ready now, in one to two years or later, on a nine-box.', 'succession_planning', 'succession', 'Open Succession Planning'],
-    ['Step 4 · Analytics', 'See the whole organization', 'Every employee and reporting line, with layers, spans of control and the structure questions worth asking.', 'org_chart', 'orgchart', 'Open Org Chart']
+    ['Step 1 · Market data', 'Start with the market', 'Every job is matched to the salary survey with a confidence score and a market pay range, so pay decisions start from evidence.', 'job_matcher', 'jdmatch', 'Open Job Matcher'],
+    ['Step 2 · Job architecture', 'One framework for every job', 'Families, levels and ranges across the US, Canada and Mexico, so offers and promotions follow the same rules everywhere.', 'job_architecture', 'archbuild', 'Open Job Architecture'],
+    ['Step 2 · Job descriptions', 'Every job, described the same way', 'Job descriptions from one approved template, with the training, certifications and next-step criteria for each grade.', 'jd_creator', 'jdlib', 'Open JD Creator'],
+    ['Step 2 · Careers', 'Show people where they can go', 'Every role\u2019s next steps, what each move is worth, the skills to build and who is ready now.', 'career_pathing', 'career', 'Open Career Pathing'],
+    ['Step 3 · Long-term incentive', 'Keep the leaders who build the future', 'Stock options, phantom shares or deferred cash for a private company, with grants, cost and retention modeled.', 'lti', 'lti', 'Open the LTI designer'],
+    ['Step 4 · Analytics', 'See it all in one view', 'Workforce and pay KPIs, pay analysis and market position, live on one company dataset.', 'analytics', 'ghr', 'Open Analytics']
   ];
   var tour = document.createElement('div'); tour.className = 'tour'; tour.hidden = true; tour.setAttribute('role', 'dialog'); tour.setAttribute('aria-modal', 'true'); tour.setAttribute('aria-label', 'Quick tour');
   document.body.appendChild(tour);
@@ -114,7 +104,7 @@
       + '<div class="tbar">' + TOUR.map(function(_, k){ return '<i class="' + (k < ti ? 'done' : k === ti ? 'cur' : '') + '"><b></b></i>'; }).join('') + '</div>'
       + '<div class="tnav"><button type="button" data-a="prev" aria-label="Previous">&larr;</button><button type="button" data-a="next" aria-label="Next">&rarr;</button><button type="button" class="tgo" data-a="go">' + t[5] + '</button></div></div><button type="button" class="tclose" data-a="close" aria-label="Close tour">&times;</button></div>';
     clearTimeout(timer); if (!calm && !tour.classList.contains('paused')) timer = setTimeout(function(){ show(ti + 1); }, 6000);
-    tour.querySelector('[data-a="go"]').focus({ preventScroll:true });
+    if (!tour.contains(document.activeElement) || document.activeElement === tour) tour.querySelector('[data-a="go"]').focus({ preventScroll:true });
   }
   function close(){ clearTimeout(timer); tour.hidden = true; document.body.style.overflow = ''; if (last) last.focus(); }
   tour.addEventListener('click', function(e){
@@ -124,6 +114,13 @@
   });
   tour.addEventListener('mouseenter', function(){ tour.classList.add('paused'); clearTimeout(timer); });
   tour.addEventListener('mouseleave', function(){ tour.classList.remove('paused'); clearTimeout(timer); if (!tour.hidden && !calm) timer = setTimeout(function(){ show(ti + 1); }, 4000); });
-  document.addEventListener('keydown', function(e){ if (tour.hidden) return; if (e.key === 'Escape') close(); if (e.key === 'ArrowRight') show(ti + 1); if (e.key === 'ArrowLeft') show(ti - 1); });
+  document.addEventListener('keydown', function(e){
+    if (tour.hidden) return;
+    if (e.key === 'Escape') close(); if (e.key === 'ArrowRight') show(ti + 1); if (e.key === 'ArrowLeft') show(ti - 1);
+    if (e.key === 'Tab') {   // keep focus inside the dialog
+      var f = tour.querySelectorAll('button'), a = f[0], z = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); } else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+    }
+  });
   $('#tourBtn').addEventListener('click', function(){ last = this; tour.hidden = false; document.body.style.overflow = 'hidden'; show(0); });
 })();

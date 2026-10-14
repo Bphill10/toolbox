@@ -73,7 +73,7 @@
 
 <div class="tabs"><button data-v="fam" class="on">By job family</button><button data-v="job">By job</button></div>
 <div class="wrap"><table><thead id="th"></thead><tbody id="rows"></tbody></table></div>
-<div class="legend"><span><span class="stance" style="background:var(--lag)">Lag</span> 40th percentile, 0.95</span><span><span class="stance" style="background:var(--match)">Match</span> median, 1.00</span><span><span class="stance" style="background:var(--lead)">Lead</span> 60th percentile, 1.05</span><span><span class="stance" style="background:var(--leadp)">Lead+</span> 75th percentile, 1.12</span></div>
+<div class="legend" title="Percentile equivalents are approximate"><span><span class="stance" style="background:var(--lag)">Lag</span> 40th percentile, 0.95</span><span><span class="stance" style="background:var(--match)">Match</span> median, 1.00</span><span><span class="stance" style="background:var(--lead)">Lead</span> 60th percentile, 1.05</span><span><span class="stance" style="background:var(--leadp)">Lead+</span> 75th percentile, 1.12</span></div>
 <p class="note" id="note"></p>
 
 <h2 id="method">Where “5% above market, 15% fewer leavers” comes from</h2>
@@ -143,7 +143,9 @@ Object.entries(fams).forEach(([tw, js]) => {
   const ratio = js.filter(j => j.ratio).reduce((s,j) => s + j.ratio*j.hc, 0) / js.filter(j => j.ratio).reduce((s,j) => s + j.hc, 0);
   const turnover = js.reduce((s,j) => s + j.turnover*j.hc, 0) / hc;
   const d = FAM_DEF[tw] || { scarcity: 3, critical: 3 };
-  rowsData.fam.push({ name: FAM_NAME(tw), sub: js.length + ' jobs', hs: js.filter(j => j.hourly).reduce((s,j) => s + j.hc, 0) / hc, hc, pay, ratio, turnover, repl: replCost(pay), scarcity: d.scarcity, critical: d.critical });
+  // replacement cost is set job by job and summed, so the family view and the job view agree
+  const tc0 = js.reduce((s,j) => s + j.hc * j.turnover/100 * j.pay * replCost(j.pay)/100, 0);
+  rowsData.fam.push({ name: FAM_NAME(tw), sub: js.length + ' jobs', hs: js.filter(j => j.hourly).reduce((s,j) => s + j.hc, 0) / hc, hc, pay, ratio, turnover, repl: 100 * tc0 / (hc * turnover/100 * pay), scarcity: d.scarcity, critical: d.critical });
   js.forEach(j => {
     const sc = /grower|technician|engineer|mechanic|electric|climate|maintenance|refrig/i.test(j.t) ? Math.min(5, d.scarcity + 1) : d.scarcity;
     rowsData.job.push({ hs: j.hourly ? 1 : 0, name: j.t, sub: FAM_NAME(tw) + ' · ' + j.g + (j.hourly ? ' · hourly' : ''), hc: j.hc, pay: j.pay, ratio: j.ratio || 1, turnover: j.turnover, repl: replCost(j.pay), scarcity: sc, critical: j.lead ? 5 : d.critical });
@@ -185,10 +187,11 @@ function render(){
   $('#rows').innerHTML = rows.map((r,i) => {
     const c = calc(r); T.tc += c.tc; T.cost += c.cost; T.saved += c.saved; T.hc += r.hc;
     const maxTc = Math.max(...rows.map(x => calc(x).tc));
-    return '<tr><td><b>'+r.name+'</b><span class="sub">'+r.sub+' · avg '+fmt(r.pay)+'</span></td><td class="n">'+r.hc.toLocaleString()+'</td>'
-      + '<td class="n '+(r.ratio < .95 ? 'bad' : '')+'">'+r.ratio.toFixed(2)+'</td>'
+    const small = r.hc < 5;   // pay for fewer than 5 people is not shown, as in the rest of the tool
+    return '<tr><td><b>'+r.name+'</b><span class="sub">'+r.sub+(small ? ' · pay not shown under 5 people' : ' · avg '+fmt(r.pay))+'</span></td><td class="n">'+r.hc.toLocaleString()+'</td>'
+      + '<td class="n '+(!small && r.ratio < .95 ? 'bad' : '')+'">'+(small ? '<span title="Fewer than 5 people">n&lt;5</span>' : r.ratio.toFixed(2))+'</td>'
       + '<td class="n"><input data-i="'+i+'" data-f="turnover" type="number" step="0.1" value="'+r.turnover.toFixed(1)+'">%</td>'
-      + '<td class="n"><input data-i="'+i+'" data-f="repl" type="number" value="'+r.repl+'">%</td>'
+      + '<td class="n"><input data-i="'+i+'" data-f="repl" type="number" step="0.1" value="'+(Math.round(r.repl*10)/10)+'">%</td>'
       + '<td class="n">'+fmtK(c.tc)+'<div class="bar"><i style="width:'+Math.round(100*c.tc/maxTc)+'%"></i></div></td>'
       + '<td class="n"><input data-i="'+i+'" data-f="scarcity" type="number" min="1" max="5" value="'+r.scarcity+'"></td>'
       + '<td class="n"><input data-i="'+i+'" data-f="critical" type="number" min="1" max="5" value="'+r.critical+'"></td>'

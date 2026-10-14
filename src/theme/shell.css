@@ -170,6 +170,7 @@ html[data-theme] .roadmapBanner .rbD{color:rgba(231,248,240,.8) !important}
 html[data-theme] .roadmapBanner .rbGo{background:linear-gradient(180deg,#FFF6DD,#F1DFAE) !important;color:#1F2A1F !important;border-radius:12px !important}
 .alltools{font-family:"Source Serif 4",Georgia,serif;font-weight:500;font-size:28px;margin:30px 0 4px;color:var(--ink)}
 html[data-theme] .grp{color:var(--grp) !important;border-bottom:1px solid var(--line) !important;display:flex;align-items:center;gap:10px;font-size:11px !important;letter-spacing:.14em !important}
+html[data-theme] .grp{scroll-margin-top:90px}
 html[data-theme] .grp::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gold);flex:none}
 html[data-theme] .card{display:flex !important;flex-direction:column;background:var(--card) !important;border:1px solid var(--line) !important;border-radius:var(--rad) !important;padding:18px 18px 14px !important;box-shadow:var(--shadow) !important;transition:transform .2s,box-shadow .2s,border-color .2s}
 html[data-theme] .card:hover{transform:translateY(-3px);box-shadow:0 20px 40px rgba(2,53,35,.16) !important;border-color:rgba(213,183,108,.7) !important}
@@ -216,7 +217,7 @@ html[data-theme] #jobArchGroup{background:#00392D !important}
   html[data-theme] .hero .hwrap2{padding:40px 16px 24px !important}
   html[data-theme] .hero h1{font-size:34px !important}
   html[data-theme] .hero p{font-size:16px !important}
-  .kcards{gap:12px}.kc{padding:14px}.kt b{font-size:24px}.ki{width:38px;height:38px}.kb{flex-direction:column;align-items:flex-start;gap:8px}.spk{width:100%;height:28px}
+  .kcards{gap:12px}.kc{padding:14px}.kt b{font-size:24px}.kt .ki{width:38px;height:38px}.kb{flex-direction:column;align-items:flex-start;gap:8px}.spk{width:100%;height:28px}
   .fgrid,.bgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.fcard .fb img{width:84px}
   .mappanel{padding:20px}.mappanel h2{font-size:24px}.mp-r{display:flex}}
 @media(max-width:420px){.fgrid,.bgrid{grid-template-columns:minmax(0,1fr)}}

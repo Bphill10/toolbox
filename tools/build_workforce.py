@@ -29,6 +29,9 @@ def st(key):
 sta, loc = st("sta"), st("loc")
 supix = arr(d["supix"], "I", 4)
 usd = arr(d["pay"]["annualUsd"], "f", 4)
+# FTE (100 = full time) for part-timers; market ratios compare full-time-equivalent pay
+_fv = arr(d["fte"]["v"], "H", 2); _fe = arr(d["fte"]["e"], "I", 4)
+fte = {_fe[k]: _fv[k] / 100 for k in range(len(_fe))}
 p0 = base64.b64decode(d["pres0"]); p1 = base64.b64decode(d["pres1"])
 months = d["months"]; M = len(months)
 
@@ -52,7 +55,7 @@ for i in range(n):
         s["hc"] += 1; s["pay"] += usd[i]
         r = roles.get(k); c = CTRY.get((d["jobcode"][i] or "-").split("-")[-1])
         if r and c and r["mc"].get(c):
-            s["ratio"] += usd[i] / r["mc"][c]; s["rn"] += 1
+            s["ratio"] += usd[i] / (fte.get(i, 1) or 1) / r["mc"][c]; s["rn"] += 1
     elif sta[i] == "Terminated":
         last = max((m for m in range(M) if present(i, m)), default=-1)
         if M - 13 <= last < M - 1:

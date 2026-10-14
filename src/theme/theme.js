@@ -5,6 +5,7 @@
   function system(){ try { return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; } catch(e) { return 'light'; } }
   function apply(t){
     t = t === 'dark' || t === 'light' ? t : system();
+    want = t;
     root.setAttribute('data-theme', t);
     var bs = document.querySelectorAll('.mgi-tt');
     for (var i = 0; i < bs.length; i++) { bs[i].setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'); bs[i].innerHTML = t === 'dark' ? SUN : MOON; }
@@ -24,7 +25,11 @@
     var dark = root.getAttribute('data-theme') === 'dark', els = document.body ? document.body.getElementsByTagName('*') : [];
     for (var i = 0; i < els.length; i++) {
       var el = els[i];
-      if (el.dataset.mgiFix) { el.style.backgroundColor = el.dataset.mgiBg || ''; el.style.color = el.dataset.mgiCol || ''; delete el.dataset.mgiFix; }
+      if (el.dataset.mgiFix) {   // undo only what darkFix wrote; a value the module set since then stays
+        if (el.style.backgroundColor === el.dataset.mgiNb) el.style.backgroundColor = el.dataset.mgiBg || '';
+        if (el.style.color === el.dataset.mgiNc) el.style.color = el.dataset.mgiCol || '';
+        delete el.dataset.mgiFix; delete el.dataset.mgiNb; delete el.dataset.mgiNc;
+      }
       if (!dark || el.closest(PAPER) || el.tagName === 'svg' || el.closest('svg')) continue;
       var cs = getComputedStyle(el), bg = lum(cs.backgroundColor), fg = lum(cs.color), fix = false, nb = null, nc = null;
       if (bg && bg.a > .5 && bg.l > .78) {
@@ -34,15 +39,18 @@
         fix = true;
       }
       if (fg && fg.l < .38 && (fix || !bg || bg.a < .5 || bg.l < .3)) { var fm = Math.max(fg.r, fg.g, fg.b), fn = Math.min(fg.r, fg.g, fg.b); nc = fm - fn > 60 ? 'rgb(' + Math.min(255, fg.r + 110) + ',' + Math.min(255, fg.g + 110) + ',' + Math.min(255, fg.b + 110) + ')' : 'var(--ink)'; fix = true; }
-      if (fix) { el.dataset.mgiFix = 1; el.dataset.mgiBg = el.style.backgroundColor; el.dataset.mgiCol = el.style.color; if (nb) el.style.backgroundColor = nb; if (nc) el.style.color = nc; }
+      if (fix) { el.dataset.mgiFix = 1; el.dataset.mgiBg = el.style.backgroundColor; el.dataset.mgiCol = el.style.color; if (nb) el.style.backgroundColor = nb; if (nc) el.style.color = nc; el.dataset.mgiNb = el.style.backgroundColor; el.dataset.mgiNc = el.style.color; }
     }
   }
   var fixT = 0;
   function queueFix(){ clearTimeout(fixT); fixT = setTimeout(darkFix, 120); }
   if (root.classList.contains('mgi-mod')) {
-    var start = function(){ queueFix(); try { new MutationObserver(queueFix).observe(document.body, { childList:true, subtree:true, characterData:false }); } catch(e) {} };
+    var start = function(){ queueFix(); try { new MutationObserver(queueFix).observe(document.body, { childList:true, subtree:true, attributes:true, attributeFilter:['class'] }); } catch(e) {} };
     if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
   }
+  var want = null;
+  /* a module that sets its own theme while it loads must not override the chosen one */
+  ['DOMContentLoaded','load'].forEach(function(ev){ window.addEventListener(ev, function(){ if (want && root.getAttribute('data-theme') !== want) apply(want); }); });
   var parentTheme = null;
   try { if (window.parent !== window && window.parent.document) parentTheme = window.parent.document.documentElement.getAttribute('data-theme'); } catch(e) {}
   apply(parentTheme || saved());
@@ -53,8 +61,8 @@
   });
   if (window.parent !== window) { try { window.parent.postMessage({ mgi_theme_req: 1 }, '*'); } catch(e) {} }
   var before = null;
-  window.addEventListener('beforeprint', function(){ before = root.getAttribute('data-theme'); root.setAttribute('data-theme', 'light'); });
-  window.addEventListener('afterprint', function(){ if (before) root.setAttribute('data-theme', before); });
+  window.addEventListener('beforeprint', function(){ before = root.getAttribute('data-theme'); root.setAttribute('data-theme', 'light'); darkFix(); });
+  window.addEventListener('afterprint', function(){ if (before) root.setAttribute('data-theme', before); darkFix(); });
   window.addEventListener('storage', function(e){ if (e.key === KEY) apply(e.newValue); });
   window.mgiTheme = {
     set: function(t){ try { localStorage.setItem(KEY, t); } catch(e) {} apply(t); },

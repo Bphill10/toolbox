@@ -11,12 +11,13 @@ html[data-theme] header { background:var(--hdr); position:relative; border-botto
 html[data-theme] header::after { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/100% 28px,linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/28px 100%; }
 html[data-theme] header > :not(.mgi-tt) { position:relative; z-index:1; }
 html[data-theme] header .k { color:#D5B76C; }
-html[data-theme] .card, html[data-theme] .kpi, html[data-theme] .wrap, html[data-theme] .box { border-radius:8px; }
+html[data-theme] .card, html[data-theme] .kpi, html[data-theme] .wrap, html[data-theme] .box { border-radius:16px; }
 html[data-theme] .kpi { border-top-color:#D5B76C; }
 html[data-theme] .kpi b { font-weight:700; letter-spacing:-.02em; }
 :where(html[data-theme]) th { color:var(--muted); border-bottom-color:var(--green); }
 :where(html[data-theme]) a { color:var(--green); }
 :where(html[data-theme=dark]) a { color:#8BF0C8; }
+html[data-theme=dark] :is(button.primary, .btn.primary, .step.cur) { color:#04120C; }
 html[data-theme] header a { color:#D5B76C; }
 :where(html[data-theme]) input, :where(html[data-theme]) select, :where(html[data-theme]) textarea { background:var(--card); color:var(--ink); border-color:var(--line2); }
 :where(html[data-theme]) .good { color:var(--good); }

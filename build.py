@@ -34,7 +34,7 @@ def main():
         rel = m.group(1)
         p = SRC / rel
         if not p.is_file():
-            sys.exit(f"build failed: src/index.html includes {rel}, which does not exist")
+            sys.exit(f"build failed: an include names {rel}, which does not exist")
         used.add(p.resolve())
         txt = read(p)
         return MARK.sub(include, txt) if rel.startswith("theme/") else txt
@@ -46,6 +46,8 @@ def main():
         if p.resolve() not in used:
             sys.exit(f"build failed: {p.relative_to(ROOT)} is not included anywhere in src/index.html")
 
+    import shutil
+    shutil.rmtree(OUT.parent, ignore_errors=True)   # start clean so removed files do not linger
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_bytes(out.encode("utf-8"))
 
