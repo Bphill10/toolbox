@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Build src/data/benchmark.json from the demo people file (src/data/shared-people.b64).
 
-One row per active employee with pay, for the Benchmarking tool:
+One row per active employee with pay, for the Benchmarking tool (plus each job's family
+and whether it is paid hourly):
   [name, job key, title, grade, country, site, tenure band, currency, full-time pay,
    FTE, market P25, P50, P75, range min, mid, max]
 Pay, market and range are in the employee's own currency; part-time pay is shown on a
@@ -62,6 +63,11 @@ for i in range(n):
                  round(p25[i] * fx), round(p50[i] * fx), round(p75[i] * fx),
                  round(rmin[i]), round(rmid[i]), round(rmax[i])])
 rows.sort(key=lambda x: x[0])
-out = {"asof": d["asof"], "survey": d["mkt"]["survey"], "people": rows}
+FAM = {"CORPORATE FUNCTIONS": "Corporate functions", "GREENHOUSE OPERATIONS": "Greenhouse operations", "PACKING AND DISTRIBUTION": "Packing and distribution",
+       "SALES AND MARKETING": "Sales and marketing", "MAINTENANCE AND ENGINEERING": "Maintenance and engineering", "QUALITY AND FOOD SAFETY": "Quality and food safety",
+       "SUPPLY CHAIN AND LOGISTICS": "Supply chain and logistics"}
+# per job: family name and whether the job is paid hourly
+jobs = {k: [FAM.get(r["tw"], r["tw"].title()), 1 if r["hr"] else 0] for k, r in roles.items()}
+out = {"asof": d["asof"], "survey": d["mkt"]["survey"], "jobs": jobs, "people": rows}
 (ROOT / "src/data/benchmark.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")))
 print(len(rows), "employees")
