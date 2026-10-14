@@ -56,3 +56,9 @@ body.has-rail main { margin-left:64px; }
 html.framed header.app, html.framed .rail { display:none; }
 html.framed body.has-rail main { margin-left:0; }
 @media (max-width:760px) { .rail { display:none; } body.has-rail main { margin-left:0; } .app .crumb { display:none; } .app .bar1 { gap:10px; padding-right:62px; } .app nav.top a { padding:8px 9px; font-size:12.5px; } }
+@media (max-width:760px) {
+  .app .bar1 { flex-wrap:wrap; height:auto; padding:10px 62px 10px 16px; row-gap:8px; }
+  .app nav.top { flex-wrap:wrap; overflow:visible; margin:0; width:100%; gap:6px; }
+  .app nav.top a { padding:7px 11px; font-size:12.5px; background:rgba(255,255,255,.05); border:1px solid rgba(231,248,240,.12); }
+  .rail { top:auto; }
+}

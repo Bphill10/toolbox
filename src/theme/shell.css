@@ -247,3 +247,16 @@ html[data-theme] .card.soon h3,html[data-theme] .card.soon p{color:var(--ink3) !
 html[data-theme] .card.soon .ill{filter:grayscale(1);opacity:.45}
 .soonTag{align-self:flex-start;margin:0 0 8px;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#8A6A1F;background:#F7EFD9;border:1px solid #E9D79F;border-radius:999px;padding:3px 9px}
 html[data-theme=dark] .soonTag{color:#E8C77A;background:rgba(213,183,108,.12);border-color:rgba(213,183,108,.3)}
+/* phones: every menu button visible (wraps to two rows instead of scrolling), hero buttons full width */
+@media(max-width:900px){
+  .mgiNav{flex-wrap:wrap;overflow:visible;gap:6px;padding-bottom:4px}
+  .mgiNav a{padding:8px 12px;font-size:13px;background:rgba(255,255,255,.05);border:1px solid rgba(231,248,240,.12)}
+  .mgiNav a.on{border-color:rgba(61,214,156,.35)}
+  .mgiNav a.on::after{left:12px;right:12px}
+}
+@media(max-width:600px){
+  .heroBtns{flex-direction:column;align-items:stretch}
+  .heroBtns .hb1,.heroBtns .hb2{justify-content:center;width:100%}
+  html[data-theme] header .ctl{width:100%;justify-content:space-between}
+  html[data-theme] header .ctl select{flex:1;min-width:0}
+}

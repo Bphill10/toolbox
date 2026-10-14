@@ -12,7 +12,7 @@
   var open = function(id){ if (window.openMod) openMod(id); };
 
   /* ---- navigation ---- */
-  var NAV = [['top','Home'],['grp-data','Market data'],['grp-jobs','Jobs and careers'],['grp-inc','LTI'],['grp-ana','Analytics'],['/roadmap/','Roadmap']];
+  var NAV = [['top','Home'],['grp-data','Market data'],['grp-jobs','Jobs and careers'],['grp-inc','Incentives'],['grp-ana','Analytics'],['/roadmap/','Roadmap']];
   var nav = document.createElement('nav'); nav.className = 'mgiNav'; nav.setAttribute('aria-label', 'Sections');
   nav.innerHTML = NAV.map(function(n, i){ return '<a href="' + (n[0][0] === '/' ? n[0] : '#' + n[0]) + '" data-t="' + n[0] + '"' + (i === 0 ? ' class="on" aria-current="true"' : '') + '>' + n[1] + '</a>'; }).join('');
   var logo = $('header .logo'); if (logo) logo.insertAdjacentElement('afterend', nav);
