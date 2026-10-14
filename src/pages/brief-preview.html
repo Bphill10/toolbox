@@ -10,469 +10,256 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
-  /* Executive compensation brief, built to the approved analysis design kit (forest, mint, gold). */
-  :root { --deep:#031312; --forest:#041d1c; --ink:#143b34; --emerald:#007c65; --mint:#42e6c5; --pale:#e8faf3; --gold:#d9bf89;
-          --canvas:#f3f6f2; --card:#fff; --line:#dce6df; --muted:#667a74; --soft:#eef5f1; }
+  /* The compensation analysis as a two-page document: the same two pages on screen and on paper.
+     Look follows the approved analysis design kit (forest, mint, champagne gold). */
+  :root { --forest:#041d1c; --ink:#143b34; --emerald:#007c65; --mint:#42e6c5; --gold:#c9a75e; --line:#dce6df; --muted:#5f736c; --soft:#f1f6f3; --pale:#ecfaf3; }
   * { box-sizing:border-box; }
   html, body { margin:0; }
-  body { font-family:Inter, Arial, Helvetica, sans-serif; background:var(--canvas); color:var(--ink); -webkit-font-smoothing:antialiased; font-feature-settings:"tnum" 1; }
-  button { font:inherit; cursor:pointer; }
-  .shell { max-width:1240px; margin:0 auto; padding:0 28px; }
-  .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+  body { font:10px/1.4 Inter, Arial, Helvetica, sans-serif; color:var(--ink); background:#dfe7e2; -webkit-font-smoothing:antialiased; font-feature-settings:"tnum" 1; }
+  .bar { position:sticky; top:0; z-index:5; display:flex; justify-content:flex-end; gap:10px; padding:12px 20px; }
+  .bar button { border:0; border-radius:10px; background:var(--forest); color:#fff; font:700 13px Inter, Arial, sans-serif; padding:10px 16px; cursor:pointer; box-shadow:0 6px 18px rgba(4,29,28,.25); }
+  .bar button:hover { background:#0b3a33; }
+  .bar button:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
 
-  /* top bar */
-  .top { position:sticky; top:0; z-index:20; background:linear-gradient(95deg,#031916,#072622,#041c1d); border-bottom:1px solid #265046; color:#fff; }
-  .top .shell { display:flex; align-items:center; gap:20px; min-height:72px; }
-  .brand img { height:34px; display:block; }
-  .tabs { display:flex; gap:22px; margin:0 auto; align-self:stretch; }
-  .tabs button { position:relative; border:0; background:none; color:#96b3aa; font-size:13.5px; padding:0 2px; white-space:nowrap; }
-  .tabs button:hover { color:#fff; }
-  .tabs button[aria-selected=true] { color:#fff; font-weight:700; }
-  .tabs button[aria-selected=true]::after { content:""; position:absolute; left:0; right:0; bottom:0; height:3px; border-radius:3px; background:var(--mint); }
-  .acts { display:flex; gap:10px; align-items:center; }
-  .conf { font-size:10px; letter-spacing:.14em; color:#b8d4c9; border:1px solid #31584f; border-radius:40px; padding:8px 12px; white-space:nowrap; }
-  .conf::before { content:""; display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--gold); margin-right:8px; vertical-align:1px; }
-  .print { border:0; border-radius:10px; background:#d7f7ea; color:#05352e; font-weight:800; font-size:12.5px; padding:11px 16px; white-space:nowrap; }
-  .print:hover { background:#c6f2e0; }
-  :focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+  /* sheets: letter size on screen */
+  .sheet { width:8.5in; min-height:11in; margin:0 auto 26px; background:#fff; box-shadow:0 10px 40px rgba(4,29,28,.18); padding:.42in .45in .55in; position:relative; }
+  .pgno { position:absolute; left:.45in; right:.45in; bottom:.22in; display:flex; justify-content:space-between; font-size:8px; color:var(--muted); border-top:1px solid var(--line); padding-top:5px; }
 
-  /* hero */
-  .hero { position:relative; overflow:hidden; color:#fff; background:#031c18; }
-  .hero::before { content:""; position:absolute; inset:0; background:url("/analysis-assets/hero.jpg") right center/cover no-repeat; opacity:.8; }
-  .hero::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,#03231d 0%,#052822 34%,rgba(5,26,23,.6) 62%,rgba(5,26,23,.05) 100%); }
-  .hero .shell { position:relative; z-index:1; display:flex; justify-content:space-between; align-items:center; gap:30px; padding-top:54px; padding-bottom:54px; }
-  .eyebrow { font-size:11px; letter-spacing:.26em; font-weight:700; color:#a9decf; text-transform:uppercase; }
-  .hero h1 { font-size:50px; line-height:1.06; letter-spacing:-.04em; margin:16px 0 12px; max-width:640px; }
-  .hero h1 span { color:#9af4d9; }
-  .hero p { color:#c6ddd5; font-size:15px; line-height:1.65; max-width:600px; margin:0; }
-  .pill { display:inline-flex; gap:10px; align-items:center; margin-top:22px; border:1px solid #507164; background:rgba(10,49,41,.7); padding:11px 18px; border-radius:40px; font-size:11.5px; letter-spacing:.06em; color:#e5fcf4; text-transform:uppercase; }
-  .pill i { width:7px; height:7px; border-radius:50%; background:#72f3c3; }
-  .rec { flex:none; width:310px; background:rgba(4,28,24,.78); border:1px solid rgba(113,165,146,.5); box-shadow:0 20px 65px rgba(2,12,11,.55); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-radius:18px; padding:24px 26px; }
-  .rec .k { color:#a0cfbe; font-size:10px; letter-spacing:.2em; font-weight:700; }
-  .rec .big { font-size:44px; font-weight:800; letter-spacing:-.04em; margin:8px 0 2px; }
-  .rec .sub { color:#a7d2c4; font-size:12.5px; }
-  .rec hr { border:0; height:1px; background:#346c57; margin:16px 0 6px; }
-  .rec dl { margin:0; } .rec dl div { display:flex; justify-content:space-between; font-size:13px; color:#d6f4e6; padding:6px 0; } .rec dd { margin:0; font-weight:700; color:#fff; }
+  /* page 1 header */
+  .head { border-radius:12px; overflow:hidden; position:relative; background:linear-gradient(90deg,#f6fbf8 0%,#f6fbf8 46%,rgba(246,251,248,.55) 72%,rgba(246,251,248,0) 100%), url("/analysis-assets/hero.jpg") right 40%/auto 260% no-repeat; border:1px solid var(--line); padding:14px 16px; display:flex; justify-content:space-between; gap:16px; align-items:stretch; }
+  .eyebrow { font-size:8px; letter-spacing:.24em; font-weight:700; color:var(--emerald); text-transform:uppercase; }
+  .head h1 { font-size:21px; line-height:1.12; letter-spacing:-.03em; margin:5px 0 4px; }
+  .head h1 span { color:var(--emerald); }
+  .head p { margin:0; color:var(--muted); font-size:9.5px; max-width:330px; }
+  .pill { display:inline-block; margin-top:7px; font-size:8px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink); border:1px solid #b9d6ca; background:rgba(255,255,255,.75); border-radius:999px; padding:3px 9px; }
+  .rec { flex:none; width:215px; background:var(--forest); color:#fff; border-radius:10px; padding:10px 13px; }
+  .rec .k { font-size:7.5px; letter-spacing:.2em; color:#a0cfbe; font-weight:700; }
+  .rec .big { font-size:23px; font-weight:800; letter-spacing:-.03em; margin:2px 0 0; }
+  .rec .sub { font-size:8.5px; color:#a7d2c4; }
+  .rec dl { margin:6px 0 0; border-top:1px solid #2e5d50; padding-top:3px; }
+  .rec dl div { display:flex; justify-content:space-between; font-size:9px; padding:1.5px 0; color:#d6f4e6; } .rec dd { margin:0; font-weight:700; color:#fff; }
+  .meta { display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; margin:7px 0 8px; font-size:8.5px; color:var(--muted); }
+  .notice { background:#fbf6ea; border:1px solid #ecdcb4; color:#6d5823; border-radius:999px; padding:2px 9px; font-weight:600; }
 
-  /* content */
-  main { padding:24px 0 40px; }
-  .view[hidden] { display:none; }
-  .meta { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px 16px; font-size:12px; color:#76897f; margin-bottom:18px; }
-  .meta b { color:var(--emerald); }
-  .notice { display:inline-flex; gap:8px; align-items:center; background:#fbf6ea; border:1px solid #ecdcb4; color:#6d5823; border-radius:999px; padding:5px 12px; font-size:11.5px; font-weight:600; }
-  .page-head { padding:34px 0 8px; }
-  .page-head .eyebrow { color:#729b90; }
-  .page-head h2 { font-size:38px; letter-spacing:-.035em; margin:10px 0 8px; line-height:1.1; }
-  .page-head p { color:var(--muted); max-width:760px; margin:0 0 6px; line-height:1.6; }
-  .kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
-  .kpi { background:var(--card); border:1px solid #dce8e0; border-radius:16px; padding:18px 20px; position:relative; overflow:hidden; box-shadow:0 7px 20px rgba(23,79,52,.06); min-width:0; }
-  .kpi::after { content:""; position:absolute; width:130px; height:130px; right:-66px; top:-50px; background:radial-gradient(circle,#dcf9e7,transparent 70%); }
-  .kpi .t { display:flex; gap:10px; align-items:center; font-size:11.5px; color:#60786e; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
-  .kpi .ic { width:30px; height:30px; border-radius:9px; background:#e8f8ef; display:flex; align-items:center; justify-content:center; flex:none; }
-  .kpi .ic svg { width:16px; height:16px; fill:none; stroke:var(--emerald); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-  .kpi .v { font-size:32px; font-weight:800; letter-spacing:-.035em; margin-top:14px; }
-  .kpi .v small { font-size:15px; font-weight:600; letter-spacing:0; color:var(--muted); margin-left:2px; }
-  .kpi .s { color:#5f7b70; font-size:12px; margin-top:6px; line-height:1.4; }
-  .row { display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:6px 16px; margin:30px 0 14px; }
-  .row h3 { font-size:22px; letter-spacing:-.025em; margin:0; }
-  .row small { color:#6d8b7f; font-size:12.5px; }
-  .grid2 { display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:18px; align-items:start; }
-  .panel { background:var(--card); border:1px solid #dce8e0; border-radius:18px; box-shadow:0 8px 27px rgba(27,71,49,.06); padding:22px 24px; min-width:0; }
-  .panel h4 { font-size:17px; margin:0 0 4px; letter-spacing:-.01em; }
-  .panel .note, .note { color:var(--muted); font-size:12px; line-height:1.55; }
-  .dark { background:radial-gradient(500px 260px at 90% 0%,#0d3a33,transparent 70%),#06231f; color:#fff; border-radius:18px; padding:24px 26px; min-width:0; }
-  .dark .k { color:#9fd8c5; font-size:10.5px; letter-spacing:.2em; font-weight:700; text-transform:uppercase; }
-  .dark h4 { font-size:19px; margin:10px 0 6px; }
-  .dark .huge { font-size:56px; font-weight:800; letter-spacing:-.04em; line-height:1; margin:10px 0 12px; }
-  .dark .huge small { font-size:24px; }
-  .dark p { color:#cde5dc; font-size:13.5px; line-height:1.6; margin:0 0 12px; }
-  .dark .tiles { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0; }
-  .dark .tile { border:1px solid #2c5a4f; background:rgba(255,255,255,.04); border-radius:12px; padding:14px 16px; }
-  .dark .tile b { display:block; font-size:24px; letter-spacing:-.02em; }
-  .dark .tile b.g { color:#f1d79c; }
-  .dark .tile span { font-size:11.5px; color:#a9cfc2; }
-  .dark dl { margin:6px 0 0; } .dark dl div { display:flex; justify-content:space-between; gap:10px; border-top:1px solid #23493f; padding:11px 0; font-size:13px; color:#cde5dc; } .dark dd { margin:0; font-weight:700; color:#fff; }
+  .kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; }
+  .kpi { border:1px solid var(--line); border-radius:9px; padding:6px 9px; background:linear-gradient(160deg,#fff 60%,#f1fbf6); }
+  .kpi .t { font-size:7.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:700; color:var(--muted); }
+  .kpi .v { font-size:17px; font-weight:800; letter-spacing:-.03em; margin-top:1px; }
+  .kpi .s { font-size:8px; color:var(--muted); line-height:1.35; }
 
-  /* offer vs market bars */
-  .cmp { display:grid; grid-template-columns:minmax(0,170px) minmax(0,1fr) 104px; gap:6px 18px; align-items:center; padding:16px 0; border-top:1px solid #e6eee9; }
+  h3 { font-size:11.5px; letter-spacing:-.01em; margin:9px 0 4px; display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  h3 small { font-size:8px; font-weight:500; color:var(--muted); }
+  .sec { font-size:8.5px; letter-spacing:.2em; text-transform:uppercase; font-weight:800; color:var(--emerald); margin:12px 0 0; padding-top:8px; border-top:2px solid var(--forest); }
+  .g2 { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:8px; }
+  .box { border:1px solid var(--line); border-radius:9px; padding:7px 10px; }
+  .why { background:var(--pale); border-color:#bfe6d4; }
+  .why h4 { margin:0 0 3px; font-size:10px; }
+  .why p { margin:0 0 4px; font-size:9px; line-height:1.45; }
+  .tiles { display:grid; grid-template-columns:1fr 1fr; gap:5px; margin:4px 0 5px; }
+  .tile { background:#fff; border:1px solid #bfe6d4; border-radius:7px; padding:3px 7px; }
+  .tile b { font-size:12px; display:block; } .tile b.g { color:#8a6a1f; } .tile span { font-size:7.5px; color:var(--muted); }
+
+  /* offer vs median bars */
+  .cmp { display:grid; grid-template-columns:96px minmax(0,1fr) 82px; gap:8px; align-items:center; padding:4px 0; border-top:1px solid #edf2ef; }
   .cmp:first-of-type { border-top:0; }
-  .cmp .lab b { display:block; font-size:14px; } .cmp .lab span { font-size:12px; color:var(--muted); }
-  .track { position:relative; height:10px; border-radius:6px; background:#e6efea; }
-  .track .fill { position:absolute; left:0; top:0; bottom:0; border-radius:6px; background:linear-gradient(90deg,#0b6f5c,#42e6c5); transform-origin:left; animation:grow 1s cubic-bezier(.2,.7,.2,1) both; }
-  .track .med { position:absolute; top:-6px; bottom:-6px; width:2px; background:#143b34; opacity:.55; }
-  .track .med::after { content:"median"; position:absolute; top:-15px; left:50%; transform:translateX(-50%); font-size:9.5px; color:var(--muted); letter-spacing:.06em; }
-  .track .dot { position:absolute; top:50%; width:20px; height:20px; margin:-10px 0 0 -10px; border-radius:50%; background:#0d4b40; border:4px solid #fff; box-shadow:0 0 0 2px #0d4b40; }
-  .cmp .r { text-align:right; } .cmp .r b { font-size:20px; letter-spacing:-.02em; display:block; } .cmp .r span { font-size:11px; color:var(--emerald); font-weight:600; white-space:nowrap; }
-  @keyframes grow { from { transform:scaleX(0); } }
+  .cmp b { font-size:9.5px; } .cmp .lab b { display:block; } .cmp .lab span { font-size:7.5px; color:var(--muted); }
+  .track { position:relative; height:6px; border-radius:4px; background:#e6efea; }
+  .track .fill { position:absolute; left:0; top:0; bottom:0; border-radius:4px; background:linear-gradient(90deg,#0b6f5c,#42e6c5); }
+  .track .med { position:absolute; top:-4px; bottom:-4px; width:1.5px; background:var(--ink); opacity:.6; }
+  .track .dot { position:absolute; top:50%; width:11px; height:11px; margin:-5.5px 0 0 -5.5px; border-radius:50%; background:#0d4b40; border:2px solid #fff; box-shadow:0 0 0 1.5px #0d4b40; }
+  .cmp .r { text-align:right; } .cmp .r b { font-size:12px; } .cmp .r span { font-size:7.5px; color:var(--emerald); font-weight:600; white-space:nowrap; }
 
-  /* authority cards */
-  .auth { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
-  .acard { background:var(--card); border:1px solid #dce8e0; border-radius:16px; padding:18px 20px; min-width:0; }
-  .acard.on { background:#ecfaf3; border-color:#8fd9bd; }
-  .acard .k { font-size:11px; letter-spacing:.14em; font-weight:800; color:#6d8b7f; text-transform:uppercase; }
-  .acard .v { font-size:30px; font-weight:800; letter-spacing:-.03em; margin:8px 0 4px; }
-  .acard .s { font-size:12.5px; color:var(--muted); }
-  .acard dl { margin:12px 0 0; border-top:1px solid #e1ebe5; padding-top:10px; display:grid; grid-template-columns:repeat(4,auto); gap:4px 14px; font-size:12px; }
-  .acard dt { color:var(--muted); } .acard dd { margin:0; font-weight:700; }
+  /* authority */
+  .auth { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+  .ac { border:1px solid var(--line); border-radius:9px; padding:5px 9px; }
+  .ac.on { background:var(--pale); border-color:#8fd9bd; }
+  .ac .k { font-size:7.5px; letter-spacing:.12em; text-transform:uppercase; font-weight:800; color:var(--muted); }
+  .ac .v { font-size:14px; font-weight:800; letter-spacing:-.02em; }
+  .ac .s { font-size:8px; color:var(--muted); }
+  .ac dl { display:grid; grid-template-columns:auto auto auto auto auto auto; justify-content:start; gap:0 6px; margin:3px 0 0; padding-top:3px; border-top:1px solid #e3ece7; font-size:8px; }
+  .ac dt { color:var(--muted); } .ac dd { margin:0 6px 0 0; font-weight:700; }
 
   /* corridor */
-  .corr { margin:26px 6px 10px; position:relative; height:46px; }
-  .corr .bar { position:absolute; left:0; right:0; top:18px; height:12px; border-radius:6px; background:#e6efea; }
-  .corr .iqr { position:absolute; top:18px; height:12px; border-radius:6px; background:linear-gradient(90deg,#77c4b2,#1a9e83); }
-  .corr .mk { position:absolute; top:6px; width:2px; height:36px; background:#143b34; }
-  .corr .pin { position:absolute; top:4px; width:22px; height:22px; margin-left:-11px; border-radius:50%; background:var(--gold); border:3px solid #fff; box-shadow:0 0 0 2px #143b34; }
-  .corr .alt { position:absolute; top:20px; width:8px; height:8px; margin-left:-4px; border-radius:50%; background:#fff; border:2px solid #143b34; }
-  .corrl { display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted); margin:0 0 4px; }
-  .corrk { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:11.5px; color:var(--muted); }
-  .corrk i { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; vertical-align:-1px; }
+  .corr { position:relative; height:24px; margin:4px 6px 0; }
+  .corr .bg { position:absolute; left:0; right:0; top:9px; height:6px; border-radius:4px; background:#e6efea; }
+  .corr .iqr { position:absolute; top:9px; height:6px; border-radius:4px; background:linear-gradient(90deg,#77c4b2,#1a9e83); }
+  .corr .mk { position:absolute; top:2px; width:1.5px; height:20px; background:var(--ink); }
+  .corr .alt { position:absolute; top:9px; width:6px; height:6px; margin-left:-3px; border-radius:50%; background:#fff; border:1.5px solid var(--ink); }
+  .corr .pin { position:absolute; top:4px; width:13px; height:13px; margin-left:-6.5px; border-radius:50%; background:#d9bf89; border:2px solid #fff; box-shadow:0 0 0 1.5px var(--ink); }
+  .corrl { display:flex; justify-content:space-between; gap:8px; font-size:7.5px; color:var(--muted); }
 
-  /* tables */
-  .tw { overflow-x:auto; margin-top:12px; }
-  table { border-collapse:collapse; width:100%; font-size:13px; }
-  th { text-align:left; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:#5f7b70; background:#f1f6f3; padding:9px 10px; font-weight:700; white-space:nowrap; }
-  td { padding:10px; border-bottom:1px solid #e6eee9; vertical-align:top; }
+  table { width:100%; border-collapse:collapse; font-size:9px; }
+  th { text-align:left; font-size:7px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); background:var(--soft); padding:3px 6px; font-weight:700; white-space:nowrap; }
+  td { padding:2.5px 6px; border-bottom:1px solid #e9f0ec; }
   td.n, th.n { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
-  td .r { display:block; font-size:11.5px; color:var(--emerald); font-weight:600; }
-  td .rg { display:block; font-size:11.5px; color:var(--muted); }
-  tr.hl td { background:#ecfaf3; font-weight:700; }
-  tfoot td, .tot td { font-weight:800; }
+  td .r { color:var(--emerald); font-weight:700; font-size:8px; margin-left:4px; }
+  td .rg { color:var(--muted); font-size:7.5px; margin-left:4px; }
+  tr.hl td { background:var(--pale); font-weight:700; }
+  tr.tot td { font-weight:800; }
+  .fine { font-size:7.5px; color:var(--muted); line-height:1.4; margin:3px 0 0; }
 
-  /* scenarios */
-  .chips { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:16px 0; }
-  .chip { border:1px solid #d6e3dc; background:#f8fbf9; border-radius:14px; padding:16px 10px; text-align:center; color:var(--ink); }
-  .chip b { display:block; font-size:24px; letter-spacing:-.02em; }
-  .chip span { font-size:11.5px; color:var(--muted); }
-  .chip[aria-pressed=true] { background:#06231f; border-color:var(--mint); color:#fff; box-shadow:0 8px 20px rgba(6,35,31,.25); }
-  .chip[aria-pressed=true] span { color:#a9cfc2; }
-  .ttc { background:#06231f; color:#fff; border-radius:16px; padding:20px 24px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; align-items:center; }
-  .ttc .k { font-size:11px; letter-spacing:.12em; color:#a9cfc2; text-transform:uppercase; }
-  .ttc .big { font-size:38px; font-weight:800; letter-spacing:-.03em; }
-  .ttc .rt { text-align:right; } .ttc .rt b { font-size:30px; display:block; letter-spacing:-.02em; }
-  .ttc .rt span { font-size:12px; color:#a9cfc2; }
-  .hb { display:grid; grid-template-columns:minmax(0,170px) minmax(0,1fr) 90px; gap:10px 14px; align-items:center; margin-top:16px; font-size:13px; }
-  .hb .t { height:10px; border-radius:6px; background:#e6efea; overflow:hidden; } .hb .t i { display:block; height:100%; border-radius:6px; background:linear-gradient(90deg,#0b6f5c,#42e6c5); transition:width .5s; }
-  .hb .t i.m { background:linear-gradient(90deg,#6c8a80,#a9c1b8); }
-  .hb .n { text-align:right; font-weight:700; }
+  .src { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+  .src .box .k { font-size:7px; letter-spacing:.18em; text-transform:uppercase; font-weight:800; color:var(--emerald); }
+  .src .box b { display:block; font-size:9.5px; margin:1px 0; } .src .box span { font-size:8px; color:var(--muted); }
+  ol.chg { list-style:none; margin:0; padding:0; counter-reset:c; columns:2; column-gap:14px; }
+  ol.chg li { counter-increment:c; break-inside:avoid; display:grid; grid-template-columns:18px 1fr; font-size:8.5px; line-height:1.42; margin-bottom:3px; }
+  ol.chg li::before { content:counter(c,decimal-leading-zero); color:var(--emerald); font-weight:800; }
 
-  /* methodology */
-  .src { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
-  .src .panel .k { font-size:10.5px; letter-spacing:.2em; font-weight:800; color:#6d8b7f; text-transform:uppercase; }
-  .src .panel h4 { margin:6px 0 8px; }
-  ol.why { list-style:none; margin:0; padding:0; counter-reset:w; }
-  ol.why li { counter-increment:w; display:grid; grid-template-columns:40px 1fr; gap:8px; padding:12px 0; border-top:1px solid #e6eee9; font-size:13.5px; line-height:1.55; }
-  ol.why li:first-child { border-top:0; }
-  ol.why li::before { content:counter(w,decimal-leading-zero); color:var(--emerald); font-weight:800; font-size:16px; }
-  .fine { font-size:12px; color:var(--muted); line-height:1.6; margin-top:12px; }
-  footer { border-top:1px solid #dbe6df; margin-top:30px; padding:16px 0 30px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; font-size:11.5px; color:#6f857b; }
-
-  @media (prefers-reduced-motion:reduce) { .track .fill { animation:none; } .hb .t i { transition:none; } }
-  @media (max-width:1000px) {
+  /* phones: still two pages, at the width of the screen */
+  @media screen and (max-width:860px) {
+    body { font-size:11px; }
+    .sheet { width:auto; min-height:0; margin:0 10px 18px; padding:16px 14px 40px; border-radius:6px; }
+    .pgno { left:14px; right:14px; bottom:10px; }
+    .head { flex-direction:column; } .rec { width:100%; }
     .kpis { grid-template-columns:repeat(2,minmax(0,1fr)); }
-    .grid2, .src { grid-template-columns:minmax(0,1fr); }
-    .hero .shell { flex-direction:column; align-items:flex-start; }
-    .rec { width:100%; max-width:440px; }
-    .tabs { order:5; width:100%; margin:0; gap:8px; flex-wrap:wrap; padding-bottom:12px; }
-    .tabs button { border:1px solid #31584f; border-radius:10px; padding:8px 12px; font-size:12.5px; }
-    .tabs button[aria-selected=true] { background:#d7f7ea; color:#05352e; border-color:#d7f7ea; }
-    .tabs button[aria-selected=true]::after { display:none; }
-    .top .shell { flex-wrap:wrap; padding-top:10px; gap:10px; }
-    .acts { margin-left:auto; }
+    .g2, .src, .auth { grid-template-columns:minmax(0,1fr); }
+    .tw { overflow-x:auto; }
+    ol.chg { columns:1; }
+    table { font-size:10px; }
+    .corrl { flex-wrap:wrap; }
   }
-  @media (max-width:640px) {
-    .shell { padding:0 16px; }
-    .conf { display:none; }
-    .hero h1 { font-size:34px; } .hero .shell { padding-top:34px; padding-bottom:34px; }
-    .page-head h2 { font-size:28px; }
-    .kpi .v { font-size:26px; }
-    .auth { grid-template-columns:minmax(0,1fr); }
-    .chips { grid-template-columns:repeat(2,minmax(0,1fr)); }
-    .cmp { grid-template-columns:minmax(0,1fr) 70px; } .cmp .track { grid-column:1/-1; grid-row:2; margin-top:10px; }
-    .hb { grid-template-columns:minmax(0,1fr) 84px; } .hb .t { grid-column:1/-1; grid-row:auto; }
-    .dark .huge { font-size:44px; }
-    .acard dl { grid-template-columns:repeat(2,auto); }
-  }
-
-  /* print: the whole report, light, with no dark panels and no cut tables */
   @media print {
-    @page { size:letter; margin:.45in; }
-    body { background:#fff; color:#111; font-size:11px; }
-    .top, .chips, .print, .noprint { display:none !important; }
-    .view[hidden] { display:block !important; }
-    .shell { max-width:none; padding:0; }
-    .hero { background:#fff; color:#111; border-bottom:2px solid #143b34; }
-    .hero::before, .hero::after { display:none; }
-    .hero .shell { padding:0 0 10px; align-items:flex-end; }
-    .hero h1 { font-size:22px; margin:4px 0; color:#111; letter-spacing:-.02em; } .hero h1 span { color:#007c65; }
-    .hero p, .eyebrow { color:#333; font-size:10.5px; } .pill { display:none; }
-    .rec { background:#f1f6f3; border:1px solid #cfdcd5; box-shadow:none; color:#111; width:260px; padding:10px 14px; backdrop-filter:none; }
-    .rec .k, .rec .sub, .rec dl div { color:#333; } .rec dd { color:#111; } .rec .big { font-size:24px; margin:2px 0; } .rec hr { background:#cfdcd5; margin:6px 0 2px; } .rec dl div { padding:2px 0; font-size:10.5px; }
-    main { padding:8px 0 0; }
-    .page-head { padding:10px 0 2px; } .page-head h2 { font-size:17px; margin:2px 0; } .page-head p { font-size:10.5px; }
-    .view { break-before:page; } #v-overview { break-before:auto; }
-    .kpi, .panel, .acard, .dark, .ttc { box-shadow:none !important; break-inside:avoid; }
-    .kpi { padding:8px 10px; } .kpi::after { display:none; } .kpi .v { font-size:18px; margin-top:4px; } .kpi .s { font-size:10px; }
-    .dark, .ttc { background:#f1f6f3 !important; color:#111 !important; border:1px solid #cfdcd5; }
-    .dark p, .dark .k, .dark dl div, .dark .tile span, .ttc .k, .ttc .rt span { color:#333 !important; } .dark dd, .dark .tile b, .dark .tile b.g { color:#111 !important; }
-    .dark .tile { border-color:#cfdcd5; } .dark .huge { font-size:30px; margin:4px 0; }
-    .row { margin:12px 0 6px; } .row h3 { font-size:14px; }
-    .panel, .dark { padding:10px 14px; }
-    .tw { overflow:visible; } table { font-size:10px; } th { padding:4px 6px; } td { padding:4px 6px; }
-    .track .fill, .hb .t i, .iqr { -webkit-print-color-adjust:exact; print-color-adjust:exact; animation:none; }
-    .acard { padding:8px 12px; } .acard .v { font-size:18px; }
-    footer { margin-top:6px; padding:4px 0 0; font-size:8.5px; }
-    /* two printed pages: the report's facts only; on-screen extras stay on screen */
-    body { font-size:9.5px; line-height:1.35; }
-    .view { break-before:auto !important; }
-    .pprint-hide, #v-market .kpis, #v-market .grid2 > div:last-child, #v-offer .grid2, .page-head p, .page-head .eyebrow, #v-overview .row small, .corrk, #v-market .grid2 .panel > .note { display:none !important; }
-    #v-market .grid2 { display:block; }
-    .page-head { padding:6px 0 0; } .page-head h2 { font-size:12.5px; letter-spacing:0; color:#007c65; text-transform:uppercase; }
-    .meta { margin-bottom:6px; font-size:9px; } .notice { padding:2px 8px; font-size:9px; }
-    .hero .shell { padding:0 0 6px; } .hero h1 { font-size:17px; } .hero p { font-size:9.5px; } .eyebrow { font-size:8.5px; }
-    .rec { width:230px; padding:6px 10px; } .rec .big { font-size:19px; } .rec .k { font-size:8px; } .rec .sub { font-size:9px; }
-    .kpis { gap:6px; } .kpi { padding:5px 8px; border-radius:8px; } .kpi .t { font-size:8.5px; } .kpi .ic { display:none; } .kpi .v { font-size:15px; margin-top:2px; } .kpi .v small { font-size:9px; } .kpi .s { font-size:8.5px; margin-top:1px; }
-    .row { margin:7px 0 4px; } .row h3 { font-size:11.5px; }
-    .grid2 { gap:8px; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); }
-    .panel, .dark { padding:6px 10px; border-radius:8px; } .panel h4 { font-size:10.5px; margin:0 0 2px; } .note, .panel .note { font-size:8.5px; }
-    .cmp { padding:5px 0; grid-template-columns:120px minmax(0,1fr) 54px; } .cmp .lab b { font-size:9.5px; } .cmp .lab span, .cmp .r span { font-size:8px; } .cmp .r b { font-size:12px; }
-    .track { height:6px; } .track .dot { width:12px; height:12px; margin:-6px 0 0 -6px; border-width:2px; } .track .med::after { display:none; }
-    .dark h4 { font-size:10.5px; margin:2px 0; } .dark .huge { display:none; } .dark p { font-size:9px; margin:0 0 4px; line-height:1.4; } .dark .tiles { margin:4px 0; gap:6px; } .dark .tile { padding:4px 8px; } .dark .tile b { font-size:12px; } .dark .tile span { font-size:8px; }
-    .auth { gap:6px; } .acard { padding:5px 8px; border-radius:8px; } .acard .k { font-size:8px; } .acard .v { font-size:13px; margin:2px 0; } .acard .s { font-size:8.5px; } .acard dl { margin-top:3px; padding-top:3px; font-size:8.5px; gap:1px 8px; }
-    .corr { margin:8px 4px 2px; height:30px; } .corr .bar, .corr .iqr { top:12px; height:7px; } .corr .mk { top:4px; height:24px; } .corr .pin { top:6px; width:14px; height:14px; margin-left:-7px; border-width:2px; } .corr .alt { top:12px; width:7px; height:7px; } .corrl { font-size:8.5px; }
-    table { font-size:9px; } th { font-size:7.5px; padding:2px 5px; } td { padding:2px 5px; } td .r, td .rg { font-size:8px; display:inline; margin-left:4px; }
-    .fine { font-size:8px; margin-top:3px; line-height:1.4; }
-    #v-market { break-before:page !important; }
-    .src { gap:6px; } .src .panel h4 { margin:1px 0 2px; } .src .panel .k { font-size:7.5px; }
-    ol.why li { padding:2px 0; font-size:9px; grid-template-columns:22px 1fr; line-height:1.4; } ol.why li::before { font-size:9.5px; }
-    .twocol { display:grid !important; grid-template-columns:1fr 1fr; gap:8px; }
-    /* keep the desktop grid on paper (the printable width would otherwise trigger the phone layout) */
-    .hero .shell { flex-direction:row !important; align-items:flex-end !important; }
-    .kpis { grid-template-columns:repeat(4,minmax(0,1fr)) !important; }
-    #v-overview .grid2 { grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) !important; }
-    .src { grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
-    .auth { grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
-    .cmp { grid-template-columns:110px minmax(0,1fr) 54px !important; } .cmp .track { grid-column:auto !important; grid-row:auto !important; margin:0 !important; }
-    .acard dl { grid-template-columns:repeat(4,auto) !important; }
-    #v-market { break-before:auto !important; }
-    ol.why { columns:2; column-gap:14px; } ol.why li { break-inside:avoid; border-top:0; }
-    .panel, .dark, .acard, .kpi, table { break-inside:avoid; }
-    .row, .page-head { break-after:avoid; }
-    .row { margin:5px 0 3px; } .cmp { padding:3px 0; } .corr { margin:4px 4px 0; } #v-overview .grid2 .panel > .note { display:none; }
-    .src .panel .note { font-size:8px; } .fine { margin-top:2px; } td, th { padding-top:1.5px; padding-bottom:1.5px; }
+    @page { size:letter; margin:0; }
+    body { background:#fff; }
+    .bar { display:none; }
+    .sheet { width:8.5in; height:11in; min-height:0; margin:0; box-shadow:none; break-after:page; overflow:hidden; }
+    .sheet:last-of-type { break-after:auto; }
+    * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   }
-  @page { @bottom-right { content:"Page " counter(page) " of " counter(pages); font:8px Arial, sans-serif; color:#667a74; } @bottom-left { content:"Confidential · Contains licensed survey data"; font:8px Arial, sans-serif; color:#667a74; } }
 </style>
 </head>
 <body>
-<header class="top">
-  <div class="shell">
-    <a class="brand" href="#overview" aria-label="Executive overview"><img src="/analysis-assets/wordmark-light.svg" alt="MGI Insight" width="150" height="34"></a>
-    <nav class="tabs" role="tablist" aria-label="Report sections">
-      <button role="tab" id="t-overview" aria-controls="v-overview" aria-selected="true">Executive overview</button>
-      <button role="tab" id="t-market" aria-controls="v-market" aria-selected="false" tabindex="-1">Market position</button>
-      <button role="tab" id="t-offer" aria-controls="v-offer" aria-selected="false" tabindex="-1">Offer strategy</button>
-      <button role="tab" id="t-method" aria-controls="v-method" aria-selected="false" tabindex="-1">Methodology</button>
-    </nav>
-    <div class="acts"><span class="conf">CONFIDENTIAL</span><button class="print" type="button" onclick="window.print()">&#8595; Save / Print</button></div>
-  </div>
-</header>
+<div class="bar"><button type="button" onclick="window.print()">&#8595; Save as PDF</button></div>
 
-<section class="hero" aria-label="Recommendation">
-  <div class="shell">
+<!-- PAGE 1 -->
+<section class="sheet" aria-label="Page 1 of 2">
+  <div class="head">
     <div>
-      <div class="eyebrow">Executive compensation decision brief &nbsp;/&nbsp; October 2026</div>
+      <div class="eyebrow">Executive compensation decision brief · October 2026</div>
       <h1>The right offer, <span>backed by intelligence.</span></h1>
-      <p>Director, Total Rewards, Compensation Strategy &amp; Analytics. A clear view of market position, offer authority and total direct compensation.</p>
-      <div class="pill"><i></i>United States · Director level · Radford + IPAS</div>
+      <p>Director, Total Rewards, Compensation Strategy &amp; Analytics: market position, offer authority and total direct compensation.</p>
+      <div class="pill">United States · Director level · Radford + IPAS</div>
     </div>
-    <aside class="rec" aria-label="Recommended package">
-      <div class="k">RECOMMENDED PACKAGE</div>
+    <aside class="rec" aria-label="Recommendation">
+      <div class="k">RECOMMENDATION</div>
       <div class="big" data-f="base"></div>
-      <div class="sub">Recommended base salary</div>
-      <hr>
-      <dl><div><dt>Target annual bonus</dt><dd><span data-f="bonusPct"></span> · <span data-f="bonusAmt"></span></dd></div><div><dt>Target total cash</dt><dd data-f="ttc"></dd></div><div><dt>Equity</dt><dd>$0</dd></div></dl>
+      <div class="sub">Base salary · <span data-f="baseRatio"></span> of market median · <span data-f="basePctl"></span> percentile</div>
+      <dl><div><dt>Target bonus</dt><dd>35% · <span data-f="bonusAmt"></span></dd></div><div><dt>Target total cash</dt><dd data-f="ttc"></dd></div><div><dt>Equity</dt><dd>$0</dd></div></dl>
     </aside>
   </div>
-</section>
-
-<main>
-<div class="shell">
   <div class="meta"><span>Prepared 13 October 2026 by Ben Phillips · Market: Radford (M5, Compensation) and IPAS (M4)*, averaged</span><span class="notice">Confidential · Prepared for Mastronardi Produce · Contains licensed survey data</span></div>
 
-  <!-- 01 Executive overview -->
-  <section class="view" id="v-overview" role="tabpanel" aria-labelledby="t-overview">
-    <h2 class="sr">Executive overview</h2>
-    <div class="kpis">
-      <div class="kpi"><div class="t"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l9 9-9 9-9-9z"/></svg></span>Base salary position</div><div class="v"><span data-f="basePctl"></span><small>percentile</small></div><div class="s"><b data-f="baseRatio"></b> of market median base (<span data-f="mBase"></span>)</div></div>
-      <div class="kpi"><div class="t"><span class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16M12 4v16"/></svg></span>Target total cash</div><div class="v" data-f="ttcK"></div><div class="s"><b data-f="ttcRatio"></b> of market <b>cash</b> median (<span data-f="mTtc"></span>)</div></div>
-      <div class="kpi"><div class="t"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span>Total direct comp</div><div class="v" data-f="tdcRatio"></div><div class="s">of market <b>TDC</b> median including equity (<span data-f="mTdc"></span>) · <span data-f="tdcPctl"></span> percentile</div></div>
-      <div class="kpi"><div class="t"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 4l8 8-8 8-8-8z"/></svg></span>Equity in offer</div><div class="v">$0</div><div class="s">No equity offered, so total direct comp equals total cash</div></div>
-    </div>
+  <div class="kpis">
+    <div class="kpi"><div class="t">Base salary</div><div class="v" data-f="base"></div><div class="s"><b data-f="baseRatio"></b> of market median · <span data-f="basePctl"></span> percentile</div></div>
+    <div class="kpi"><div class="t">Target bonus</div><div class="v">35%</div><div class="s"><span data-f="bonusAmt"></span> · market median 22%, top quarter 25%</div></div>
+    <div class="kpi"><div class="t">Total target cash</div><div class="v" data-f="ttc"></div><div class="s"><b data-f="ttcRatio"></b> of market <b>cash</b> median (<span data-f="mTtc"></span>)</div></div>
+    <div class="kpi"><div class="t">Total direct comp ratio</div><div class="v" data-f="tdcRatio"></div><div class="s">of market <b>TDC</b> median (<span data-f="mTdc"></span>) · no equity offered ($0) · <span data-f="tdcPctl"></span> percentile</div></div>
+  </div>
 
-    <div class="row"><h3>A decision in context</h3><small>Ratio = offer ÷ market median; 1.00 is the median</small></div>
-    <div class="grid2">
-      <div class="panel">
-        <h4>Offer versus market median</h4>
-        <div class="note">Averaged Radford and IPAS benchmark. Cash and total direct compensation are separate comparisons.</div>
-        <div id="cmp" style="margin-top:14px"></div>
-      </div>
-      <div class="dark">
-        <div class="k">The rationale</div>
-        <h4>Why the 35% bonus</h4>
-        <div class="huge">35<small>%</small></div>
-        <p>With no equity offered, total direct compensation is base plus bonus. At 35% it lands at the market median: <b data-f="ttc"></b> against <b data-f="mTdc"></b>, a ratio of <b data-f="tdcRatio"></b>. At the market's 22% bonus it would be <b data-f="ttc22"></b>, a ratio of <b data-f="tdc22"></b>.</p>
-        <div class="tiles"><div class="tile"><b data-f="ttcK"></b><span>35% target bonus · TDC <span data-f="tdcRatio"></span></span></div><div class="tile"><b class="g" data-f="ttc22K"></b><span>22% market bonus · TDC <span data-f="tdc22"></span></span></div></div>
-        <p style="margin:0">Why above the median on base: the role builds the rewards function from scratch, from executive pay and job architecture to incentive governance and analytics, and integrates AI into how that work gets done.</p>
-      </div>
+  <div class="g2" style="margin-top:8px">
+    <div class="box">
+      <h3 style="margin-top:0">Offer versus market median <small>ratio = offer ÷ median; 1.00 is the median</small></h3>
+      <div id="cmp"></div>
     </div>
-
-    <div class="row"><h3>Recommended offer authority</h3><small>All levels use a 35% target bonus</small></div>
-    <div class="auth" id="auth"></div>
-    <p class="fine">Source: equal-weight average of Radford M5 and IPAS M4. * IPAS is not an exact match: its compensation and benefits job is broader than this role, so it is a general comparison. Licensed survey data. No equity offered.</p>
-  </section>
-
-  <!-- 02 Market position -->
-  <section class="view" id="v-market" role="tabpanel" aria-labelledby="t-market" hidden>
-    <div class="page-head"><div class="eyebrow">02 / Market position</div><h2>See exactly where the offer lands.</h2><p>The proposed package against the blended market benchmarks, with cash competitiveness kept separate from total direct compensation.</p></div>
-    <div class="kpis">
-      <div class="kpi"><div class="t">Recommended base</div><div class="v" data-f="baseK"></div><div class="s"><span data-f="basePctl"></span> percentile · US director</div></div>
-      <div class="kpi"><div class="t">Blended base median</div><div class="v" data-f="mBaseK"></div><div class="s">Radford and IPAS, equal weight</div></div>
-      <div class="kpi"><div class="t">Target cash median</div><div class="v" data-f="mTtcK"></div><div class="s">Offer is <b data-f="ttcRatio"></b> of it</div></div>
-      <div class="kpi"><div class="t">TDC median</div><div class="v" data-f="mTdcK"></div><div class="s">Includes market equity · offer is <b data-f="tdcRatio"></b> of it</div></div>
+    <div class="box why">
+      <h4>Why the 35% bonus</h4>
+      <p>With no equity offered, total direct compensation is base plus bonus. At 35% it lands at the market median: <b data-f="ttc"></b> against <b data-f="mTdc"></b>, a ratio of <b data-f="tdcRatio"></b>. At the market's 22% bonus it would be <b data-f="ttc22"></b>, a ratio of <b data-f="tdc22"></b>.</p>
+      <div class="tiles"><div class="tile"><b data-f="ttcK"></b><span>35% bonus · TDC ratio <span data-f="tdcRatio"></span></span></div><div class="tile"><b class="g" data-f="ttc22K"></b><span>22% bonus · TDC ratio <span data-f="tdc22"></span></span></div></div>
+      <p style="margin:0"><b>Why above the median on base:</b> the role builds the rewards function from scratch, from executive pay and job architecture to incentive governance and analytics, and integrates AI into how that work gets done.</p>
     </div>
-    <div class="row"><h3>Benchmark intelligence</h3><small>Median and 25th to 75th percentile</small></div>
-    <div class="grid2">
-      <div class="panel">
-        <h4>Base salary market corridor</h4>
-        <div class="note">Blended 25th to 75th percentile. Gold marks the $230,000 recommendation; white dots mark the open and strong-candidate levels.</div>
-        <div class="corr" id="corr" role="img"></div>
-        <div class="corrl"><span>25th · <span data-f="p25"></span></span><span>Median · <span data-f="mBase"></span></span><span>75th · <span data-f="p75"></span></span></div>
-        <div class="corrk"><span><i style="background:var(--gold)"></i>Recommended $230,000</span><span><i style="background:#fff;border:2px solid #143b34"></i>Open $215,000 · Strong $222,500</span></div>
+  </div>
 
-        <h4 style="margin-top:22px">Position to market</h4>
-        <div class="note">Market median, with the offer's ratio below it.</div>
-        <div class="tw"><table id="pos"></table></div>
-        <p class="fine">Market total direct comp includes equity; IPAS does not report it, so the average uses Radford's equity (<span data-f="eqR"></span>).</p>
-      </div>
-      <div style="display:grid;gap:18px;min-width:0">
-        <div class="panel">
-          <div class="note" style="font-weight:800;letter-spacing:.18em;text-transform:uppercase;font-size:10.5px">Reading the comparison</div>
-          <ul style="margin:10px 0 0;padding-left:18px;font-size:13px;line-height:1.6">
-            <li><b>Base</b> sits just above the blended median (<span data-f="baseRatio"></span>, <span data-f="basePctl"></span> percentile).</li>
-            <li><b>Total cash</b> is <span data-f="ttcRatio"></span> of the market cash median.</li>
-            <li><b>Total direct comp</b> is <span data-f="tdcRatio"></span> of a market that includes equity; this offer has none.</li>
-            <li><b>Survey caveat:</b> IPAS M4 is a broader comparison, not an exact job match.</li>
-          </ul>
-        </div>
-        <div class="dark"><div class="k">Total direct comp position</div><div class="huge" data-f="tdcRatio"></div><p style="margin:0">Of the blended market median including market equity (<span data-f="mTdc"></span>), with no equity in this offer.</p></div>
-      </div>
-    </div>
-    <div class="row"><h3>Total direct compensation, with equity</h3><small>Component by component</small></div>
-    <div class="panel"><div class="tw"><table id="tdcT"></table></div><p class="fine">Market equity averages in people who receive none; the median for recipients is <span data-f="eqRecip"></span>.</p></div>
-    <div class="row"><h3>Market data, Director level</h3><small>Median, with the 25th to 75th percentile below</small></div>
-    <div class="panel"><div class="tw"><table id="mkt"></table></div><p class="fine">Equal-weight average of Radford and IPAS. — not reported by IPAS. † Radford figure used where IPAS does not report.</p></div>
-  </section>
+  <h3>Authority range at a 35% bonus <small>Base ratio vs $221,500 · TDC ratio vs $297,561</small></h3>
+  <div class="auth" id="auth"></div>
 
-  <!-- 03 Offer strategy -->
-  <section class="view" id="v-offer" role="tabpanel" aria-labelledby="t-offer" hidden>
-    <div class="page-head"><div class="eyebrow">03 / Offer strategy</div><h2>Turn compensation into a decision.</h2><p>Target bonus choices at the recommended $230,000 base. Values come straight from the report's figures; no equity is included in the offer.</p></div>
-    <div class="grid2">
-      <div class="panel">
-        <h4>Target bonus scenarios</h4>
-        <div class="note">Pick a target bonus. Every comparison uses the same $230,000 base.</div>
-        <div class="chips" id="chips" role="group" aria-label="Target bonus"></div>
-        <div class="ttc"><div><div class="k">Target total cash</div><div class="big" id="sTtc"></div><div class="k" style="text-transform:none;letter-spacing:0">Base plus annual target bonus</div></div><div class="rt"><span>vs market total cash median <span data-f="mTtc"></span></span><b id="sCash"></b><span>vs market TDC median <span data-f="mTdc"></span>: <b id="sTdc" style="display:inline;font-size:14px"></b></span></div></div>
-        <div id="hb"></div>
-      </div>
-      <div class="dark">
-        <div class="k">Total direct comp position</div>
-        <div class="huge" id="sTdcBig"></div>
-        <p id="sTdcTxt"></p>
-        <dl><div><dt>Equity included</dt><dd>$0</dd></div><div><dt>Market TDC median</dt><dd data-f="mTdc"></dd></div><div><dt>Bonus at target</dt><dd id="sBonus"></dd></div><div><dt>Offer base percentile</dt><dd data-f="basePctl"></dd></div></dl>
-      </div>
-    </div>
-    <div class="row"><h3>Bonus options at a $230,000 base</h3><small>Total cash against both market medians</small></div>
-    <div class="panel"><div class="tw"><table id="opts"></table></div></div>
-    <div class="row"><h3>Value of the bonus</h3><small id="payAt">At a 35% target</small></div>
-    <div class="panel"><div class="tw"><table id="pay"></table></div></div>
-  </section>
+  <h3>Position to market <small>Market median, with the offer's ratio beside it</small></h3>
+  <div class="box">
+    <div class="corrl"><b style="font-size:8.5px;color:var(--ink)">Base salary corridor, blended 25th to 75th percentile</b><span>Gold: $230,000 · white: $215,000 and $222,500</span></div>
+    <div class="corr" id="corr" role="img"></div>
+    <div class="corrl"><span>25th · <span data-f="p25"></span></span><span>Median · <span data-f="mBase"></span></span><span>75th · <span data-f="p75"></span></span></div>
+    <div class="tw" style="margin-top:5px"><table id="pos"></table></div>
+    <p class="fine">Ratio = offer ÷ market median; 1.00 is the median. Market total direct comp includes equity; IPAS does not report it, so the average uses Radford's equity (<span data-f="eqR"></span>). * IPAS is not an exact match: its compensation and benefits job is broader than this role, so it is a general comparison.</p>
+  </div>
 
-  <!-- 04 Methodology -->
-  <section class="view" id="v-method" role="tabpanel" aria-labelledby="t-method" hidden>
-    <div class="page-head"><div class="eyebrow">04 / Methodology</div><h2>Confidence is built on transparency.</h2><p>Every source, assumption and caveat, so the recommendation can be reviewed and defended.</p></div>
-    <div class="src">
-      <div class="panel"><div class="k">Source 01</div><h4>Radford M5 · Compensation</h4><div class="note">Director-level base, target bonus, total cash and total direct compensation. Sample 636 people / 448 companies.</div></div>
-      <div class="panel"><div class="k">Source 02</div><h4>IPAS M4 · broader role*</h4><div class="note">Director comparison for compensation and benefits; not an exact match to this role. Sample 230 people / 66 companies.</div></div>
-      <div class="panel"><div class="k">Blending</div><h4>Equal-weight market view</h4><div class="note">Base and cash medians are averaged with equal weight. Radford fills measures IPAS does not report, including equity.</div></div>
-    </div>
-    <div class="row"><h3>What could change the number</h3><small>From the report</small></div>
-    <div class="panel">
-      <ol class="why">
-        <li><span><b>Bonus level.</b> At the market's 22%, total cash is $280,600: above the cash median, but only 0.94 of market total direct comp, because there is no equity.</span></li>
-        <li><span><b>Scope.</b> Building the function from scratch is what puts the base above the median.</span></li>
-        <li><span><b>No equity.</b> Total direct comp equals total cash, 1.04 of a market that includes equity.</span></li>
-        <li><span><b>Survey choice.</b> Radford leans toward tech but fits the role's analytics skill set; IPAS is within $100 of it on median base.</span></li>
-        <li><span><b>Blending.</b> Good practice blends like-for-like matches, and a hybrid role has no exact one. Broader cuts would lower the number: Radford's comp and benefits family pays $213,200 vs $221,450 median base because it includes benefits roles, so it is left out.</span></li>
-        <li><span><b>Location.</b> US figures. A Canada-based role needs a Canadian cut.</span></li>
-        <li><span><b>Timing.</b> Data is not aged; past six months, add about 3% a year (an assumption).</span></li>
-      </ol>
-    </div>
-    <p class="fine"><b>Method:</b> Radford M5 (Director) and IPAS M4, averaged with equal weight; Radford fills measures IPAS does not report. Measures are current fiscal year base, target bonus, target total cash and target total direct compensation, with equity at $0. Percentiles are interpolated between published points. Prepared by Ben Phillips with a benchmarking tool he built. Licensed market data, shared for this hiring discussion only.</p>
-  </section>
+  <div class="pgno"><span>Confidential · Contains licensed survey data</span><span>Page 1 of 2</span></div>
+</section>
 
-  <footer><span>MGI Insight · Executive compensation brief</span><span>Confidential · Prepared for Mastronardi Produce · Contains licensed survey data</span></footer>
-</div>
-</main>
+<!-- PAGE 2 -->
+<section class="sheet" aria-label="Page 2 of 2">
+  <h3 style="margin-top:0">Total direct compensation, with equity <small>Component by component</small></h3>
+  <div class="tw"><table id="tdcT"></table></div>
+  <p class="fine">Market equity averages in people who receive none; the median for recipients is <span data-f="eqRecip"></span>.</p>
+
+  <h3>Market data, Director level <small>Median, with the 25th to 75th percentile beside it</small></h3>
+  <div class="tw"><table id="mkt"></table></div>
+  <p class="fine">Equal-weight average of Radford and IPAS. — not reported by IPAS. † Radford figure used where IPAS does not report.</p>
+
+  <div class="g2" style="margin-top:2px">
+    <div><h3>Bonus options at a $230,000 base <small>Against both medians</small></h3><div class="tw"><table id="opts"></table></div></div>
+    <div><h3>Value of the bonus <small>At 35%</small></h3><div class="tw"><table id="pay"></table></div></div>
+  </div>
+
+  <div class="sec">Methodology</div>
+  <div class="src" style="margin-top:6px">
+    <div class="box"><div class="k">Source 01</div><b>Radford M5 · Compensation</b><span>Director-level base, target bonus, total cash and total direct comp. Sample 636 people / 448 companies.</span></div>
+    <div class="box"><div class="k">Source 02</div><b>IPAS M4 · broader role*</b><span>Compensation and benefits director; a general comparison, not an exact match. Sample 230 people / 66 companies.</span></div>
+    <div class="box"><div class="k">Blending</div><b>Equal-weight market view</b><span>Medians averaged with equal weight; Radford fills measures IPAS does not report, including equity.</span></div>
+  </div>
+
+  <h3>What could change the number</h3>
+  <ol class="chg">
+    <li><span><b>Bonus level.</b> At the market's 22%, total cash is $280,600: above the cash median, but only 0.94 of market total direct comp, because there is no equity.</span></li>
+    <li><span><b>Scope.</b> Building the function from scratch is what puts the base above the median.</span></li>
+    <li><span><b>No equity.</b> Total direct comp equals total cash, 1.04 of a market that includes equity.</span></li>
+    <li><span><b>Survey choice.</b> Radford leans toward tech but fits the role's analytics skill set; IPAS is within $100 of it on median base.</span></li>
+    <li><span><b>Blending.</b> Good practice blends like-for-like matches, and a hybrid role has no exact one. Broader cuts would lower the number: Radford's comp and benefits family pays $213,200 vs $221,450 median base because it includes benefits roles, so it is left out.</span></li>
+    <li><span><b>Location.</b> US figures. A Canada-based role needs a Canadian cut.</span></li>
+    <li><span><b>Timing.</b> Data is not aged; past six months, add about 3% a year (an assumption).</span></li>
+  </ol>
+  <p class="fine" style="margin-top:6px"><b>Method:</b> Radford M5 (Director) and IPAS M4, averaged with equal weight; Radford fills measures IPAS does not report. Measures are current fiscal year base, target bonus, target total cash and target total direct compensation, with equity at $0. Percentiles are interpolated between published points. Prepared by Ben Phillips with a benchmarking tool he built. Licensed market data, shared for this hiring discussion only.</p>
+
+  <div class="pgno"><span>Confidential · Contains licensed survey data</span><span>Page 2 of 2</span></div>
+</section>
 
 <script>
 (function(){
   /* Report figures. Only the published survey numbers live here; every ratio, total and percentile
-     below is computed from them, and the test suite checks the results against the report. */
+     is computed from them and checked against the report by the test suite. */
   const D = {
     base: 230000, bonus: .35,
     levels: [['Open', 215000], ['Strong candidate', 222500], ['Recommended (base cap)', 230000]],
-    radford: { base:221450, p25:200750, p75:247000, bonus:.22, bonusRg:'20% – 25%', ttc:268145, tdc:300039, tdcRg:[258225,365420], eq:31894, eqRecip:69981, n:'636 / 448' },
+    radford: { base:221450, p25:200750, p75:247000, bonusRg:'20% – 25%', ttc:268145, tdc:300039, tdcRg:[258225,365420], eq:31894, eqRecip:69981, n:'636 / 448' },
     ipas:    { base:221550, p25:203210, p75:241697, ttc:263189, n:'230 / 66' },
-    avg:     { base:221500, p25:201980, p75:244349, bonus:.22, ttc:265667, tdc:297561 }
+    avg:     { base:221500, p25:201980, p75:244349, ttc:265667, tdc:297561 }
   };
   const $ = s => document.querySelector(s);
   const usd = v => '$' + Math.round(v).toLocaleString('en-US');
   const k = v => '$' + (v / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
   const r2 = v => v.toFixed(2);
   const ord = n => n + (n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th','st','nd','rd'][n % 10] || 'th');
-  // percentile by straight-line interpolation between the published 25th, median and 75th
   const pctl = (v, p25, med, p75) => Math.round(v <= med ? 25 + 25 * (v - p25) / (med - p25) : 50 + 25 * (v - med) / (p75 - med));
-  const A = D.avg, R = D.radford, I = D.ipas;
-  const ttcAt = (base, b) => base * (1 + b);
+  const A = D.avg, R = D.radford, I = D.ipas, ttcAt = (b, x) => b * (1 + x), T = ttcAt(D.base, D.bonus);
   const F = {
-    base: usd(D.base), baseK: k(D.base), bonusPct: Math.round(D.bonus * 100) + '%', bonusAmt: usd(D.base * D.bonus),
-    ttc: usd(ttcAt(D.base, D.bonus)), ttcK: k(ttcAt(D.base, D.bonus)),
-    baseRatio: r2(D.base / A.base), ttcRatio: r2(ttcAt(D.base, D.bonus) / A.ttc), tdcRatio: r2(ttcAt(D.base, D.bonus) / A.tdc),
-    basePctl: ord(pctl(D.base, A.p25, A.base, A.p75)), tdcPctl: ord(pctl(ttcAt(D.base, D.bonus), R.tdcRg[0], A.tdc, R.tdcRg[1])),
-    mBase: usd(A.base), mBaseK: k(A.base), mTtc: usd(A.ttc), mTtcK: k(A.ttc), mTdc: usd(A.tdc), mTdcK: k(A.tdc),
+    base: usd(D.base), bonusAmt: usd(D.base * D.bonus), ttc: usd(T), ttcK: k(T),
+    baseRatio: r2(D.base / A.base), ttcRatio: r2(T / A.ttc), tdcRatio: r2(T / A.tdc),
+    basePctl: ord(pctl(D.base, A.p25, A.base, A.p75)), tdcPctl: ord(pctl(T, R.tdcRg[0], A.tdc, R.tdcRg[1])),
+    mBase: usd(A.base), mTtc: usd(A.ttc), mTdc: usd(A.tdc),
     ttc22: usd(ttcAt(D.base, .22)), ttc22K: k(ttcAt(D.base, .22)), tdc22: r2(ttcAt(D.base, .22) / A.tdc),
     p25: usd(A.p25), p75: usd(A.p75), eqR: usd(R.eq), eqRecip: usd(R.eqRecip)
   };
   document.querySelectorAll('[data-f]').forEach(el => { if (F[el.dataset.f] != null) el.textContent = F[el.dataset.f]; });
 
-  /* offer vs market bars on one ratio scale (0.80 to 1.30) */
-  const lo = .8, hi = 1.3, at = v => Math.max(0, Math.min(100, 100 * (v - lo) / (hi - lo)));
-  const CMP = [['Base salary', D.base, A.base], ['Total target cash', ttcAt(D.base, D.bonus), A.ttc], ['Total direct comp', ttcAt(D.base, D.bonus), A.tdc]];
-  $('#cmp').innerHTML = CMP.map(([l, o, m]) => { const q = o / m; return '<div class="cmp"><div class="lab"><b>' + l + '</b><span>' + usd(o) + ' / ' + usd(m) + '</span></div>'
-    + '<div class="track" role="img" aria-label="' + l + ': ' + r2(q) + ' of market median"><span class="fill" style="width:' + at(q).toFixed(1) + '%"></span><span class="med" style="left:' + at(1).toFixed(1) + '%"></span><span class="dot" style="left:' + at(q).toFixed(1) + '%"></span></div>'
-    + '<div class="r"><b>' + r2(q) + '</b><span>' + (q >= 1 ? '+' : '') + Math.round((q - 1) * 100) + '% to median</span></div></div>'; }).join('');
+  const lo = .8, hi = 1.3, at = v => Math.max(0, Math.min(100, 100 * (v - lo) / (hi - lo))).toFixed(1) + '%';
+  $('#cmp').innerHTML = [['Base salary', D.base, A.base], ['Total target cash', T, A.ttc], ['Total direct comp', T, A.tdc]].map(([l, o, m]) => { const q = o / m;
+    return '<div class="cmp"><div class="lab"><b>' + l + '</b><span>' + usd(o) + ' / ' + usd(m) + '</span></div><div class="track" role="img" aria-label="' + l + ' ' + r2(q) + ' of market median"><span class="fill" style="width:' + at(q) + '"></span><span class="med" style="left:' + at(1) + '"></span><span class="dot" style="left:' + at(q) + '"></span></div><div class="r"><b>' + r2(q) + '</b> <span>' + (q >= 1 ? '+' : '') + Math.round((q - 1) * 100) + '% to median</span></div></div>'; }).join('');
 
-  /* authority cards */
-  $('#auth').innerHTML = D.levels.map(([l, b], i) => { const t = ttcAt(b, D.bonus); return '<div class="acard' + (i === 2 ? ' on' : '') + '"><div class="k">' + (i === 2 ? '★ ' : '') + l + '</div><div class="v">' + usd(b) + '</div><div class="s">Bonus ' + usd(b * D.bonus) + ' · total cash ' + usd(t) + '</div>'
-    + '<dl><dt>Base ratio</dt><dd>' + r2(b / A.base) + '</dd><dt>TDC ratio</dt><dd>' + r2(t / A.tdc) + '</dd><dt>Base percentile</dt><dd>' + ord(pctl(b, A.p25, A.base, A.p75)) + '</dd></dl></div>'; }).join('');
+  $('#auth').innerHTML = D.levels.map(([l, b], i) => { const t = ttcAt(b, D.bonus);
+    return '<div class="ac' + (i === 2 ? ' on' : '') + '"><div class="k">' + (i === 2 ? '★ ' : '') + l + '</div><div class="v">' + usd(b) + '</div><div class="s">Bonus ' + usd(b * D.bonus) + ' · total cash ' + usd(t) + '</div><dl><dt>Base ratio</dt><dd>' + r2(b / A.base) + '</dd><dt>TDC ratio</dt><dd>' + r2(t / A.tdc) + '</dd><dt>Percentile</dt><dd>' + ord(pctl(b, A.p25, A.base, A.p75)) + '</dd></dl></div>'; }).join('');
 
-  /* corridor */
   const cl = A.p25 - 8000, ch = A.p75 + 8000, cx = v => (100 * (v - cl) / (ch - cl)).toFixed(1) + '%';
   $('#corr').setAttribute('aria-label', 'Recommended $230,000 between the 25th percentile ' + F.p25 + ' and the 75th ' + F.p75 + ', median ' + F.mBase);
-  $('#corr').innerHTML = '<span class="bar"></span><span class="iqr" style="left:' + cx(A.p25) + ';width:calc(' + cx(A.p75) + ' - ' + cx(A.p25) + ')"></span><span class="mk" style="left:' + cx(A.base) + '"></span>'
-    + D.levels.slice(0, 2).map(([, b]) => '<span class="alt" style="left:' + cx(b) + '"></span>').join('') + '<span class="pin" style="left:' + cx(D.base) + '"></span>';
+  $('#corr').innerHTML = '<span class="bg"></span><span class="iqr" style="left:' + cx(A.p25) + ';width:calc(' + cx(A.p75) + ' - ' + cx(A.p25) + ')"></span><span class="mk" style="left:' + cx(A.base) + '"></span>' + D.levels.slice(0, 2).map(([, b]) => '<span class="alt" style="left:' + cx(b) + '"></span>').join('') + '<span class="pin" style="left:' + cx(D.base) + '"></span>';
 
-  /* tables */
-  const T = D.base * (1 + D.bonus);
   const cell = (m, o) => '<td class="n">' + (m ? usd(m) + '<span class="r">' + r2(o / m) + '</span>' : '—') + '</td>';
   $('#pos').innerHTML = '<thead><tr><th>Measure</th><th class="n">Offer</th><th class="n">Radford</th><th class="n">IPAS*</th><th class="n">Average</th></tr></thead><tbody>'
     + '<tr><td><b>Base salary</b></td><td class="n">' + usd(D.base) + '</td>' + cell(R.base, D.base) + cell(I.base, D.base) + cell(A.base, D.base) + '</tr>'
@@ -492,40 +279,11 @@
     + '<tr><td>Target bonus</td><td class="n">22%<span class="rg">' + R.bonusRg + '</span></td><td class="n">—</td><td class="n">22%†<span class="rg">' + R.bonusRg + '</span></td></tr>'
     + '<tr><td>Total cash</td><td class="n">' + usd(R.ttc) + '</td><td class="n">' + usd(I.ttc) + '</td><td class="n">' + usd(A.ttc) + '</td></tr>'
     + '<tr><td>Total direct comp</td><td class="n">' + usd(R.tdc) + rg(R.tdcRg[0], R.tdcRg[1]) + '</td><td class="n">—</td><td class="n">' + usd(A.tdc) + '<span class="rg">' + usd(R.tdcRg[0]) + ' – ' + usd(R.tdcRg[1]) + '†</span></td></tr></tbody>';
-
-  /* offer strategy */
-  const OPTS = [[.22, 'Market median'], [.25, 'Top quarter'], [.30, 'Alternative'], [.35, 'Recommended']];
-  $('#opts').innerHTML = '<thead><tr><th>Target bonus</th><th class="n">Bonus</th><th class="n">Total cash</th><th class="n">vs cash median</th><th class="n">vs TDC median</th></tr></thead><tbody>'
-    + OPTS.map(([b, l]) => { const t = ttcAt(D.base, b); return '<tr' + (b === D.bonus ? ' class="hl"' : '') + '><td>' + Math.round(b * 100) + '% <span class="rg" style="display:inline">· ' + l + '</span></td><td class="n">' + usd(D.base * b) + '</td><td class="n">' + usd(t) + '</td><td class="n">' + r2(t / A.ttc) + '</td><td class="n">' + r2(t / A.tdc) + '</td></tr>'; }).join('') + '</tbody>';
-  const MAXV = 320000;
-  function scenario(b){
-    const t = ttcAt(D.base, b), bon = D.base * b;
-    $('#chips').querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', +c.dataset.b === b));
-    $('#sTtc').textContent = usd(t); $('#sCash').textContent = r2(t / A.ttc); $('#sTdc').textContent = r2(t / A.tdc);
-    $('#sTdcBig').textContent = r2(t / A.tdc); $('#sBonus').textContent = usd(bon); $('#payAt').textContent = 'At a ' + Math.round(b * 100) + '% target';
-    $('#sTdcTxt').textContent = 'At a ' + Math.round(b * 100) + '% bonus, total direct compensation is ' + usd(t) + ' against a market median of ' + F.mTdc + ' that includes equity. This offer has no equity.';
-    $('#hb').innerHTML = [['Base salary', D.base, 0], ['Target bonus', bon, 0], ['Total cash market median', A.ttc, 1], ['Market TDC median', A.tdc, 1]].map(([l, v, m]) => '<div class="hb"><span>' + l + '</span><span class="t"><i' + (m ? ' class="m"' : '') + ' style="width:' + (100 * v / MAXV).toFixed(1) + '%"></i></span><span class="n">' + usd(v) + '</span></div>').join('');
-    $('#pay').innerHTML = '<thead><tr><th>Payout</th><th class="n">Bonus</th><th class="n">Total cash</th></tr></thead><tbody>'
-      + [[0, '0% of target'], [.5, '50% of target'], [1, '100% of target'], [1.5, '150% of target (maximum)']].map(([p, l]) => '<tr' + (p === 1 ? ' class="hl"' : '') + '><td>' + l + '</td><td class="n">' + usd(bon * p) + '</td><td class="n">' + usd(D.base + bon * p) + '</td></tr>').join('') + '</tbody>';
-  }
-  $('#chips').innerHTML = OPTS.map(([b, l]) => '<button type="button" class="chip" data-b="' + b + '" aria-pressed="false"><b>' + Math.round(b * 100) + '%</b><span>' + l + '</span></button>').join('');
-  $('#chips').addEventListener('click', e => { const c = e.target.closest('.chip'); if (c) scenario(+c.dataset.b); });
-  scenario(D.bonus);
-  window.addEventListener('beforeprint', () => scenario(D.bonus));   // the printed report always shows the recommendation
-
-  /* tabs */
-  const tabs = [...document.querySelectorAll('[role=tab]')];
-  function go(id, focus){
-    tabs.forEach(t => { const on = t.id === 't-' + id; t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1; document.getElementById(t.getAttribute('aria-controls')).hidden = !on; if (on && focus) t.focus(); });
-    document.querySelector('.hero').hidden = id !== 'overview';
-    if (location.hash.slice(1) !== id) history.replaceState(null, '', '#' + id);
-  }
-  tabs.forEach((t, i) => { t.onclick = () => { go(t.id.slice(2)); window.scrollTo({ top:0 }); };
-    t.onkeydown = e => { const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (d) { e.preventDefault(); go(tabs[(i + d + tabs.length) % tabs.length].id.slice(2), true); } }; });
-  window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (['overview','market','offer','method'].includes(h)) go(h); });
-  const start = (location.hash || '').slice(1); go(['overview','market','offer','method'].includes(start) ? start : 'overview');
-  window.addEventListener('beforeprint', () => { document.querySelector('.hero').hidden = false; });
-  window.addEventListener('afterprint', () => go((location.hash || '#overview').slice(1)));
+  $('#opts').innerHTML = '<thead><tr><th>Bonus</th><th class="n">Total cash</th><th class="n">vs cash median</th><th class="n">vs TDC median</th></tr></thead><tbody>'
+    + [[.22, 'market median'], [.25, 'top quarter'], [.30, ''], [.35, 'recommended']].map(([b, l]) => { const t = ttcAt(D.base, b); return '<tr' + (b === D.bonus ? ' class="hl"' : '') + '><td>' + Math.round(b * 100) + '%' + (l ? '<span class="rg">' + l + '</span>' : '') + '</td><td class="n">' + usd(t) + '</td><td class="n">' + r2(t / A.ttc) + '</td><td class="n">' + r2(t / A.tdc) + '</td></tr>'; }).join('') + '</tbody>';
+  const bon = D.base * D.bonus;
+  $('#pay').innerHTML = '<thead><tr><th>Payout</th><th class="n">Total cash</th></tr></thead><tbody>'
+    + [[0, '0% of target'], [.5, '50% of target'], [1, '100% of target'], [1.5, '150% of target (maximum)']].map(([p, l]) => '<tr' + (p === 1 ? ' class="hl"' : '') + '><td>' + l + '</td><td class="n">' + usd(D.base + bon * p) + '</td></tr>').join('') + '</tbody>';
   window.__brief = { D, F, pctl, ttcAt };
 })();
 </script>
