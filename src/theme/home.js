@@ -99,6 +99,12 @@
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && tour.hidden) escHome(); });
   window.addEventListener('message', function(e){ if (e.data && e.data.mgi_escape) escHome(); });
 
+  /* ---- direct links: /#archbuild opens that tool, so every tool can be shared on its own ---- */
+  var IDS = ['jdmatch','positioning','archbuild','jdlib','ranges','career','lti','analysis','ghr'];
+  function fromHash(){ var id = (location.hash || '').slice(1).toLowerCase(); if (IDS.indexOf(id) >= 0 && window.openMod) openMod(id); }
+  window.addEventListener('hashchange', fromHash);
+  if (document.readyState === 'complete') setTimeout(fromHash, 300); else window.addEventListener('load', function(){ setTimeout(fromHash, 300); });
+
   /* ---- quick tour ---- */
   var TOUR = [
     ['Step 1 · Market data', 'Start with the market', 'Every job is matched to the salary survey with a confidence score and a market pay range, so pay decisions start from evidence.', 'job_matcher', 'jdmatch', 'Open Job Matcher'],
