@@ -158,6 +158,11 @@ header .logo .mark{background:linear-gradient(135deg,#14A877,#0B3B2C)!important;
 @keyframes produceBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
 @media(prefers-reduced-motion:reduce){.hero .produce{animation:none}}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<script id="mgi-theme-js">{{include:theme/theme.js}}</script>
+<style id="mgiShell">{{include:theme/shell.css}}</style>
+<script type="text/plain" id="mgi-mod-css">{{include:theme/module.css}}</script>
 <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -175,6 +180,7 @@ header .logo .mark{background:linear-gradient(135deg,#14A877,#0B3B2C)!important;
       
       
       <button id="appBtn" type="button" data-i="app_btn"></button>
+      <span id="mgiTT1"></span>
     </div>
   </div>
 </header>
@@ -361,6 +367,7 @@ header .logo .mark{background:linear-gradient(135deg,#14A877,#0B3B2C)!important;
     <div class="mspace"></div>
     <label style="font-size:10px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.06em;font-weight:700" data-i="region"></label>
     <select id="regSel2"><option value="all" data-i="r_all"></option><option value="canada">Canada</option><option value="usa">United States</option><option value="latam">Mexico</option></select>
+    <span id="mgiTT2"></span>
     
     
   </div>
@@ -543,24 +550,24 @@ const CAT={
 };
 
 const MODS=[
-  {id:'jdmatch', url:'/jdmatch/', icon:'⇄', grad:'linear-gradient(135deg,#0F8A5F,#0B3B2C)', desktop:true, group:'data'},
-  {id:'positioning', url:'/positioning/', icon:'◎', grad:'linear-gradient(135deg,#0F8A5F,#0B3B2C)', desktop:true, group:'data'},
-  {id:'archbuild', icon:'▤', grad:'linear-gradient(135deg,#65A30D,#4D7C0F)', desktop:true, group:'jobs'},
-  {id:'jdlib', icon:'✎', grad:'linear-gradient(135deg,#65A30D,#4D7C0F)', desktop:true, group:'jobs'},
-  {id:'ranges', icon:'▥', grad:'linear-gradient(135deg,#65A30D,#4D7C0F)', desktop:true, group:'jobs'},
-  {id:'career', icon:'⇗', grad:'linear-gradient(135deg,#65A30D,#4D7C0F)', desktop:true, group:'jobs'},
-  {id:'succession', url:'/succession/', icon:'⇡', grad:'linear-gradient(135deg,#65A30D,#4D7C0F)', desktop:true, group:'jobs'},
-  {id:'orgchart', url:'/orgchart/', icon:'⊤', grad:'linear-gradient(135deg,#65A30D,#4D7C0F)', desktop:true, group:'jobs'},
-  {id:'sti', icon:'◈', grad:'linear-gradient(135deg,#0E7490,#155E75)', desktop:true, group:'inc'},
-  {id:'lti', icon:'◔', grad:'linear-gradient(135deg,#0E7490,#155E75)', desktop:true, group:'inc'},
-  {id:'perf', icon:'◎', grad:'linear-gradient(135deg,#0E7490,#155E75)', desktop:true, group:'inc'},
-  {id:'ghr', icon:'▦', grad:'linear-gradient(135deg,#B45309,#92400E)', desktop:true, group:'ana'},
-  {id:'analysis', icon:'◫', grad:'linear-gradient(135deg,#B45309,#92400E)', desktop:true, group:'ana'},
-  {id:'merit', icon:'▲', grad:'linear-gradient(135deg,#B45309,#92400E)', desktop:true, group:'ana'},
-  {id:'aisavings', url:'/aisavings/', icon:'⌛', grad:'linear-gradient(135deg,#B45309,#92400E)', desktop:true, group:'ana'},
-  {id:'trs', url:'/trs/', icon:'★', grad:'linear-gradient(135deg,#B45309,#92400E)', desktop:true, group:'ana'},
-  {id:'offer', icon:'✉', grad:'linear-gradient(135deg,#B45309,#92400E)', desktop:true, group:'ana'},
-  {id:'harvest', icon:'❖', grad:'linear-gradient(135deg,#B45309,#92400E)', desktop:true, group:'ana'},
+  {id:'jdmatch', url:'/jdmatch/', icon:'⇄', grad:'linear-gradient(135deg,#0A5BB0,#003E7E)', desktop:true, group:'data'},
+  {id:'positioning', url:'/positioning/', icon:'◎', grad:'linear-gradient(135deg,#0A5BB0,#003E7E)', desktop:true, group:'data'},
+  {id:'archbuild', icon:'▤', grad:'linear-gradient(135deg,#5BBF55,#2F8F2B)', desktop:true, group:'jobs'},
+  {id:'jdlib', icon:'✎', grad:'linear-gradient(135deg,#5BBF55,#2F8F2B)', desktop:true, group:'jobs'},
+  {id:'ranges', icon:'▥', grad:'linear-gradient(135deg,#5BBF55,#2F8F2B)', desktop:true, group:'jobs'},
+  {id:'career', icon:'⇗', grad:'linear-gradient(135deg,#5BBF55,#2F8F2B)', desktop:true, group:'jobs'},
+  {id:'succession', url:'/succession/', icon:'⇡', grad:'linear-gradient(135deg,#5BBF55,#2F8F2B)', desktop:true, group:'jobs'},
+  {id:'orgchart', url:'/orgchart/', icon:'⊤', grad:'linear-gradient(135deg,#5BBF55,#2F8F2B)', desktop:true, group:'jobs'},
+  {id:'sti', icon:'◈', grad:'linear-gradient(135deg,#F9A548,#E07F0E)', desktop:true, group:'inc'},
+  {id:'lti', icon:'◔', grad:'linear-gradient(135deg,#F9A548,#E07F0E)', desktop:true, group:'inc'},
+  {id:'perf', icon:'◎', grad:'linear-gradient(135deg,#F9A548,#E07F0E)', desktop:true, group:'inc'},
+  {id:'ghr', icon:'▦', grad:'linear-gradient(135deg,#46607F,#1E2D44)', desktop:true, group:'ana'},
+  {id:'analysis', icon:'◫', grad:'linear-gradient(135deg,#46607F,#1E2D44)', desktop:true, group:'ana'},
+  {id:'merit', icon:'▲', grad:'linear-gradient(135deg,#46607F,#1E2D44)', desktop:true, group:'ana'},
+  {id:'aisavings', url:'/aisavings/', icon:'⌛', grad:'linear-gradient(135deg,#46607F,#1E2D44)', desktop:true, group:'ana'},
+  {id:'trs', url:'/trs/', icon:'★', grad:'linear-gradient(135deg,#46607F,#1E2D44)', desktop:true, group:'ana'},
+  {id:'offer', icon:'✉', grad:'linear-gradient(135deg,#46607F,#1E2D44)', desktop:true, group:'ana'},
+  {id:'harvest', icon:'❖', grad:'linear-gradient(135deg,#46607F,#1E2D44)', desktop:true, group:'ana'},
 ];
 let LANG='en', REG='all', CURMOD=null, JAMEMBER=null;
 let JAMEMBERDOC=null;
@@ -620,7 +627,9 @@ async function modUrl(id){
   else{ const r=await fetch('modules/'+id+'.html'); html=await r.text(); if(!r.ok||html.indexOf('id="modView"')>=0)throw new Error('module '+id+' is not part of this page'); }
   html=html.replace(/\/\*@shared:(\w+)\*\//g,function(_,k){var s=document.getElementById('shared-'+k);return s?s.textContent:'null';});
   if(id==='pricing'){ html='<script>window.__PRICING_VIEW=1;<\/script>'+html; }
-      const u=URL.createObjectURL(new Blob([__JA_BOOT+html],{type:'text/html'}));
+      const th='<style id="mgiTheme">'+document.getElementById('mgi-mod-css').textContent+'</style><script>'+document.getElementById('mgi-theme-js').textContent+'</scr'+'ipt>';
+      const own='<script>document.documentElement.classList.add('+(srcId==='ghr'?'"mgi-own"':'"mgi-mod"')+')</scr'+'ipt>';
+      const u=URL.createObjectURL(new Blob([own+__JA_BOOT+html+th],{type:'text/html'}));
   urlCache[id]=u; return u;
 }
 function jaGroup(id){ for(var i=0;i<MODS.length;i++){ if(MODS[i].id===id && MODS[i].members) return MODS[i]; } return null; }
@@ -1403,5 +1412,6 @@ if('serviceWorker' in navigator && (location.protocol==='https:' || location.hos
 <script type="text/plain" id="mod-lti">{{include:modules/lti.html}}</script>
 <script type="text/plain" id="mod-harvest">{{include:modules/harvest.html}}</script>
 <script id="saiPeopleJs">(function(){var el=document.getElementById("shared-people");window.__getPeople=function(){if(window.__peoplePromise)return window.__peoplePromise;window.__peoplePromise=(async function(){if(!el)return "";var b=atob(el.textContent.replace(/\s+/g,"")),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);var blob=await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream("gzip"))).blob();return URL.createObjectURL(new Blob([blob],{type:"application/json"}))})().catch(function(){return ""});return window.__peoplePromise};window.addEventListener("message",function(e){var d=e&&e.data;if(!d||!d.ghr_people_req||!e.source)return;window.__getPeople().then(function(u){return u?fetch(u).then(function(r){return r.text();}):"";}).then(function(txt){if(txt)e.source.postMessage({ghr_people_json:txt},"*");});});})();</script>
+<script>["mgiTT1","mgiTT2"].forEach(function(id){var h=document.getElementById(id);if(h)h.replaceWith(mgiTheme.button());});</script>
 </body>
 </html>

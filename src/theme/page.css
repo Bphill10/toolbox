@@ -1,0 +1,27 @@
+/* MGI theme for the standalone pages: Mastronardi navy, orange and green, finance-style type. */
+html[data-theme] { --deep:#00264F; --green:#003E7E; --accent:#2F8F2B; --ink:#0D1B2E; --muted:#5A6A80; --line:#DCE2EA; --line2:#C5CFDC; --soft:#EEF2F7; --bg:#F3F5F8; --card:#FFFFFF; --card2:#F8FAFC; --track:#E6EBF1;
+  --hl:#F89728; --hp:rgba(255,255,255,.78); --tint-g:#E6F4E5; --tint-o:#FEF0DF; --tint-r:#FBE7E5; --or:#C46A00; --good:#2F8F2B; --bad:#C0392B; --hdr:linear-gradient(120deg,#001A36 0%,#00264F 45%,#003E7E 100%); color-scheme:light; }
+html[data-theme=dark] { --deep:#DCE6F2; --green:#3D82D1; --accent:#5BC456; --ink:#E7EDF5; --muted:#93A3B8; --line:#1F2E45; --line2:#2A3D59; --soft:#13203A; --bg:#070D17; --card:#0E1726; --card2:#111D30; --track:#1C2A40;
+  --tint-g:rgba(91,196,86,.14); --tint-o:rgba(248,151,40,.16); --tint-r:rgba(240,119,106,.16); --or:#FFB25C; --good:#5BC456; --bad:#F0776A; --hdr:linear-gradient(120deg,#030812 0%,#061428 50%,#0B2A52 100%); color-scheme:dark; }
+html[data-theme] body { font-family:"Inter","Segoe UI",Arial,Helvetica,sans-serif; font-feature-settings:"tnum" 1,"cv11" 1; background:var(--bg); color:var(--ink); }
+html[data-theme] h1, html[data-theme] h2, html[data-theme] h3 { font-family:"Inter","Segoe UI",Arial,sans-serif; letter-spacing:-.015em; }
+html[data-theme] h1 { font-weight:700; }
+html[data-theme] h2 { font-weight:650; font-size:19px; }
+html[data-theme] header { background:var(--hdr); position:relative; border-bottom:3px solid #F89728; }
+html[data-theme] header::after { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/100% 28px,linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/28px 100%; }
+html[data-theme] header > :not(.mgi-tt) { position:relative; z-index:1; }
+html[data-theme] header .k { color:#F89728; }
+html[data-theme] .card, html[data-theme] .kpi, html[data-theme] .wrap, html[data-theme] .box { border-radius:8px; }
+html[data-theme] .kpi { border-top-color:#F89728; }
+html[data-theme] .kpi b { font-weight:700; letter-spacing:-.02em; }
+:where(html[data-theme]) th { color:var(--muted); border-bottom-color:var(--green); }
+:where(html[data-theme]) a { color:var(--green); }
+:where(html[data-theme=dark]) a { color:#7FB2EE; }
+html[data-theme] header a { color:#F89728; }
+:where(html[data-theme]) input, :where(html[data-theme]) select, :where(html[data-theme]) textarea { background:var(--card); color:var(--ink); border-color:var(--line2); }
+:where(html[data-theme]) .good { color:var(--good); }
+:where(html[data-theme]) .bad { color:var(--bad); }
+.mgi-tt { position:absolute; top:14px; right:16px; z-index:3; width:34px; height:34px; border-radius:8px; border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.08); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.mgi-tt.inline { position:static; align-self:center; }
+.mgi-tt:hover { background:rgba(255,255,255,.16); }
+@media print { .mgi-tt { display:none; } }

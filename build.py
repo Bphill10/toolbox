@@ -36,7 +36,8 @@ def main():
         if not p.is_file():
             sys.exit(f"build failed: src/index.html includes {rel}, which does not exist")
         used.add(p.resolve())
-        return read(p)
+        txt = read(p)
+        return MARK.sub(include, txt) if rel.startswith("theme/") else txt
 
     out = MARK.sub(include, shell)
 
