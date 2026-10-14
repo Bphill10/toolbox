@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Competitive Should We Be · MGI Insight</title>
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<style>
+  :root { --deep:#072A1F; --green:#0B4A36; --accent:#0F8A5F; --ink:#16241e; --muted:#5C6F66; --line:#DDE6E0; --soft:#F2F7F4; --bg:#F5F7F6;
+          --lag:#94A3B8; --match:#0E7490; --lead:#0F8A5F; --leadp:#B45309; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14.5px/1.5 "Segoe UI", Arial, Helvetica, sans-serif; }
+  header { background:linear-gradient(135deg,var(--deep),var(--green)); color:#fff; padding:22px 16px 24px; }
+  .w { max-width:1200px; margin:0 auto; }
+  header a { color:#9BE7C4; text-decoration:none; font-size:13px; font-weight:600; }
+  .k { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#9BE7C4; font-weight:800; margin-top:10px; }
+  h1 { font:600 27px/1.2 Georgia, serif; margin:4px 0 6px; }
+  header p { margin:0; color:#cfe9dd; max-width:860px; }
+  main { padding:20px 16px 48px; }
+  h2 { font:600 20px Georgia, serif; margin:26px 0 8px; color:var(--deep); }
+  .lead { color:var(--muted); margin:0 0 12px; max-width:880px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 18px; }
+  .values { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
+  .val label { display:block; font-weight:700; font-size:13.5px; }
+  .val span { display:block; color:var(--muted); font-size:12px; min-height:34px; }
+  .val input { width:100%; accent-color:var(--accent); }
+  .val b { color:var(--green); }
+  .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:16px 0; }
+  .kpi { background:#fff; border:1px solid var(--line); border-top:3px solid var(--green); border-radius:10px; padding:12px 14px; }
+  .kpi b { display:block; font-size:22px; color:var(--deep); }
+  .kpi span { color:var(--muted); font-size:12.5px; }
+  .tabs { display:flex; gap:6px; margin:18px 0 10px; }
+  .tabs button { font:600 13.5px "Segoe UI", Arial, sans-serif; padding:8px 14px; border-radius:8px; border:1px solid var(--line); background:#fff; color:var(--green); cursor:pointer; }
+  .tabs button.on { background:var(--green); color:#fff; border-color:var(--green); }
+  .wrap { overflow-x:auto; background:#fff; border:1px solid var(--line); border-radius:12px; }
+  table { border-collapse:collapse; width:100%; }
+  th { text-align:left; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--deep); padding:8px 6px; vertical-align:bottom; }
+  td { border-bottom:1px solid var(--line); padding:7px 6px; vertical-align:middle; }
+  td:first-child { min-width:170px; }
+  td.n, th.n { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .sub { display:block; color:var(--muted); font-size:12px; }
+  .stance { display:inline-block; border-radius:999px; padding:2px 10px; font-size:12px; font-weight:700; color:#fff; white-space:nowrap; }
+  .bar { height:6px; background:#e7ece9; border-radius:4px; width:80px; margin-left:auto; } .bar i { display:block; height:8px; border-radius:4px; background:#C2410C; }
+  td input, td select { font:13px "Segoe UI", Arial; width:56px; padding:3px 5px; border:1px solid var(--line); border-radius:5px; text-align:right; }
+  td select { width:auto; text-align:left; }
+  .good { color:var(--accent); font-weight:700; } .bad { color:#B42318; font-weight:700; }
+  .note { color:var(--muted); font-size:12px; margin-top:10px; }
+  .legend { display:flex; flex-wrap:wrap; gap:14px; font-size:12.5px; color:var(--muted); margin-top:8px; }
+  @media (max-width:900px) { .values, .kpis { grid-template-columns:1fr 1fr; } }
+  @media (max-width:520px) { .values, .kpis { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header><div class="w">
+  <a href="/" target="_top">&larr; Back to MGI Insight</a>
+  <div class="k">Step 1b · Competitive assessment</div>
+  <h1>How competitive should we be?</h1>
+  <p>Set what the company values most, and each job family or job gets a pay stance: lag, match or lead the market. Turnover and what it costs decide where paying more earns its keep.</p>
+</div></header>
+<main><div class="w">
+
+<h2>What do we value most?</h2>
+<p class="lead">Move the sliders. Each one changes how much that factor pushes a family toward leading or lagging the market.</p>
+<div class="card"><div class="values" id="values"></div>
+<p class="note" style="margin-top:12px">Assumption: every 5% of pay above today's position means <input id="el" type="number" min="0" max="60" value="15" style="width:52px;font:13px Segoe UI,Arial;padding:2px 4px;border:1px solid var(--line);border-radius:5px">% fewer people leaving. Set it from exit interviews and past raises.</p></div>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="tabs"><button data-v="fam" class="on">By job family</button><button data-v="job">By job</button></div>
+<div class="wrap"><table><thead id="th"></thead><tbody id="rows"></tbody></table></div>
+<div class="legend"><span><span class="stance" style="background:var(--lag)">Lag</span> 40th percentile, 0.95</span><span><span class="stance" style="background:var(--match)">Match</span> median, 1.00</span><span><span class="stance" style="background:var(--lead)">Lead</span> 60th percentile, 1.05</span><span><span class="stance" style="background:var(--leadp)">Lead+</span> 75th percentile, 1.12</span></div>
+<p class="note" id="note"></p>
+
+</div></main>
+
+<script>
+const WF = {{include:data/workforce.json}};
+</script>
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const fmt = v => '$' + Math.round(v).toLocaleString('en-US');
+const fmtK = v => Math.abs(v) >= 1e6 ? '$' + (v/1e6).toFixed(2) + 'M' : '$' + Math.round(v/1000) + 'k';
+const FAM_NAME = t => t.charAt(0) + t.slice(1).toLowerCase().replace(/\band\b/g,'and');
+// Defaults a compensation leader would start from; every one is editable in the table.
+const FAM_DEF = {
+  'GREENHOUSE OPERATIONS':      { scarcity: 3, critical: 5 },
+  'PACKING AND DISTRIBUTION':   { scarcity: 2, critical: 4 },
+  'MAINTENANCE AND ENGINEERING':{ scarcity: 5, critical: 5 },
+  'QUALITY AND FOOD SAFETY':    { scarcity: 3, critical: 5 },
+  'SALES AND MARKETING':        { scarcity: 3, critical: 4 },
+  'SUPPLY CHAIN AND LOGISTICS': { scarcity: 3, critical: 3 },
+  'CORPORATE FUNCTIONS':        { scarcity: 2, critical: 3 },
+};
+const VALUES = [
+  { k:'retain',  t:'Keeping people',        d:'weight on turnover and what it costs', v:4 },
+  { k:'scarce',  t:'Hard-to-find skills',   d:'weight on how scarce the skills are', v:3 },
+  { k:'critical',t:'Critical to the crop',  d:'weight on how critical the work is to food, safety and supply', v:4 },
+  { k:'cost',    t:'Controlling cost',      d:'pulls large populations toward the median', v:3 },
+  { k:'equity',  t:'Internal fairness',     d:'pulls everyone toward one consistent stance', v:2 },
+];
+const W = {}; VALUES.forEach(v => W[v.k] = v.v);
+// Cost of replacing someone, as a share of annual pay. Under $100k from the Center
+// for American Progress review of 30 case studies; senior levels are an assumption.
+const replCost = pay => pay < 30000 ? 16 : pay < 50000 ? 20 : pay < 100000 ? 21 : pay < 200000 ? 50 : 100;
+const STANCES = [ ['Lag',.95,'var(--lag)'], ['Match',1,'var(--match)'], ['Lead',1.05,'var(--lead)'], ['Lead+',1.12,'var(--leadp)'] ];
+let ELASTIC = 15;   // % fewer leavers for every 5% of pay above today's position (assumption, editable)
+
+let view = 'fam';
+const rowsData = { fam: [], job: [] };
+const fams = {};
+WF.jobs.forEach(j => { (fams[j.tw] = fams[j.tw] || []).push(j); });
+Object.entries(fams).forEach(([tw, js]) => {
+  const hc = js.reduce((s,j) => s + j.hc, 0);
+  const pay = js.reduce((s,j) => s + j.pay*j.hc, 0) / hc;
+  const ratio = js.filter(j => j.ratio).reduce((s,j) => s + j.ratio*j.hc, 0) / js.filter(j => j.ratio).reduce((s,j) => s + j.hc, 0);
+  const turnover = js.reduce((s,j) => s + j.turnover*j.hc, 0) / hc;
+  const d = FAM_DEF[tw] || { scarcity: 3, critical: 3 };
+  rowsData.fam.push({ name: FAM_NAME(tw), sub: js.length + ' jobs', hc, pay, ratio, turnover, repl: replCost(pay), scarcity: d.scarcity, critical: d.critical });
+  js.forEach(j => {
+    const sc = /grower|technician|engineer|mechanic|electric|climate|maintenance|refrig/i.test(j.t) ? Math.min(5, d.scarcity + 1) : d.scarcity;
+    rowsData.job.push({ name: j.t, sub: FAM_NAME(tw) + ' · ' + j.g + (j.hourly ? ' · hourly' : ''), hc: j.hc, pay: j.pay, ratio: j.ratio || 1, turnover: j.turnover, repl: replCost(j.pay), scarcity: sc, critical: j.lead ? 5 : d.critical });
+  });
+});
+rowsData.job.sort((a,b) => b.hc - a.hc);
+const totalPayroll = rowsData.fam.reduce((s,r) => s + r.hc*r.pay, 0);
+
+function score(r){
+  const tc = r.hc * r.turnover/100 * r.pay * r.repl/100;                       // yearly turnover cost
+  const tcPerHead = tc / r.hc;
+  const retain = Math.min(5, (r.turnover / 10) + (tcPerHead / 4000));             // high churn or costly churn
+  const share = r.hc * r.pay / totalPayroll;                                      // share of payroll
+  const wsum = W.retain + W.scarce + W.critical + W.cost + W.equity || 1;
+  let s = (W.retain*retain + W.scarce*r.scarcity + W.critical*r.critical + W.cost*(3 - 6*share) + W.equity*3) / wsum;
+  return { s, tc };
+}
+function stanceOf(s){ return s < 2.6 ? 0 : s < 3.3 ? 1 : s < 3.9 ? 2 : 3; }
+function calc(r){
+  const { s, tc } = score(r);
+  const st = r.override != null ? r.override : stanceOf(s);
+  const target = STANCES[st][1];
+  const gap = Math.max(0, target / r.ratio - 1);
+  const cost = r.hc * r.pay * gap;
+  const lift = (target / r.ratio - 1) * 100;                                      // % pay change vs today
+  const fewer = Math.max(-60, Math.min(60, ELASTIC * lift / 5));                  // % change in leavers
+  const saved = tc * fewer / 100;
+  return { s, tc, st, target, cost, saved, net: saved - cost };
+}
+
+function renderValues(){
+  $('#values').innerHTML = VALUES.map(v => '<div class="val"><label>'+v.t+' <b id="vv-'+v.k+'">'+W[v.k]+'</b></label><span>'+v.d+'</span><input type="range" min="0" max="5" step="1" value="'+W[v.k]+'" data-k="'+v.k+'"></div>').join('');
+  $('#values').querySelectorAll('input').forEach(inp => inp.oninput = () => { W[inp.dataset.k] = +inp.value; $('#vv-'+inp.dataset.k).textContent = inp.value; render(); });
+}
+function render(){
+  const rows = rowsData[view];
+  $('#th').innerHTML = '<tr><th>'+(view==='fam'?'Job family':'Job')+'</th><th class="n">People</th><th class="n">Market ratio</th><th class="n">Turnover</th><th class="n">Replace cost</th><th class="n">Turnover cost / yr</th><th class="n">Scarcity</th><th class="n">Critical</th><th>Stance</th><th class="n">Cost to reach</th><th class="n">Turnover saved</th><th class="n">Savings cover</th></tr>';
+  let T = { tc:0, cost:0, saved:0, hc:0 };
+  $('#rows').innerHTML = rows.map((r,i) => {
+    const c = calc(r); T.tc += c.tc; T.cost += c.cost; T.saved += c.saved; T.hc += r.hc;
+    const maxTc = Math.max(...rows.map(x => calc(x).tc));
+    return '<tr><td><b>'+r.name+'</b><span class="sub">'+r.sub+' · avg '+fmt(r.pay)+'</span></td><td class="n">'+r.hc.toLocaleString()+'</td>'
+      + '<td class="n '+(r.ratio < .95 ? 'bad' : '')+'">'+r.ratio.toFixed(2)+'</td>'
+      + '<td class="n"><input data-i="'+i+'" data-f="turnover" type="number" step="0.1" value="'+r.turnover.toFixed(1)+'">%</td>'
+      + '<td class="n"><input data-i="'+i+'" data-f="repl" type="number" value="'+r.repl+'">%</td>'
+      + '<td class="n">'+fmtK(c.tc)+'<div class="bar"><i style="width:'+Math.round(100*c.tc/maxTc)+'%"></i></div></td>'
+      + '<td class="n"><input data-i="'+i+'" data-f="scarcity" type="number" min="1" max="5" value="'+r.scarcity+'"></td>'
+      + '<td class="n"><input data-i="'+i+'" data-f="critical" type="number" min="1" max="5" value="'+r.critical+'"></td>'
+      + '<td><select data-i="'+i+'" style="background:'+STANCES[c.st][2]+';color:#fff;font-weight:700;border:0">'+STANCES.map((s,k) => '<option value="'+k+'"'+(k===c.st?' selected':'')+'>'+s[0]+' '+s[1].toFixed(2)+'</option>').join('')+'</select>'+(r.override==null ? '<span class="sub">recommended</span>' : '<span class="sub">your choice</span>')+'</td>'
+      + '<td class="n">'+(c.cost ? fmtK(c.cost) : '—')+'</td><td class="n">'+(c.saved > 0 ? fmtK(c.saved) : '—')+'</td>'
+      + '<td class="n '+(c.cost && c.saved >= c.cost ? 'good' : '')+'">'+(c.cost ? Math.round(100*Math.max(0,c.saved)/c.cost)+'%' : '—')+'</td></tr>';
+  }).join('');
+  $('#rows').querySelectorAll('input').forEach(inp => inp.onchange = () => { rows[+inp.dataset.i][inp.dataset.f] = +inp.value; render(); });
+  $('#rows').querySelectorAll('select').forEach(sel => sel.onchange = () => { rows[+sel.dataset.i].override = +sel.value; render(); });
+  $('#kpis').innerHTML = [
+    [T.hc.toLocaleString(), 'people in the jobs shown'],
+    [fmtK(T.tc), 'turnover cost a year at today’s rates'],
+    [fmtK(T.cost), 'cost a year to reach the recommended stances'],
+    [(T.cost ? Math.round(100*T.saved/T.cost) : 0) + '%', 'of that cost covered by fewer leavers; the rest is the price of what we value'],
+  ].map(k => '<div class="kpi"><b>'+k[0]+'</b><span>'+k[1]+'</span></div>').join('');
+  $('#note').innerHTML = 'Turnover is the last 12 months of demo data ('+WF.window+'). Replacement cost under $100,000 of pay follows the <a href="https://www.americanprogress.org/article/there-are-significant-business-costs-to-replacing-employees/">Center for American Progress</a> review (16% under $30,000, 20% under $50,000, 21% typical); higher levels are assumptions. Turnover saved assumes '+ELASTIC+'% fewer leavers for every 5% of pay above today’s market position; check it against exit interviews and real results. Market ratio compares each person with the market midpoint for their own country.';
+}
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { view = b.dataset.v; document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b)); render(); });
+if (window.top !== window) document.querySelector('header a').style.display = 'none';
+renderValues(); $('#el').oninput = () => { ELASTIC = +$('#el').value || 0; render(); }; render();
+})();
+</script>
+</body>
+</html>

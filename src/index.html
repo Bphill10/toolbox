@@ -444,6 +444,12 @@ const CAT={
  m_jdmatch_d:{en:'Drop in a folder of job descriptions: each is matched to a survey job and level with a confidence score, plus a career path and an expanded job description for the next level.',pt:'Drop in a folder of job descriptions: each is matched to a survey job and level with a confidence score, plus a career path and an expanded job description for the next level.',es:'Drop in a folder of job descriptions: each is matched to a survey job and level with a confidence score, plus a career path and an expanded job description for the next level.'},
  m_trs:{en:'Total Rewards Statement',pt:'Total Rewards Statement',es:'Total Rewards Statement'},
  m_trs_d:{en:'A personal statement of everything an employee earns: pay, health, retirement, time off, government programs and extras, in local currency, ready to save as PDF.',pt:'A personal statement of everything an employee earns: pay, health, retirement, time off, government programs and extras, in local currency, ready to save as PDF.',es:'A personal statement of everything an employee earns: pay, health, retirement, time off, government programs and extras, in local currency, ready to save as PDF.'},
+ m_positioning:{en:'How Competitive Should We Be',pt:'How Competitive Should We Be',es:'How Competitive Should We Be'},
+ m_positioning_d:{en:'Set what the company values most and get a pay stance for each job family or job, lag, match or lead, weighed against turnover and what it costs.',pt:'Set what the company values most and get a pay stance for each job family or job, lag, match or lead, weighed against turnover and what it costs.',es:'Set what the company values most and get a pay stance for each job family or job, lag, match or lead, weighed against turnover and what it costs.'},
+ m_succession:{en:'Succession Planning',pt:'Succession Planning',es:'Succession Planning'},
+ m_succession_d:{en:'Critical roles, vacancy risk and successors ready now, in one to two years or later, with a nine-box and the development each one needs.',pt:'Critical roles, vacancy risk and successors ready now, in one to two years or later, with a nine-box and the development each one needs.',es:'Critical roles, vacancy risk and successors ready now, in one to two years or later, with a nine-box and the development each one needs.'},
+ m_orgchart:{en:'Org Chart',pt:'Org Chart',es:'Org Chart'},
+ m_orgchart_d:{en:'Every active employee and who they report to, with team sizes and span of control. Click to move through the organisation or search for anyone.',pt:'Every active employee and who they report to, with team sizes and span of control. Click to move through the organisation or search for anyone.',es:'Every active employee and who they report to, with team sizes and span of control. Click to move through the organisation or search for anyone.'},
   m_pricing_d:{en:'RFP rate building. Directors and below, EMEA shown in aggregate.',pt:'Constru\u00e7\u00e3o de taxas para RFP. Diretores e abaixo, EMEA agregado.',es:'Construcci\u00f3n de tarifas para RFP. Directores y abajo, EMEA agregado.'},
  m_ctc:{en:'Cost to Company',pt:'Custo para a Empresa',es:'Costo para la Empresa'},
  m_ctc_d:{en:'All-in employment cost by country — employer loadings, market-to-market comparisons, cheapest-location analysis.',
@@ -535,12 +541,14 @@ const CAT={
 };
 
 const MODS=[
-  {id:'comp', icon:'⚖', grad:'linear-gradient(135deg,#0F8A5F,#0B3B2C)', desktop:true, group:'data'},
   {id:'jdmatch', url:'/jdmatch/', icon:'⇄', grad:'linear-gradient(135deg,#0F8A5F,#0B3B2C)', desktop:true, group:'data'},
+  {id:'positioning', url:'/positioning/', icon:'◎', grad:'linear-gradient(135deg,#0F8A5F,#0B3B2C)', desktop:true, group:'data'},
   {id:'archbuild', icon:'▤', grad:'linear-gradient(135deg,#65A30D,#4D7C0F)', desktop:true, group:'jobs'},
   {id:'jdlib', icon:'✎', grad:'linear-gradient(135deg,#65A30D,#4D7C0F)', desktop:true, group:'jobs'},
   {id:'ranges', icon:'▥', grad:'linear-gradient(135deg,#65A30D,#4D7C0F)', desktop:true, group:'jobs'},
   {id:'career', icon:'⇗', grad:'linear-gradient(135deg,#65A30D,#4D7C0F)', desktop:true, group:'jobs'},
+  {id:'succession', url:'/succession/', icon:'⇡', grad:'linear-gradient(135deg,#65A30D,#4D7C0F)', desktop:true, group:'jobs'},
+  {id:'orgchart', url:'/orgchart/', icon:'⊤', grad:'linear-gradient(135deg,#65A30D,#4D7C0F)', desktop:true, group:'jobs'},
   {id:'sti', icon:'◈', grad:'linear-gradient(135deg,#0E7490,#155E75)', desktop:true, group:'inc'},
   {id:'lti', icon:'◔', grad:'linear-gradient(135deg,#0E7490,#155E75)', desktop:true, group:'inc'},
   {id:'perf', icon:'◎', grad:'linear-gradient(135deg,#0E7490,#155E75)', desktop:true, group:'inc'},
@@ -564,7 +572,7 @@ function applyLang(){
   renderCards();
   broadcast({pl_lang:LANG});
 }
-const GROUPS={data:'Step 1 · Market data, then competitive assessment · weeks 1 to 8',jobs:'Step 2 · Global job architecture · months 1 to 4',inc:'Step 3 · Incentives: STI, then LTI · months 3 to 9',ana:'Step 4 · Analytics and everyday pay tools · months 6 to 12'};
+const GROUPS={data:'Step 1 · Market data, then competitive assessment · weeks 1 to 8',jobs:'Step 2 · Global job architecture, careers and succession · months 1 to 4',inc:'Step 3 · Incentives: STI, then LTI · months 3 to 9',ana:'Step 4 · Analytics and everyday pay tools · months 6 to 12'};
 function renderCards(){
   var out='',last='';
   MODS.forEach(function(m){

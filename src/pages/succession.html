@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Succession Planning · MGI Insight</title>
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<style>
+  :root { --deep:#072A1F; --green:#0B4A36; --accent:#0F8A5F; --ink:#16241e; --muted:#5C6F66; --line:#DDE6E0; --soft:#F2F7F4; --bg:#F5F7F6;
+          --now:#0F8A5F; --soon:#0E7490; --later:#B45309; --none:#B42318; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14.5px/1.5 "Segoe UI", Arial, Helvetica, sans-serif; }
+  header { background:linear-gradient(135deg,var(--deep),var(--green)); color:#fff; padding:20px 16px 22px; }
+  .w { max-width:1200px; margin:0 auto; }
+  header a { color:#9BE7C4; text-decoration:none; font-size:13px; font-weight:600; }
+  .k { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#9BE7C4; font-weight:800; margin-top:10px; }
+  h1 { font:600 27px/1.2 Georgia, serif; margin:4px 0 6px; }
+  header p { margin:0; color:#cfe9dd; max-width:860px; }
+  main { padding:18px 16px 48px; }
+  h2 { font:600 20px Georgia, serif; margin:24px 0 8px; color:var(--deep); }
+  .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .kpi { background:#fff; border:1px solid var(--line); border-top:3px solid var(--green); border-radius:10px; padding:12px 14px; }
+  .kpi b { display:block; font-size:24px; color:var(--deep); }
+  .kpi span { color:var(--muted); font-size:12.5px; }
+  .grid2 { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:16px; align-items:start; }
+  .grid2 > div { min-width:0; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px; }
+  .wrap { overflow-x:auto; background:#fff; border:1px solid var(--line); border-radius:12px; }
+  table { border-collapse:collapse; width:100%; }
+  th { text-align:left; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--deep); padding:9px 10px; white-space:nowrap; }
+  td { border-bottom:1px solid var(--line); padding:9px 10px; vertical-align:top; }
+  tbody tr { cursor:pointer; } tbody tr:hover td { background:var(--soft); } tbody tr.sel td { background:#E3F4EC; }
+  .sub { display:block; color:var(--muted); font-size:12px; }
+  .pill { display:inline-block; border-radius:999px; padding:2px 9px; font-size:12px; font-weight:700; white-space:nowrap; color:#fff; margin:0 4px 4px 0; }
+  .risk { font-weight:700; } .r-High { color:var(--none); } .r-Medium { color:var(--later); } .r-Low { color:var(--now); }
+  .nine { display:grid; grid-template-columns:24px repeat(3,1fr); grid-template-rows:repeat(3,92px) 22px; gap:5px; }
+  .cell { border-radius:8px; padding:6px 7px; font-size:11.5px; overflow:hidden; }
+  .cell b { display:block; font-size:11px; letter-spacing:.04em; }
+  .cell .n { font:700 20px Georgia, serif; }
+  .ax { font-size:10.5px; color:var(--muted); display:flex; align-items:center; justify-content:center; }
+  .ax.y { writing-mode:vertical-rl; transform:rotate(180deg); }
+  .det h3 { font:600 18px Georgia, serif; margin:0 0 4px; }
+  .det h4 { font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:14px 0 6px; }
+  .succ { border:1px solid var(--line); border-left:4px solid var(--c); border-radius:9px; padding:9px 11px; margin-bottom:8px; }
+  .succ ul { margin:6px 0 0; padding-left:18px; font-size:13px; }
+  .note { color:var(--muted); font-size:12px; margin-top:10px; }
+  @media (max-width:900px) { .grid2 { grid-template-columns:minmax(0,1fr); } .kpis { grid-template-columns:1fr 1fr; } }
+</style>
+</head>
+<body>
+<header><div class="w">
+  <a href="/" target="_top">&larr; Back to MGI Insight</a>
+  <div class="k">Step 2 · Job architecture and careers</div>
+  <h1>Succession planning</h1>
+  <p>Every critical role, its risk of a vacancy, and who could step in: ready now, in one to two years, or later, with the development each successor needs. Successors come from each leader's own organisation in the org chart.</p>
+</div></header>
+<main><div class="w">
+  <div class="kpis" id="kpis"></div>
+  <div class="grid2" style="margin-top:16px">
+    <div>
+      <h2 style="margin-top:0">Critical roles</h2>
+      <div class="wrap"><table><thead><tr><th>Role and incumbent</th><th>Vacancy risk</th><th>Successors</th><th>Bench</th></tr></thead><tbody id="rows"></tbody></table></div>
+    </div>
+    <div>
+      <h2 style="margin-top:0">Successors on the nine-box</h2>
+      <div class="card"><div class="nine" id="nine"></div></div>
+      <div class="card det" id="det" style="margin-top:14px"></div>
+    </div>
+  </div>
+  <p class="note">Demonstration: the people and reporting lines come from the demo dataset; performance, potential, risk and readiness ratings are illustrative and would come from talent reviews.</p>
+</div></main>
+<script>
+const WF = {{include:data/workforce.json}};
+</script>
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const tc = s => s.toLowerCase().replace(/(^|[\s\-'])\p{L}/gu, m => m.toUpperCase());
+function hash(s){ let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+const JOB = {}; WF.jobs.forEach(j => JOB[j.k] = j);
+const RANK = { S1:1,S2:2,S3:3,S4:4,P5:5,P6:6,P7:7,M7:7,M8:8,M9:9,M10:10,M11:11,E12:12,E13:13 };
+const P = WF.org.map(([n, t, loc, sup, k], i) => { const [last, first] = n.split(', '); return { i, name: tc((first||'') + ' ' + last).trim(), t, loc, sup, k, g: (JOB[k]||{}).g || '', kids: [] }; });
+P.forEach(p => { if (p.sup >= 0 && P[p.sup]) P[p.sup].kids.push(p); });
+const rank = p => RANK[p.g] || 0;
+// Critical roles: directors and above, plus every leadership role.
+const critical = P.filter(p => rank(p) >= 10 || (JOB[p.k] && JOB[p.k].lead && rank(p) >= 8)).sort((a,b) => rank(b) - rank(a) || a.t.localeCompare(b.t));
+const READY = [['Ready now','var(--now)'],['Ready in 1–2 years','var(--soon)'],['Ready in 3+ years','var(--later)']];
+const LEVEL = ['Low','Medium','High'];
+const GAPS = {
+  M:['Lead a larger team or a second site for a season','Own a budget and an annual operating plan','Present results to the executive team'],
+  E:['Take on a cross-functional company priority','Build relationships with key customers and the board','Lead a major change or investment end to end'],
+  P:['Lead people for the first time, starting with a small crew','Run a project across two departments','Learn budgeting and workforce planning'],
+};
+function within(p, depth){ const out = []; (function walk(x, d){ x.kids.forEach(k => { out.push(k); if (d < depth) walk(k, d + 1); }); })(p, 1); return out; }
+const plans = critical.map(c => {
+  const h = hash(c.name + c.t);
+  const pool = within(c, 3).filter(x => rank(x) >= Math.max(7, rank(c) - 4) && rank(x) < rank(c) + 1).sort((a,b) => rank(b) - rank(a) || hash(a.name) - hash(b.name)).slice(0, 3);
+  // Nominated successors skew toward stronger ratings; readiness follows the ratings and the level gap.
+  const rate = x => { const v = x % 100; return v < 12 ? 1 : v < 55 ? 2 : 3; };
+  const succ = pool.map(s => { const hs = hash(s.name + c.name); const perf = rate(hs), pot = rate(hs >>> 8);
+      const gap = rank(c) - rank(s); const strength = perf + pot;
+      const ready = strength >= 6 && gap <= 2 ? 0 : strength >= 5 && gap <= 3 ? (gap <= 1 ? 0 : 1) : strength >= 4 ? 1 + (gap >= 4 ? 1 : 0) : 2;
+      return { s, ready: Math.min(2, ready), perf, pot }; })
+    .filter(x => x.perf + x.pot >= 3).sort((a, b) => a.ready - b.ready || (b.perf + b.pot) - (a.perf + a.pot));
+  return { c, risk: h % 7 === 0 ? 2 : h % 3 === 0 ? 1 : 0, retire: (h >>> 5) % 9 === 0, succ };
+});
+let SEL = 0;
+function render(){
+  const withNow = plans.filter(p => p.succ.some(s => s.ready === 0)).length;
+  const none = plans.filter(p => !p.succ.length).length;
+  const high = plans.filter(p => p.risk === 2 || p.retire).length;
+  const allS = plans.flatMap(p => p.succ);
+  $('#kpis').innerHTML = [
+    [plans.length, 'critical roles: directors and above, and key site leaders'],
+    [Math.round(100 * withNow / plans.length) + '%', 'have a successor ready now'],
+    [none, 'have no successor identified'],
+    [high, 'at high risk of a vacancy (flight or retirement)'],
+  ].map(k => '<div class="kpi"><b>'+k[0]+'</b><span>'+k[1]+'</span></div>').join('');
+  $('#rows').innerHTML = plans.map((p, i) => {
+    const bench = p.succ.some(s => s.ready === 0) ? ['Strong','var(--now)'] : p.succ.some(s => s.ready === 1) ? ['Developing','var(--soon)'] : p.succ.length ? ['Thin','var(--later)'] : ['None','var(--none)'];
+    return '<tr data-i="'+i+'" class="'+(i===SEL?'sel':'')+'"><td><b>'+esc(p.c.t)+'</b><span class="sub">'+esc(p.c.name)+' · '+esc(p.c.loc)+'</span></td>'
+      + '<td><span class="risk r-'+LEVEL[p.risk]+'">'+LEVEL[p.risk]+'</span>'+(p.retire ? '<span class="sub">retirement eligible</span>' : '')+'</td>'
+      + '<td>'+(p.succ.map(s => '<span class="pill" style="background:'+READY[s.ready][1]+'" title="'+esc(s.s.t)+'">'+esc(s.s.name.split(' ')[0])+' · '+['now','1–2y','3y+'][s.ready]+'</span>').join('') || '<span class="sub">none identified</span>')+'</td>'
+      + '<td><span class="pill" style="background:'+bench[1]+'">'+bench[0]+'</span></td></tr>';
+  }).join('');
+  $('#rows').querySelectorAll('tr').forEach(tr => tr.onclick = () => { SEL = +tr.dataset.i; render(); });
+  // nine-box
+  const box = {}; allS.forEach(s => { const key = s.pot + '-' + s.perf; (box[key] = box[key] || []).push(s); });
+  const NAMES = { '3-1':'Enigma','3-2':'Growth employee','3-3':'Future leader','2-1':'Dilemma','2-2':'Core player','2-3':'High performer','1-1':'Under-performer','1-2':'Effective','1-3':'Trusted professional' };
+  const BG = { '3-3':'#0F8A5F','3-2':'#3FA77D','2-3':'#3FA77D','2-2':'#8CC7A9','3-1':'#E9C46A','1-3':'#8CC7A9','1-2':'#CFE3D7','2-1':'#F2D7A6','1-1':'#F1B9AE' };
+  let g = '';
+  for (const pot of [3,2,1]) { g += '<div class="ax y">'+['','Low','Medium','High'][pot]+' potential</div>'; for (const perf of [1,2,3]) { const k = pot+'-'+perf, list = box[k] || []; g += '<div class="cell" style="background:'+BG[k]+';color:'+(['3-3','3-2','2-3'].includes(k)?'#fff':'#16241e')+'"><b>'+NAMES[k]+'</b><span class="n">'+list.length+'</span></div>'; } }
+  g += '<div></div><div class="ax">Low performance</div><div class="ax">Medium</div><div class="ax">High performance</div>';
+  $('#nine').innerHTML = g;
+  // detail
+  const p = plans[SEL];
+  $('#det').innerHTML = '<h3>'+esc(p.c.t)+'</h3><span class="sub">'+esc(p.c.name)+' · '+esc(p.c.loc)+' · grade '+p.c.g+' · '+p.c.kids.length+' direct reports</span>'
+    + '<h4>Vacancy risk</h4><div><span class="risk r-'+LEVEL[p.risk]+'">'+LEVEL[p.risk]+' flight risk</span>'+(p.retire ? ' · retirement eligible within 3 years' : '')+'</div>'
+    + '<h4>Successors</h4>' + (p.succ.length ? p.succ.map(s => { const track = rank(p.c) >= 12 ? 'E' : rank(s.s) <= 7 && !/supervisor|manager|director|lead/i.test(s.s.t) ? 'P' : 'M'; const gaps = GAPS[track].slice(0, 3 - s.ready);
+        return '<div class="succ" style="--c:'+READY[s.ready][1]+'"><b>'+esc(s.s.name)+'</b> · '+READY[s.ready][0]+'<span class="sub">'+esc(s.s.t)+' · '+esc(s.s.loc)+' · performance '+LEVEL[s.perf-1].toLowerCase()+', potential '+LEVEL[s.pot-1].toLowerCase()+'</span>'
+          + (gaps.length ? '<ul>'+gaps.map(x => '<li>'+x+'</li>').join('')+'</ul>' : '<span class="sub">No gaps: ready to step in.</span>')+'</div>'; }).join('')
+      : '<p class="sub">No internal successor in this leader\'s organisation. Look across sites and functions, or plan an external hire.</p>');
+}
+if (window.top !== window) document.querySelector('header a').style.display = 'none';
+render();
+})();
+</script>
+</body>
+</html>
