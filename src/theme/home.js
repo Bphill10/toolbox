@@ -35,6 +35,7 @@
     var w = 120, h = 38, n = vals.length, bw = w / n, mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals), r = mx - mn || 1;
     return '<svg class="spk" viewBox="0 0 ' + w + ' ' + h + '" aria-hidden="true">' + vals.map(function(v, i){ var bh = 8 + (h - 8) * (v - mn) / r; return '<rect x="' + (i*bw + 1.2).toFixed(1) + '" y="' + (h - bh).toFixed(1) + '" width="' + (bw - 2.6).toFixed(1) + '" height="' + bh.toFixed(1) + '" rx="2" opacity="' + (.3 + .7*(i+1)/n).toFixed(2) + '"/>'; }).join('') + '</svg>';
   }
+  function meter(f){ return '<svg class="spk" viewBox="0 0 120 38" aria-hidden="true"><rect x="0" y="15" width="120" height="8" rx="4" opacity=".25"/><rect x="0" y="15" width="' + (120 * f).toFixed(1) + '" height="8" rx="4"/></svg>'; }
   var byC = {}; H.sites.forEach(function(s){ var c = byC[s.c] = byC[s.c] || { sites:0, hc:0 }; c.sites++; c.hc += s.hc; });
   var people = H.sites.reduce(function(a, s){ return a + s.hc; }, 0), hc = H.hc.ALL;
   var d12 = 100 * (hc[hc.length-1] - hc[0]) / hc[0];
@@ -45,9 +46,9 @@
     bld:'<svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4 21V5.5L12 3v18h-2v-3H7v3zm3-13h1.6v1.8H7zm2.4 0H11v1.8H9.4zM7 11.3h1.6v1.8H7zm2.4 0H11v1.8H9.4zM7 14.6h1.6v1.8H7zm2.4 0H11v1.8H9.4zM13 21V9l7 2.2V21zm2-7.6h1.5v1.6H15zm2.5 0H19v1.6h-1.5zM15 16.6h1.5v1.6H15zm2.5 0H19v1.6h-1.5z"/></svg>'
   };
   var K = [
-    ['one', B.priced, 'Employees priced', '<span class="dl">' + (d12 >= 0 ? '▲' : '▼') + ' ' + Math.abs(d12).toFixed(1) + '%</span> vs 12 months ago', bars(hc)],
+    ['one', people, 'Active employees', '<span class="dl">' + (d12 >= 0 ? '▲' : '▼') + ' ' + Math.abs(d12).toFixed(1) + '%</span> vs 12 months ago', bars(hc)],
+    ['two', B.priced, 'Mapped to market', Math.round(100 * B.priced / people) + '% of active employees have a survey match', meter(B.priced / people)],
     ['glb', 3, 'Countries', 'Canada, United States, Mexico', bars(['MX','CA','US'].map(function(c){ return byC[c].hc; }))],
-    ['two', B.records, 'People in HR data', fmt(people) + ' current · ' + fmt(B.former) + ' former', bars(H.seen)],
     ['bld', H.sites.length, 'Sites', 'greenhouses, packing, distribution, offices', bars(H.sites.slice(0, 12).map(function(s){ return s.hc; }).reverse())]
   ];
 
@@ -62,7 +63,7 @@
     + '<button type="button" class="crow" data-r="all"><span class="flag f-ALL" aria-hidden="true">ALL</span><span class="cn"><b>All regions</b><small>the whole company</small></span><span class="chev" aria-hidden="true">›</span></button>';
 
   /* ---- featured modules (artwork from the approved design kit) ---- */
-  var FEAT = [['jdmatch','Job Matcher','Start here: match your jobs to the market.','job_matcher'],['archbuild','Job Architecture','Build a connected career framework.','job_architecture'],['career','Career Pathing','Show what is possible for every employee.','career_pathing'],['benchmark','Benchmarking','See any employee against market and peers.','market_positioning'],['lti','Long-Term Incentive','Design an executive LTI plan.','lti'],['ghr','Analytics','Workforce and pay KPIs in one view.','analytics']];
+  var FEAT = [['jdmatch','Job Matcher','Start here: match your jobs to the market.','job_matcher'],['archbuild','Job Architecture','Build a connected career framework.','job_architecture'],['career','Career Pathing','Show what is possible for every employee.','career_pathing'],['benchmark','Benchmarking','Every job against the market, by level.','market_positioning'],['lti','Long-Term Incentive','Design an executive LTI plan.','lti'],['ghr','Analytics','Workforce and pay KPIs in one view.','analytics']];
 
   var ov = document.getElementById('mgiOverview');
   ov.innerHTML = '<div class="kcards">' + K.map(function(k){ return '<div class="kc"><div class="kt"><span class="ki" aria-hidden="true">' + ICON[k[0]] + '</span><div><b data-n="' + k[1] + '">' + fmt(k[1]) + '</b><span>' + k[2] + '</span></div></div><div class="kb"><small>' + k[3] + '</small>' + k[4] + '</div></div>'; }).join('') + '</div>'
@@ -111,7 +112,7 @@
     ['Step 2 · Job architecture', 'One framework for every job', 'Families, levels and ranges across the US, Canada and Mexico, so offers and promotions follow the same rules everywhere.', 'job_architecture', 'archbuild', 'Open Job Architecture'],
     ['Step 2 · Job descriptions', 'Every job, described the same way', 'Job descriptions from one approved template, with the training, certifications and next-step criteria for each grade.', 'jd_creator', 'jdlib', 'Open JD Creator'],
     ['Step 2 · Careers', 'Show people where they can go', 'Every role\u2019s next steps, what each move is worth, the skills to build and who is ready now.', 'career_pathing', 'career', 'Open Career Pathing'],
-    ['Step 3 · Benchmarking', 'See any employee against the market', 'Pull up an employee and see their pay against the market median, their pay range and the people in the same job.', 'market_positioning', 'benchmark', 'Open Benchmarking'],
+    ['Step 3 · Benchmarking', 'See every job against the market', 'Pick a job and see its average pay against the market median and its pay range, level by level, with no individual names.', 'market_positioning', 'benchmark', 'Open Benchmarking'],
     ['Step 4 · Long-term incentive', 'Keep the leaders who build the future', 'Stock options, phantom shares or deferred cash for a private company, with grants, cost and retention modeled.', 'lti', 'lti', 'Open the LTI designer'],
     ['Step 5 · Analytics', 'See it all in one view', 'Workforce and pay KPIs, pay analysis and market position, live on one company dataset.', 'analytics', 'ghr', 'Open Analytics']
   ];

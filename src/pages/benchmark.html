@@ -71,6 +71,13 @@
   .cost { margin:10px 0 0; font-size:14px; }
   .est { font-size:10.5px; font-weight:700; color:var(--or); background:var(--tint-o); border-radius:4px; padding:1px 4px; }
   table.fam .sub { display:inline; font-size:12px; }
+  .seg2 { display:inline-flex; border:1px solid var(--line2); border-radius:12px; overflow:hidden; background:var(--card); }
+  .seg2 button { font:600 13.5px Inter, "Segoe UI", Arial, sans-serif; border:0; background:none; color:var(--muted); padding:11px 14px; cursor:pointer; }
+  .seg2 button.on { background:var(--green); color:#fff; }
+  .seg2 button:disabled { opacity:.35; cursor:default; }
+  .toprow { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+  .toprow .find { flex:1 1 320px; }
+  .dist .barq { fill:var(--accent); } .dist .barq.out { fill:var(--or); }
   @media (max-width:760px) {
     .kpis { grid-template-columns:1fr; } .two { grid-template-columns:1fr; }
     .who .pay { text-align:left; } .card { padding:16px; }
@@ -89,18 +96,21 @@
 <main><div class="w">
 
 <h1 class="pt">Benchmarking</h1>
-<p class="ps">Pick an employee to see their pay against the market and against the people in the same job.</p>
+<p class="ps">Pick a job to see its average pay against the market, and how pay compares at each level of that job.</p>
 
-<div class="find">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
-  <input id="q" type="search" autocomplete="off" placeholder="Search by name or job title" aria-label="Search by name or job title" role="combobox" aria-expanded="false" aria-controls="sug">
-  <ul class="sug" id="sug" role="listbox" hidden></ul>
+<div class="toprow">
+  <div class="find">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+    <input id="q" type="search" autocomplete="off" placeholder="Search a job title" aria-label="Search a job title" role="combobox" aria-expanded="false" aria-controls="sug">
+    <ul class="sug" id="sug" role="listbox" hidden></ul>
+  </div>
+  <div class="seg2" id="ctry" role="group" aria-label="Country"><button data-c="USA">US</button><button data-c="CANADA">Canada</button><button data-c="MEXICO">Mexico</button></div>
 </div>
 <div class="try">Try: <button data-ex="below">Paid below market</button><button data-ex="at">At market</button><button data-ex="above">Paid above market</button></div>
 
 <div id="out"></div>
 
-<p class="note">Fictional employees and an illustrative salary survey. Market means the same job in the employee&rsquo;s own country. Part-time pay is shown on a full-time basis. Pay and market figures are in each employee&rsquo;s local currency.</p>
+<p class="note">Fictional company and an illustrative salary survey. Averages only; no individual pay is shown. Market means the same job in that country. Part-time pay is put on a full-time basis. Figures are in each country&rsquo;s currency.</p>
 
 </div></main>
 
@@ -111,174 +121,153 @@ const BM = {{include:data/benchmark.json}};
 (function(){
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
-// [name, job key, title, grade, country, site, tenure, currency, pay, fte, p25, p50, p75, min, mid, max]
-const P = BM.people.map((r, i) => ({ i, name:r[0], k:r[1], title:r[2], grade:r[3], ctry:r[4], site:r[5], ten:r[6], ccy:r[7], pay:r[8], fte:r[9], p25:r[10], p50:r[11], p75:r[12], min:r[13], mid:r[14], max:r[15] }));
+// [job key, title, grade, country, currency, people, average, lowest, highest, P25, P50, P75, range min, mid, max, [below, Q1..Q4, above]]
+const J = BM.rows.map(r => ({ k:r[0], title:r[1], grade:r[2], ctry:r[3], ccy:r[4], n:r[5], avg:r[6], lo:r[7], hi:r[8], p25:r[9], p50:r[10], p75:r[11], min:r[12], mid:r[13], max:r[14], q:r[15] }));
+const byKey = {}; J.forEach(j => byKey[j.k + '|' + j.ctry] = j);
 const CTRY = { USA:'United States', CANADA:'Canada', MEXICO:'Mexico' };
 const SYM = { USD:'$', CAD:'C$', MXN:'MX$' };
 const money = (v, c) => SYM[c] + Math.round(v).toLocaleString('en-US');
 const short = (v, c) => SYM[c] + (v >= 1e6 ? (v/1e6).toFixed(2) + 'M' : v >= 1e4 ? Math.round(v/1000) + 'K' : Math.round(v).toLocaleString('en-US'));
 const pct = x => (x > 0 ? '+' : '') + Math.round(x * 100) + '%';
-const groups = {}; P.forEach(p => { (groups[p.k + '|' + p.ctry] = groups[p.k + '|' + p.ctry] || []).push(p); });
-Object.values(groups).forEach(g => g.sort((a, b) => b.pay - a.pay));
-const median = a => { const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m-1] + s[m]) / 2; };
-let SHOWALL = false;
-const FAMILY = k => (BM.jobs[k] || [''])[0], HOURLY = k => !!(BM.jobs[k] || [0, 0])[1];
+const HOURLY = k => !!(BM.jobs[k] || [0, 0])[1];
 const hourly = (v, c) => SYM[c] + (v / 2080).toFixed(2);
-// Where pay sits in the range, in quarters, with what each quarter usually means.
 const QL = ['Learning the role', 'Developing in the role', 'Fully proficient', 'Expert in the role'];
-function quart(pay, p){ if (pay < p.min) return { q:'Below range', l:'Below the range minimum' }; if (pay > p.max) return { q:'Above range', l:'Above the range maximum' }; const i = Math.min(3, Math.floor((pay - p.min) / (p.max - p.min) * 4)); return { q:'Q' + (i + 1), l:QL[i] }; }
-const peerRank = (pay, p, g) => { const o = g.filter(x => x !== p), b = o.filter(x => x.pay < pay).length; return !o.length ? '&mdash;' : b === 0 ? 'Lowest paid' : b === o.length ? 'Highest paid' : 'Paid more than ' + Math.round(100 * b / o.length) + '%'; };
+function quart(pay, j){ if (pay < j.min) return { q:'Below range', l:'Below the range minimum' }; if (pay > j.max) return { q:'Above range', l:'Above the range maximum' }; const i = Math.min(3, Math.floor((pay - j.min) / (j.max - j.min) * 4)); return { q:'Q' + (i + 1), l:QL[i] }; }
+let CTY = 'USA', CUR = null, lastW = 0;
 
-// ---------- search ----------
+// ---------- picking a job ----------
 const q = $('#q'), sug = $('#sug'); let hits = [], hi = -1;
 function find(t){
   t = t.trim().toLowerCase(); if (t.length < 2) return [];
-  const w = t.split(/\s+/);
-  return P.filter(p => { const h = (p.name + ' ' + p.title + ' ' + p.site).toLowerCase(); return w.every(x => h.includes(x)); }).slice(0, 8);
+  const w = t.split(/\s+/), seen = {};
+  return J.filter(j => j.ctry === CTY && w.every(x => j.title.toLowerCase().includes(x))).concat(J.filter(j => j.ctry !== CTY && w.every(x => j.title.toLowerCase().includes(x))))
+    .filter(j => seen[j.k] ? false : (seen[j.k] = 1)).slice(0, 8);
 }
 function showSug(){
   hits = find(q.value); hi = -1;
-  sug.innerHTML = hits.length ? hits.map((p, j) => '<li role="option" data-j="' + j + '">' + esc(p.name) + '<span>' + esc(p.title) + ' · ' + esc(p.site) + '</span></li>').join('') : (q.value.trim().length > 1 ? '<li aria-disabled="true"><span>No one found</span></li>' : '');
+  sug.innerHTML = hits.length ? hits.map((j, n) => { const h = byKey[j.k + '|' + CTY] || j; return '<li role="option" data-n="' + n + '">' + esc(j.title) + '<span>Grade ' + esc(j.grade) + ' · ' + h.n + ' ' + (h.n > 1 ? 'people' : 'person') + ' in ' + CTRY[h.ctry] + '</span></li>'; }).join('') : (q.value.trim().length > 1 ? '<li aria-disabled="true"><span>No job found</span></li>' : '');
   sug.hidden = !sug.innerHTML; q.setAttribute('aria-expanded', !sug.hidden);
 }
-function pick(p){ sug.hidden = true; q.setAttribute('aria-expanded', 'false'); q.value = ''; SHOWALL = false; show(p); }
+function pick(j){ sug.hidden = true; q.setAttribute('aria-expanded', 'false'); q.value = ''; show(byKey[j.k + '|' + CTY] || j); }
 q.addEventListener('input', showSug);
 q.addEventListener('keydown', e => {
   if (sug.hidden || !hits.length) return;
-  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); hi = (hi + (e.key === 'ArrowDown' ? 1 : -1) + hits.length) % hits.length; [...sug.children].forEach((li, j) => li.classList.toggle('on', j === hi)); }
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); hi = (hi + (e.key === 'ArrowDown' ? 1 : -1) + hits.length) % hits.length; [...sug.children].forEach((li, n) => li.classList.toggle('on', n === hi)); }
   else if (e.key === 'Enter') { e.preventDefault(); pick(hits[hi < 0 ? 0 : hi]); }
   else if (e.key === 'Escape') { sug.hidden = true; }
 });
-sug.addEventListener('mousedown', e => { const li = e.target.closest('li[data-j]'); if (li) { e.preventDefault(); pick(hits[+li.dataset.j]); } });
+sug.addEventListener('mousedown', e => { const li = e.target.closest('li[data-n]'); if (li) { e.preventDefault(); pick(hits[+li.dataset.n]); } });
 document.addEventListener('click', e => { if (!e.target.closest('.find')) sug.hidden = true; });
-
-// ---------- examples: someone in a job with a handful of peers ----------
+document.querySelectorAll('#ctry button').forEach(b => b.onclick = () => { CTY = b.dataset.c; const j = CUR && byKey[CUR.k + '|' + CTY]; show(j || example('below')); });
 function example(kind){
-  const ok = p => { const n = groups[p.k + '|' + p.ctry].length; return n >= 6 && n <= 40 && p.fte === 1; };
-  const r = p => p.pay / p.p50;
-  const pool = P.filter(ok).filter(kind === 'below' ? p => r(p) < .9 : kind === 'above' ? p => r(p) > 1.1 : p => Math.abs(r(p) - 1) < .02);
-  const aim = kind === 'below' ? .88 : kind === 'above' ? 1.12 : 1;
-  pool.sort((a, b) => Math.abs(r(a) - aim) - Math.abs(r(b) - aim));
-  return pool[0] || P[0];
+  const r = j => j.avg / j.p50, aim = kind === 'below' ? .9 : kind === 'above' ? 1.08 : 1;
+  const pool = J.filter(j => j.ctry === CTY && j.n >= 5).sort((a, b) => Math.abs(r(a) - aim) - Math.abs(r(b) - aim));
+  return pool[0] || J.find(j => j.ctry === CTY);
 }
-document.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => { SHOWALL = false; show(example(b.dataset.ex)); });
+document.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => show(example(b.dataset.ex)));
 
 // ---------- charts ----------
-function marketChart(p, W){
-  const x0 = 20, x1 = W - 20;
-  const lo = Math.min(p.min, p.p25, p.pay) * .94, hi = Math.max(p.max, p.p75, p.pay) * 1.04;
+function marketChart(j, W){
+  const x0 = 20, x1 = W - 20, c = j.ccy;
+  const lo = Math.min(j.min, j.p25, j.avg) * .94, hi = Math.max(j.max, j.p75, j.avg) * 1.04;
   const X = v => x0 + (v - lo) / (hi - lo) * (x1 - x0);
-  const c = p.ccy;
-  return '<svg class="ch" viewBox="0 0 ' + W + ' 150" role="img" aria-label="Pay ' + money(p.pay, c) + ' against market 25th ' + money(p.p25, c) + ', median ' + money(p.p50, c) + ', 75th ' + money(p.p75, c) + '">' +
-    '<text x="' + X(p.p50) + '" y="14" text-anchor="middle">Market median ' + short(p.p50, c) + '</text>' +
-    '<rect class="band" x="' + X(p.p25) + '" y="26" width="' + (X(p.p75) - X(p.p25)) + '" height="34" rx="6"/>' +
-    '<line class="med" x1="' + X(p.p50) + '" x2="' + X(p.p50) + '" y1="20" y2="66"/>' +
-    '<text x="' + X(p.p25) + '" y="78" text-anchor="middle">25th ' + short(p.p25, c) + '</text>' +
-    '<text x="' + X(p.p75) + '" y="78" text-anchor="middle">75th ' + short(p.p75, c) + '</text>' +
-    '<line class="rng" x1="' + X(p.min) + '" x2="' + X(p.max) + '" y1="104" y2="104"/>' +
-    [1, 2, 3].map(j => '<line x1="' + X(p.min + (p.max - p.min) * j / 4) + '" x2="' + X(p.min + (p.max - p.min) * j / 4) + '" y1="99" y2="109" stroke="var(--card)" stroke-width="2"/>').join('') +
-    [0, 1, 2, 3].map(j => '<text x="' + X(p.min + (p.max - p.min) * (j + .5) / 4) + '" y="94" text-anchor="middle" style="font-size:10.5px">Q' + (j + 1) + '</text>').join('') +
-    '<text x="' + X(p.min) + '" y="126" text-anchor="start">Range min ' + short(p.min, c) + '</text>' +
-    '<text x="' + X(p.max) + '" y="126" text-anchor="end">max ' + short(p.max, c) + '</text>' +
-    '<line x1="' + X(p.pay) + '" x2="' + X(p.pay) + '" y1="36" y2="104" stroke="var(--deep)" stroke-width="1" stroke-dasharray="2 3"/>' +
-    '<circle class="me" cx="' + X(p.pay) + '" cy="43" r="9"/><circle class="me" cx="' + X(p.pay) + '" cy="104" r="7"/>' +
-    '<text class="lbl" x="' + Math.min(Math.max(X(p.pay), 60), W - 60) + '" y="146" text-anchor="middle">' + esc(p.name.split(' ')[0]) + ' ' + short(p.pay, p.ccy) + '</text>' +
-    '</svg><div class="legend"><span><i style="background:var(--tint-g);border:1px solid var(--accent)"></i>Market 25th to 75th</span><span><i style="background:var(--line2)"></i>Company pay range</span><span><i style="background:var(--hl);border-radius:50%"></i>This employee</span></div>';
+  return '<svg class="ch" viewBox="0 0 ' + W + ' 150" role="img" aria-label="Average pay ' + money(j.avg, c) + ' against market 25th ' + money(j.p25, c) + ', median ' + money(j.p50, c) + ', 75th ' + money(j.p75, c) + '">' +
+    '<text x="' + X(j.p50) + '" y="14" text-anchor="middle">Market median ' + short(j.p50, c) + '</text>' +
+    '<rect class="band" x="' + X(j.p25) + '" y="26" width="' + (X(j.p75) - X(j.p25)) + '" height="34" rx="6"/>' +
+    '<line class="med" x1="' + X(j.p50) + '" x2="' + X(j.p50) + '" y1="20" y2="66"/>' +
+    '<text x="' + X(j.p25) + '" y="78" text-anchor="middle">25th ' + short(j.p25, c) + '</text>' +
+    '<text x="' + X(j.p75) + '" y="78" text-anchor="middle">75th ' + short(j.p75, c) + '</text>' +
+    '<line class="rng" x1="' + X(j.min) + '" x2="' + X(j.max) + '" y1="104" y2="104"/>' +
+    [1, 2, 3].map(n => '<line x1="' + X(j.min + (j.max - j.min) * n / 4) + '" x2="' + X(j.min + (j.max - j.min) * n / 4) + '" y1="99" y2="109" stroke="var(--card)" stroke-width="2"/>').join('') +
+    [0, 1, 2, 3].map(n => '<text x="' + X(j.min + (j.max - j.min) * (n + .5) / 4) + '" y="94" text-anchor="middle" style="font-size:10.5px">Q' + (n + 1) + '</text>').join('') +
+    '<text x="' + X(j.min) + '" y="126" text-anchor="start">Range min ' + short(j.min, c) + '</text>' +
+    '<text x="' + X(j.max) + '" y="126" text-anchor="end">max ' + short(j.max, c) + '</text>' +
+    '<line x1="' + X(j.avg) + '" x2="' + X(j.avg) + '" y1="36" y2="104" stroke="var(--deep)" stroke-width="1" stroke-dasharray="2 3"/>' +
+    '<circle class="me" cx="' + X(j.avg) + '" cy="43" r="9"/><circle class="me" cx="' + X(j.avg) + '" cy="104" r="7"/>' +
+    '<text class="lbl" x="' + Math.min(Math.max(X(j.avg), 70), W - 70) + '" y="146" text-anchor="middle">Our average ' + short(j.avg, c) + '</text>' +
+    '</svg><div class="legend"><span><i style="background:var(--tint-g);border:1px solid var(--accent)"></i>Market 25th to 75th</span><span><i style="background:var(--line2)"></i>Company pay range</span><span><i style="background:var(--hl);border-radius:50%"></i>Our average</span></div>';
 }
-function peerChart(p, g, W){
-  const x0 = 20, x1 = W - 20, pays = g.map(x => x.pay);
-  const lo = Math.min(...pays, p.p50) * .95, hi = Math.max(...pays, p.p50) * 1.04;
-  const X = v => x0 + (v - lo) / (hi - lo) * (x1 - x0);
-  const pm = median(pays), c = p.ccy;
-  let dots = '';
-  g.forEach((x, j) => { if (x === p) return; const y = 52 + ((j * 37) % 7 - 3) * 5; dots += '<circle class="peer" cx="' + X(x.pay).toFixed(1) + '" cy="' + y + '" r="' + (g.length > 120 ? 3.5 : 6) + '"/>'; });
-  return '<svg class="ch" viewBox="0 0 ' + W + ' 120" role="img" aria-label="' + g.length + ' people in this job; this employee ' + money(p.pay, c) + ', company median ' + money(pm, c) + '">' +
-    '<line class="axis" x1="' + x0 + '" x2="' + x1 + '" y1="84" y2="84"/>' +
-    '<line class="med" x1="' + X(p.p50) + '" x2="' + X(p.p50) + '" y1="18" y2="84"/><text x="' + X(p.p50) + '" y="12" text-anchor="middle">Market ' + short(p.p50, c) + '</text>' +
-    '<line class="pmed" x1="' + X(pm) + '" x2="' + X(pm) + '" y1="24" y2="84"/><text x="' + X(pm) + '" y="102" text-anchor="middle">Company median ' + short(pm, c) + '</text>' +
-    dots + '<circle class="me" cx="' + X(p.pay) + '" cy="52" r="9"/>' +
-    '</svg><div class="legend"><span><i style="background:var(--accent);opacity:.45;border-radius:50%"></i>Others in this job</span><span><i style="background:var(--hl);border-radius:50%"></i>This employee</span></div>';
+function distChart(j, W){
+  const L = ['Below', 'Q1', 'Q2', 'Q3', 'Q4', 'Above'], m = Math.max(...j.q, 1), bw = (W - 40) / 6;
+  return '<svg class="ch dist" viewBox="0 0 ' + W + ' 150" role="img" aria-label="' + L.map((l, n) => l + ' ' + j.q[n]).join(', ') + '">' +
+    j.q.map((v, n) => { const h = v / m * 92, x = 20 + n * bw; return '<rect class="barq' + (n === 0 || n === 5 ? ' out' : '') + '" x="' + (x + bw * .18) + '" y="' + (112 - h) + '" width="' + bw * .64 + '" height="' + Math.max(h, v ? 2 : 0) + '" rx="4"/><text class="lbl" x="' + (x + bw / 2) + '" y="' + (106 - h) + '" text-anchor="middle">' + v + '</text><text x="' + (x + bw / 2) + '" y="130" text-anchor="middle">' + L[n] + '</text>'; }).join('') +
+    '<line class="axis" x1="20" x2="' + (W - 20) + '" y1="112" y2="112"/></svg><div class="legend"><span>Number of people in each quarter of the pay range' + (j.q[0] || j.q[5] ? '; gold bars are outside the range' : '') + '</span></div>';
 }
-
-// ---------- the view ----------
-function show(p){
-  const g = groups[p.k + '|' + p.ctry], c = p.ccy;
-  const vsMkt = p.pay / p.p50 - 1, compa = p.pay / p.mid;
-  const below = g.filter(x => x.pay < p.pay).length, others = g.length - 1;
-  const rank = others ? Math.round(100 * below / others) : null;
-  let say = vsMkt < -.1 ? 'Paid ' + Math.round(-vsMkt * 100) + '% below the market median. Worth a look at the next pay review.'
-          : vsMkt < -.03 ? 'A little below the market median, within the normal range.'
-          : vsMkt <= .03 ? 'Paid right at the market median.'
-          : vsMkt <= .1 ? 'A little above the market median, within the normal range.'
-          : 'Paid ' + Math.round(vsMkt * 100) + '% above the market median. Check the reasons, such as experience or skills.';
-  if (p.pay < p.min) say += ' Below the bottom of the pay range.'; else if (p.pay > p.max) say += ' Above the top of the pay range.';
-  const warn = Math.abs(vsMkt) > .1 || p.pay < p.min || p.pay > p.max;
-  const rows = SHOWALL ? g : (() => { const at = g.indexOf(p), s = Math.max(0, Math.min(at - 3, g.length - 8)); return g.slice(s, s + 8); })();
-  $('#out').innerHTML =
-    '<div class="card"><div class="who"><div><h2>' + esc(p.name) + '</h2><div class="meta">' + esc(p.title) + ' · Grade ' + esc(p.grade) + '<br>' + esc(p.site) + ', ' + CTRY[p.ctry] + ' · ' + esc(p.ten) + ' with the company</div></div>' +
-    '<div class="pay"><b>' + money(p.pay, c) + '</b><span>annual base' + (p.fte < 1 ? ', full-time basis (works ' + Math.round(p.fte * 100) + '%)' : '') + (HOURLY(p.k) ? '<br>about ' + hourly(p.pay, c) + ' an hour' : '') + '</span></div></div>' +
-    '<div class="kpis">' +
-      '<div class="kpi"><div class="l">Against market median</div><div class="v ' + (vsMkt < -.03 ? 'dn' : vsMkt > .03 ? 'up' : '') + '">' + pct(vsMkt) + '</div><div class="s">market median ' + money(p.p50, c) + '</div></div>' +
-      '<div class="kpi"><div class="l">Position in pay range</div><div class="v">' + quart(p.pay, p).q + ' &middot; ' + compa.toFixed(2) + '</div><div class="s">' + quart(p.pay, p).l + '; 1.00 is the midpoint (' + money(p.mid, c) + ')</div></div>' +
-      '<div class="kpi"><div class="l">Against peers</div><div class="v">' + peerRank(p.pay, p, g) + '</div><div class="s">' + (others ? 'of the ' + others + ' other ' + esc(p.title) + (others > 1 ? 's' : '') + ' in ' + CTRY[p.ctry] : 'only person in this job in ' + CTRY[p.ctry]) + '</div></div>' +
-    '</div><div class="say' + (warn ? ' warn' : '') + '">' + say + '</div></div>' +
-    '<div class="two"><div class="card"><h3>Against the market</h3><p class="hs">' + esc(p.title) + ', ' + CTRY[p.ctry] + '</p><div id="c1"></div></div>' +
-    '<div class="card"><h3>Inside the company</h3><p class="hs">' + g.length + ' ' + (g.length > 1 ? 'people' : 'person') + ' in this job in ' + CTRY[p.ctry] + '</p><div id="c2"></div></div></div>' +
-    '<div class="card"><h3>Try a pay change</h3><p class="hs">See what a raise would do before it is approved.</p>' +
-      '<div class="chg"><label class="amt"><input id="chg" type="number" inputmode="decimal" step="any" min="0" placeholder="0" aria-label="Increase"><span class="seg"><button type="button" data-m="pct" class="on">%</button><button type="button" data-m="amt">' + SYM[c] + '</button></span></label>' +
-      '<button type="button" class="q" data-q="3">+3%</button><button type="button" class="q" data-q="mkt">To market median</button>' + (p.pay < p.min ? '<button type="button" class="q" data-q="min">To range minimum</button>' : '') + '</div>' +
-      '<div style="overflow-x:auto"><table class="cmp"><thead><tr><th></th><th class="n">Now</th><th class="n">After</th></tr></thead><tbody id="chgRows"></tbody></table></div><p class="cost" id="chgCost"></p></div>' +
-    '<div class="card"><h3>Same job, same country</h3><p class="hs">Click a name to benchmark that person.</p><div style="overflow-x:auto"><table><thead><tr><th>Name</th><th class="hide-sm">Site</th><th class="hide-sm">Time with company</th><th class="n">Pay</th><th class="n">Vs market</th></tr></thead><tbody>' +
-      rows.map(x => '<tr data-i="' + x.i + '"' + (x === p ? ' class="me"' : '') + ' tabindex="0"><td>' + esc(x.name) + '</td><td class="hide-sm">' + esc(x.site) + '</td><td class="hide-sm">' + esc(x.ten) + '</td><td class="n">' + money(x.pay, x.ccy) + '</td><td class="n">' + pct(x.pay / x.p50 - 1) + '</td></tr>').join('') +
-    '</tbody></table></div>' + (g.length > 8 ? '<button class="more" id="more">' + (SHOWALL ? 'Show fewer' : 'Show all ' + g.length) + '</button>' : '') + '</div>' + ladderCard(p);
-  CUR = p; draw(); chgInit(p, g);
-  const m = $('#more'); if (m) m.onclick = () => { SHOWALL = !SHOWALL; show(p); };
-  document.querySelectorAll('#out tbody tr[data-i]').forEach(tr => { const go = () => { if (+tr.dataset.i !== p.i) { show(P[+tr.dataset.i]); $('#out').scrollIntoView({ behavior:'smooth', block:'start' }); } }; tr.onclick = go; tr.onkeydown = e => { if (e.key === 'Enter') go(); }; });
-}
-// ---------- pay change ----------
-let MODE = 'pct';
-function chgInit(p, g){
-  const inp = $('#chg'); let exact = null;  // a button's exact target, so "to market median" lands on it, not a rounded %
-  const run = () => {
-    const v = parseFloat(inp.value) || 0, np = exact !== null ? exact : Math.max(0, MODE === 'pct' ? p.pay * (1 + v / 100) : p.pay + v), c = p.ccy, d = np - p.pay;
-    const row = (l, a, b) => '<tr><td>' + l + '</td><td class="n">' + a + '</td><td class="n"><b>' + b + '</b></td></tr>';
-    $('#chgRows').innerHTML = row('Pay', money(p.pay, c), money(np, c)) + row('Against market median', pct(p.pay / p.p50 - 1), pct(np / p.p50 - 1)) +
-      row('Position in pay range', quart(p.pay, p).q + ' &middot; ' + (p.pay / p.mid).toFixed(2), quart(np, p).q + ' &middot; ' + (np / p.mid).toFixed(2)) + row('Against peers', peerRank(p.pay, p, g), peerRank(np, p, g));
-    $('#chgCost').innerHTML = d > 0 ? 'Cost: <b>' + money(d, c) + ' a year</b> (' + (d / p.pay * 100).toFixed(1) + '%' + (HOURLY(p.k) ? ', ' + hourly(d, c) + ' an hour' : '') + ')' : 'Enter an increase, or pick one of the buttons.';
-  };
-  inp.oninput = () => { exact = null; run(); };
-  document.querySelectorAll('.seg button').forEach(b => b.onclick = () => { const v = parseFloat(inp.value) || 0; const was = MODE; MODE = b.dataset.m; document.querySelectorAll('.seg button').forEach(x => x.classList.toggle('on', x === b)); if (v && was !== MODE) inp.value = MODE === 'amt' ? Math.round((exact !== null ? exact - p.pay : p.pay * v / 100)) : ((exact !== null ? exact - p.pay : v) / p.pay * 100).toFixed(1); run(); });
-  document.querySelectorAll('.chg .q').forEach(b => b.onclick = () => { const t = b.dataset.q === '3' ? p.pay * 1.03 : b.dataset.q === 'mkt' ? p.p50 : p.min; inp.value = MODE === 'pct' ? Math.max(0, (t / p.pay - 1) * 100).toFixed(1) : Math.max(0, Math.round(t - p.pay)); exact = Math.max(p.pay, t); run(); });
-  run();
-}
+function draw(){ if (!CUR) return; lastW = innerWidth; $('#c1').innerHTML = marketChart(CUR, Math.max(280, $('#c1').clientWidth)); $('#c2').innerHTML = distChart(CUR, Math.max(280, $('#c2').clientWidth)); }
+addEventListener('resize', () => { if (innerWidth !== lastW) draw(); });
 
 // ---------- this job, level by level ----------
 // Levels the survey has for this job, lowest to highest. Where the company has people at a level, the market and range
 // are that level's own; elsewhere the midpoint is estimated from this job's market with a typical step between levels.
 const STEP = { S:1.12, P:1.22, M:1.25, E:1.35 };
 const lvNum = l => +l.slice(1);
-function ladderCard(p){
-  const L = BM.ladders[p.k]; if (!L) return '';
-  const [fam, name, at, levels] = L, c = p.ccy;
+function ladderCard(j){
+  const L = BM.ladders[j.k]; if (!L) return '';
+  const [fam, name, at, levels] = L, c = j.ccy;
   const rows = levels.map(l => {
-    const k = BM.codes[fam + '.' + l], g = k && groups[k + '|' + p.ctry];
-    if (g) { const x = g[0], pays = g.map(y => y.pay); return { l, k, real:true, mid:x.mid, min:x.min, max:x.max, n:g.length, lo:Math.min(...pays), avg:pays.reduce((a, b) => a + b, 0) / g.length, hi:Math.max(...pays) }; }
-    const f = Math.pow(STEP[l[0]] || 1.15, lvNum(l) - lvNum(at)), mid = p.mid * f;
-    return { l, real:false, mid, min:mid * p.min / p.mid, max:mid * p.max / p.mid, n:0 };
+    const k = BM.codes[fam + '.' + l], x = k && byKey[k + '|' + j.ctry];
+    if (x) return { l, x, real:true, mid:x.mid, min:x.min, max:x.max, n:x.n, lo:x.lo, avg:x.avg, hi:x.hi };
+    const f = Math.pow(STEP[l[0]] || 1.15, lvNum(l) - lvNum(at)), mid = j.mid * f;
+    return { l, real:false, mid, min:mid * j.min / j.mid, max:mid * j.max / j.mid, n:0 };
   });
   const est = rows.some(r => !r.real);
-  return '<div class="card"><h3>' + esc(name) + ' by level, ' + CTRY[p.ctry] + '</h3><p class="hs">Lowest to highest level. Internal pay is shown where the level has people; click a level to see someone in it.</p><div style="overflow-x:auto"><table class="fam"><thead><tr><th>Level</th><th class="n">Market midpoint</th><th class="n hide-sm">Range</th><th class="n">People</th><th class="n hide-sm">Internal min</th><th class="n">Internal avg</th><th class="n hide-sm">Internal max</th><th class="n" title="Average pay against the range midpoint">Avg position</th></tr></thead><tbody>' +
-    rows.map(r => '<tr' + (r.n ? ' data-job="' + r.k + '|' + p.ctry + '" tabindex="0"' : '') + (r.l === at ? ' class="me"' : '') + '><td>' + r.l + ' <span class="sub">' + esc(BM.levelNames[r.l] || '') + '</span></td><td class="n">' + money(r.mid, c) + (r.real ? '' : ' <span class="est">est.</span>') + '</td><td class="n hide-sm">' + short(r.min, c) + '&ndash;' + short(r.max, c) + '</td><td class="n">' + (r.n || '&mdash;') + '</td>' +
+  return '<div class="card"><h3>' + esc(name) + ' by level, ' + CTRY[j.ctry] + '</h3><p class="hs">Lowest to highest level. Internal pay is shown where the level has people.</p><div style="overflow-x:auto"><table class="fam"><thead><tr><th>Level</th><th class="n">Market midpoint</th><th class="n hide-sm">Range</th><th class="n">People</th><th class="n hide-sm">Internal min</th><th class="n">Internal avg</th><th class="n hide-sm">Internal max</th><th class="n" title="Average pay against the range midpoint">Avg position</th></tr></thead><tbody>' +
+    rows.map(r => '<tr' + (r.real && r.x !== j ? ' data-k="' + r.x.k + '" tabindex="0"' : '') + (r.l === at ? ' class="me"' : '') + '><td>' + r.l + ' <span class="sub">' + esc(BM.levelNames[r.l] || '') + '</span></td><td class="n">' + money(r.mid, c) + (r.real ? '' : ' <span class="est">est.</span>') + '</td><td class="n hide-sm">' + short(r.min, c) + '&ndash;' + short(r.max, c) + '</td><td class="n">' + (r.n || '&mdash;') + '</td>' +
       (r.n ? '<td class="n hide-sm">' + money(r.lo, c) + '</td><td class="n">' + money(r.avg, c) + '</td><td class="n hide-sm">' + money(r.hi, c) + '</td><td class="n">' + (r.avg / r.mid).toFixed(2) + '</td>' : '<td class="n hide-sm">&mdash;</td><td class="n">&mdash;</td><td class="n hide-sm">&mdash;</td><td class="n">&mdash;</td>') + '</tr>').join('') +
     '</tbody></table></div><p class="note">Position 1.00 means average pay sits at the range midpoint.' + (est ? ' <span class="est">est.</span> marks a level with no one at the company yet; its midpoint is estimated from this job&rsquo;s market and the usual step between levels.' : '') + '</p></div>';
 }
-document.addEventListener('click', e => { const tr = e.target.closest('tr[data-job]'); if (!tr) return; const g = groups[tr.dataset.job], m = median(g.map(x => x.pay)); const pick = g.reduce((a, x) => Math.abs(x.pay - m) < Math.abs(a.pay - m) ? x : a, g[0]); if (pick !== CUR) { SHOWALL = false; show(pick); $('#out').scrollIntoView({ behavior:'smooth', block:'start' }); } });
-document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches && e.target.matches('tr[data-job]')) e.target.click(); });
+document.addEventListener('click', e => { const tr = e.target.closest('tr[data-k]'); if (tr) { show(byKey[tr.dataset.k + '|' + CTY]); $('#out').scrollIntoView({ behavior:'smooth', block:'start' }); } });
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches && e.target.matches('tr[data-k]')) e.target.click(); });
 
-let CUR = null, lastW = 0;
-function draw(){ if (!CUR) return; const g = groups[CUR.k + '|' + CUR.ctry]; const w = Math.max(280, $('#c1').clientWidth); lastW = innerWidth; $('#c1').innerHTML = marketChart(CUR, w); $('#c2').innerHTML = peerChart(CUR, g, Math.max(280, $('#c2').clientWidth)); }
-addEventListener('resize', () => { if (innerWidth !== lastW) draw(); });
-window.__bm = { P, groups, example, show };
+// ---------- pay change for the whole job ----------
+let MODE = 'pct';
+function chgInit(j){
+  const inp = $('#chg'); let exact = null;  // a button's exact target, so "to market median" lands on it
+  const run = () => {
+    const v = parseFloat(inp.value) || 0, np = exact !== null ? exact : Math.max(0, MODE === 'pct' ? j.avg * (1 + v / 100) : j.avg + v), c = j.ccy, d = np - j.avg;
+    const row = (l, a, b) => '<tr><td>' + l + '</td><td class="n">' + a + '</td><td class="n"><b>' + b + '</b></td></tr>';
+    $('#chgRows').innerHTML = row('Average pay', money(j.avg, c), money(np, c)) + row('Against market median', pct(j.avg / j.p50 - 1), pct(np / j.p50 - 1)) +
+      row('Position in pay range', quart(j.avg, j).q + ' &middot; ' + (j.avg / j.mid).toFixed(2), quart(np, j).q + ' &middot; ' + (np / j.mid).toFixed(2));
+    $('#chgCost').innerHTML = d > 0 ? 'Cost: <b>' + money(d * j.n, c) + ' a year</b> for ' + j.n + ' ' + (j.n > 1 ? 'people' : 'person') + ' (' + money(d, c) + ' each, ' + (d / j.avg * 100).toFixed(1) + '%' + (HOURLY(j.k) ? ', ' + hourly(d, c) + ' an hour' : '') + ')' : exact !== null ? 'Average pay is already at or above that point; no increase needed.' : 'Enter an increase, or pick one of the buttons.';
+  };
+  inp.oninput = () => { exact = null; run(); };
+  document.querySelectorAll('.seg button').forEach(b => b.onclick = () => { const v = parseFloat(inp.value) || 0, was = MODE; MODE = b.dataset.m; document.querySelectorAll('.seg button').forEach(x => x.classList.toggle('on', x === b)); if (v && was !== MODE) inp.value = MODE === 'amt' ? Math.round(exact !== null ? exact - j.avg : j.avg * v / 100) : ((exact !== null ? exact - j.avg : v) / j.avg * 100).toFixed(1); run(); });
+  document.querySelectorAll('.chg .q').forEach(b => b.onclick = () => { const t = b.dataset.q === '3' ? j.avg * 1.03 : b.dataset.q === 'mkt' ? j.p50 : j.min; inp.value = MODE === 'pct' ? Math.max(0, (t / j.avg - 1) * 100).toFixed(1) : Math.max(0, Math.round(t - j.avg)); exact = Math.max(j.avg, t); run(); });
+  run();
+}
+
+// ---------- the view ----------
+function show(j){
+  if (!j) return;
+  CTY = j.ctry; document.querySelectorAll('#ctry button').forEach(b => { b.classList.toggle('on', b.dataset.c === CTY); b.setAttribute('aria-pressed', b.dataset.c === CTY); });
+  const c = j.ccy, vs = j.avg / j.p50 - 1, qq = quart(j.avg, j);
+  const outside = j.q[0] + j.q[5];
+  let say = vs < -.1 ? 'On average this job is paid ' + Math.round(-vs * 100) + '% below the market median. Worth a look at the next pay review.'
+          : vs < -.03 ? 'On average a little below the market median, within the normal range.'
+          : vs <= .03 ? 'On average this job is paid right at the market median.'
+          : vs <= .1 ? 'On average a little above the market median, within the normal range.'
+          : 'On average this job is paid ' + Math.round(vs * 100) + '% above the market median. Check the reasons, such as experience or skills.';
+  if (outside) say += ' ' + outside + ' of ' + j.n + ' ' + (outside > 1 ? 'are' : 'is') + ' outside the pay range.';
+  const others = ['USA', 'CANADA', 'MEXICO'].filter(x => byKey[j.k + '|' + x]);
+  $('#out').innerHTML =
+    '<div class="card"><div class="who"><div><h2>' + esc(j.title) + '</h2><div class="meta">Grade ' + esc(j.grade) + ' · ' + CTRY[j.ctry] + ' · ' + j.n + ' ' + (j.n > 1 ? 'people' : 'person') + '</div></div>' +
+    '<div class="pay"><b>' + money(j.avg, c) + '</b><span>average annual base' + (HOURLY(j.k) ? '<br>about ' + hourly(j.avg, c) + ' an hour' : '') + '</span></div></div>' +
+    '<div class="kpis">' +
+      '<div class="kpi"><div class="l">Against market median</div><div class="v ' + (vs < -.03 ? 'dn' : vs > .03 ? 'up' : '') + '">' + pct(vs) + '</div><div class="s">market median ' + money(j.p50, c) + '</div></div>' +
+      '<div class="kpi"><div class="l">Average position in range</div><div class="v">' + qq.q + ' &middot; ' + (j.avg / j.mid).toFixed(2) + '</div><div class="s">' + qq.l + '; 1.00 is the midpoint (' + money(j.mid, c) + ')</div></div>' +
+      '<div class="kpi"><div class="l">Pay spread</div><div class="v">' + short(j.lo, c) + '&ndash;' + short(j.hi, c) + '</div><div class="s">lowest to highest in this job</div></div>' +
+    '</div><div class="say' + (Math.abs(vs) > .1 || outside ? ' warn' : '') + '">' + say + '</div></div>' +
+    '<div class="two"><div class="card"><h3>Against the market</h3><p class="hs">' + esc(j.title) + ', ' + CTRY[j.ctry] + '</p><div id="c1"></div></div>' +
+    '<div class="card"><h3>Where people sit in the range</h3><p class="hs">' + j.n + ' ' + (j.n > 1 ? 'people' : 'person') + ', no names shown</p><div id="c2"></div></div></div>' +
+    ladderCard(j) +
+    '<div class="card"><h3>Try a pay change</h3><p class="hs">See what a raise for this job would do before it is approved.</p>' +
+      '<div class="chg"><label class="amt"><input id="chg" type="number" inputmode="decimal" step="any" min="0" placeholder="0" aria-label="Increase"><span class="seg"><button type="button" data-m="pct"' + (MODE === 'pct' ? ' class="on"' : '') + '>%</button><button type="button" data-m="amt"' + (MODE === 'amt' ? ' class="on"' : '') + '>' + SYM[c] + '</button></span></label>' +
+      '<button type="button" class="q" data-q="3">+3%</button><button type="button" class="q" data-q="mkt">To market median</button>' + (j.avg < j.min ? '<button type="button" class="q" data-q="min">To range minimum</button>' : '') + '</div>' +
+      '<div style="overflow-x:auto"><table class="cmp"><thead><tr><th></th><th class="n">Now</th><th class="n">After</th></tr></thead><tbody id="chgRows"></tbody></table></div><p class="cost" id="chgCost"></p></div>';
+  CUR = j; draw(); chgInit(j);
+  document.querySelectorAll('#ctry button').forEach(b => b.disabled = !others.includes(b.dataset.c) && b.dataset.c !== CTY);
+}
+window.__bm = { J, byKey, example, show };
 show(example('below'));
 })();
 </script>

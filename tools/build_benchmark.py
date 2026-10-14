@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Build src/data/benchmark.json from the demo people file (src/data/shared-people.b64).
 
-One row per active employee with pay, for the Benchmarking tool (plus each job's family
-and whether it is paid hourly):
-  [name, job key, title, grade, country, site, tenure band, currency, full-time pay,
-   FTE, market P25, P50, P75, range min, mid, max]
-Pay, market and range are in the employee's own currency; part-time pay is shown on a
-full-time basis so it compares fairly with the market. Market percentiles in the people
-file are USD and are converted at the same rates the pay ranges use.
+Job averages for the Benchmarking tool: one row per job and country, no names.
+  [job key, title, grade, country, currency, people, average pay, lowest, highest,
+   market P25, P50, P75, range min, mid, max, [below range, Q1, Q2, Q3, Q4, above range]]
+Pay, market and range are in the country's currency; part-time pay is put on a full-time
+basis so it compares fairly with the market. Market percentiles in the people file are USD
+and are converted at the same rates the pay ranges use. Also: each job's family, whether it
+is paid hourly, and the survey levels its family has (for the by-level view).
 Run after the people file changes:  python3 tools/build_benchmark.py
 """
 import base64, gzip, json, struct
@@ -42,12 +42,7 @@ CTRY = {"US": "USA", "CA": "CANADA", "MX": "MEXICO"}
 FX = {"USD": 1, "CAD": lite["fx"]["CANADA"]["per"], "MXN": lite["fx"]["MEXICO"]["per"]}
 
 
-def nice(name):
-    last, _, first = name.partition(", ")
-    return (first.title() + " " + last.title()).strip()
-
-
-rows = []
+people = []
 for i in range(n):
     if sta[i] != "Active" or ann[i] <= 0:
         continue
@@ -59,10 +54,18 @@ for i in range(n):
         continue
     f = fte.get(i, 1) or 1
     fx = FX[ccy]
-    rows.append([nice(d["names"][i]), k, r["t"], r["g"], c, loc[i], ten[i], ccy, round(ann[i] / f), f,
-                 round(p25[i] * fx), round(p50[i] * fx), round(p75[i] * fx),
-                 round(rmin[i]), round(rmid[i]), round(rmax[i])])
-rows.sort(key=lambda x: x[0])
+    people.append((k, c, ccy, ann[i] / f, p25[i] * fx, p50[i] * fx, p75[i] * fx, rmin[i], rmid[i], rmax[i]))
+grp = {}
+for x in people:
+    grp.setdefault((x[0], x[1]), []).append(x)
+rows = []
+for (k, c), g in sorted(grp.items()):
+    pays = [x[3] for x in g]; x = g[0]; r = roles[k]
+    q = [0] * 6
+    for v in pays:
+        q[0 if v < x[7] else 5 if v > x[9] else 1 + min(3, int((v - x[7]) / (x[9] - x[7]) * 4))] += 1
+    rows.append([k, r["t"], r["g"], c, x[2], len(g), round(sum(pays) / len(g)), round(min(pays)), round(max(pays)),
+                 round(x[4]), round(x[5]), round(x[6]), round(x[7]), round(x[8]), round(x[9]), q])
 FAM = {"CORPORATE FUNCTIONS": "Corporate functions", "GREENHOUSE OPERATIONS": "Greenhouse operations", "PACKING AND DISTRIBUTION": "Packing and distribution",
        "SALES AND MARKETING": "Sales and marketing", "MAINTENANCE AND ENGINEERING": "Maintenance and engineering", "QUALITY AND FOOD SAFETY": "Quality and food safety",
        "SUPPLY CHAIN AND LOGISTICS": "Supply chain and logistics"}
@@ -84,6 +87,6 @@ for k, r in roles.items():
     lv = sorted({j[0].rsplit(".", 1)[1] for j in rows_}, key=ORDER.index)
     ladders[k] = [fam, R["area"][rows_[0][2]], lvl, lv]
 codes = {r["code"]: k for k, r in roles.items()}
-out = {"asof": d["asof"], "survey": d["mkt"]["survey"], "jobs": jobs, "ladders": ladders, "codes": codes, "levelNames": LVLNAME, "people": rows}
+out = {"asof": d["asof"], "survey": d["mkt"]["survey"], "jobs": jobs, "ladders": ladders, "codes": codes, "levelNames": LVLNAME, "rows": rows}
 (ROOT / "src/data/benchmark.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")))
-print(len(rows), "employees")
+print(len(rows), "jobs by country,", len(people), "employees")
