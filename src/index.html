@@ -12,7 +12,7 @@
   --rad:14px; --sh:0 1px 2px rgba(15,36,64,.05),0 8px 24px rgba(15,36,64,.07);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
+html{height:100%}body{min-height:100%}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
 button{font-family:inherit}
 /* ---------- header ---------- */
@@ -586,7 +586,7 @@ function applyLang(){
   renderCards();
   broadcast({pl_lang:LANG});
 }
-const GROUPS={data:'Step 1 · Market data, then competitive assessment · weeks 1 to 8',jobs:'Step 2 · Global job architecture, careers and succession · months 1 to 4',inc:'Step 3 · Incentives · months 3 to 9',ana:'Step 4 · Analytics and everyday pay tools · months 6 to 12'};
+const GROUPS={data:'Step 1 · Market data, then competitive assessment · weeks 1 to 8',jobs:'Step 2 · Global job architecture, careers and succession · months 1 to 6',inc:'Step 3 · Incentives · months 4 to 12',ana:'Step 4 · Analytics and everyday pay tools · months 7 to 18'};
 function renderCards(){
   var out='',last='';
   MODS.forEach(function(m){

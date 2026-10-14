@@ -46,7 +46,7 @@ html[data-theme] .hero .dataUpd::before{background:#3DD69C !important;box-shadow
 .heroBtns .hb2:hover{background:rgba(255,255,255,.08)}
 .heroBtns .hb2 svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linejoin:round}
 .heroFine{margin-top:18px;font-size:12px;color:rgba(231,248,240,.55)}
-.heroTag{position:absolute;right:max(24px,calc((100vw - 1280px)/2 + 24px));top:210px;z-index:2;font-size:13px;letter-spacing:.34em;text-transform:uppercase;color:#fff;font-weight:600;line-height:1.95;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+.heroTag{position:absolute;right:24px;top:150px;z-index:2;font-size:13px;letter-spacing:.34em;text-transform:uppercase;color:#fff;font-weight:600;line-height:1.95;text-shadow:0 2px 14px rgba(0,0,0,.55)}
 .heroTag small{display:block;font-size:10.5px;letter-spacing:.24em;color:#E9D79F;margin-top:2px}
 
 /* ---- overview ---- */
@@ -260,3 +260,15 @@ html[data-theme=dark] .soonTag{color:#E8C77A;background:rgba(213,183,108,.12);bo
   html[data-theme] header .ctl{width:100%;justify-content:space-between}
   html[data-theme] header .ctl select{flex:1;min-width:0}
 }
+/* laptop screens: hero, key numbers and the featured tools fit without zooming out
+   (html[data-theme] to match the theme rules these override) */
+@media (min-width:761px){
+html[data-theme] .hero{min-height:0 !important;padding-bottom:118px !important}
+html[data-theme] .hero .hwrap2{padding:26px 24px 18px !important}
+html[data-theme] .hero h1{font-size:46px !important;margin-top:12px !important}
+html[data-theme] .hero p{font-size:16px !important;margin-top:10px !important}
+html[data-theme] .hero .heroBtns{margin-top:18px !important}
+#mgiOverview{margin-top:-104px}
+.kcards .kc{padding-top:14px;padding-bottom:14px}
+}
+html{scroll-padding-top:64px}

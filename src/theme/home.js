@@ -18,7 +18,8 @@
   var logo = $('header .logo'); if (logo) logo.insertAdjacentElement('afterend', nav);
   function jump(id){
     if (document.body.classList.contains('modOpen') && window.goHome) goHome();
-    var y = id === 'top' ? 0 : document.getElementById(id).getBoundingClientRect().top + window.scrollY - 80;
+    var el = (id === 'grp-data' && document.querySelector('.alltools')) || document.getElementById(id);   // the first group starts under the "All tools" title
+    var y = id === 'top' ? 0 : el.getBoundingClientRect().top + window.scrollY - 72;
     window.scrollTo({ top: y, behavior: calm ? 'auto' : 'smooth' });
   }
   nav.addEventListener('click', function(e){ var a = e.target.closest('a'); if (!a || a.dataset.t[0] === '/') return; e.preventDefault(); jump(a.dataset.t); });
@@ -67,9 +68,9 @@
 
   var ov = document.getElementById('mgiOverview');
   ov.innerHTML = '<div class="kcards">' + K.map(function(k){ return '<div class="kc"><div class="kt"><span class="ki" aria-hidden="true">' + ICON[k[0]] + '</span><div><b data-n="' + k[1] + '">' + fmt(k[1]) + '</b><span>' + k[2] + '</span></div></div><div class="kb"><small>' + k[3] + '</small>' + k[4] + '</div></div>'; }).join('') + '</div>'
+    + '<section class="fsec" id="featured" aria-label="Featured modules"><div class="fgrid">' + FEAT.map(function(f){ return '<button type="button" class="fcard" data-m="' + f[0] + '"><h3>' + f[1] + '</h3><p>' + f[2] + '</p><span class="fb"><span class="achip" aria-hidden="true">&rarr;</span><img src="img/mgi/' + f[3] + '.svg" alt="" width="118" height="83" loading="lazy"></span></button>'; }).join('') + '</div></section>'
     + '<div class="mappanel"><div class="mp-l"><h2>A global workforce with a shared purpose.</h2><div class="mp-n"><div><b>3</b><span>Countries</span></div><div><b>' + H.sites.length + '</b><span>Sites</span></div><div><b>' + fmt(people) + '</b><span>People</span></div></div><p>Pick a country to focus the dashboards on it.</p></div>'
-    + '<div class="mapbox">' + mapSvg + '</div><div class="mp-r">' + rows + '</div></div>'
-    + '<section class="fsec" id="featured" aria-label="Featured modules"><div class="fgrid">' + FEAT.map(function(f){ return '<button type="button" class="fcard" data-m="' + f[0] + '"><h3>' + f[1] + '</h3><p>' + f[2] + '</p><span class="fb"><span class="achip" aria-hidden="true">&rarr;</span><img src="img/mgi/' + f[3] + '.svg" alt="" width="118" height="83" loading="lazy"></span></button>'; }).join('') + '</div></section>';
+    + '<div class="mapbox">' + mapSvg + '</div><div class="mp-r">' + rows + '</div></div>';
   ov.querySelectorAll('[data-m]').forEach(function(el){ el.addEventListener('click', function(){ open(el.dataset.m); }); });
   var main = $('.main'); if (main) { var h = document.createElement('h2'); h.className = 'alltools'; h.textContent = 'All tools'; var c = document.getElementById('cards'); main.insertBefore(h, c); }
 
