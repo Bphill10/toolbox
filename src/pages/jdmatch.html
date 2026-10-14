@@ -22,6 +22,7 @@
   .drop.over { background:var(--hisoft); border-color:var(--accent); }
   .drop h2 { font:600 19px Inter, "Segoe UI", Arial, sans-serif; margin:0 0 6px; }
   .drop p { margin:0 0 14px; color:var(--muted); }
+  .drop textarea { display:block; width:100%; max-width:460px; margin:14px auto 8px; box-sizing:border-box; font:inherit; font-size:14px; padding:10px 12px; border:1px solid var(--line, #cfe3d8); border-radius:10px; background:var(--bg, #fff); color:inherit; resize:vertical; }
   .btns { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
   button, .btn { font:600 13.5px Inter, "Segoe UI", Arial, sans-serif; border-radius:8px; padding:9px 14px; cursor:pointer; border:1px solid var(--green); background:var(--card); color:var(--green); }
   button.primary, .btn.primary { background:var(--green); color:#fff; }
@@ -153,17 +154,18 @@
 <nav class="rail" aria-label="Tools"><a href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a><a href="/jdmatch/" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="11" height="15" rx="2"/><path d="M7 7h5M7 10h5M7 13h3"/><circle cx="17" cy="16" r="4"/><path d="M15.4 16l1.2 1.2 2.2-2.4"/></svg><span>Job Matcher</span></a><a href="/positioning/"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg><span>How competitive should we be</span></a><a href="/roadmap/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20L9 4M20 20L15 4M12 6v2M12 11v2M12 16v2"/></svg><span>Roadmap</span></a></nav>
 <main><div class="w">
 
-<div class="tbar"><div><h1 class="pt">Job Matcher</h1><div class="ps">Match roles to market data, see pay ranges, and explore career paths. Every company job is already matched; add your own job descriptions any time.</div></div>
-  <div class="btns"><button id="csv"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Export</button><button id="fltBtn" aria-expanded="true" aria-controls="flt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M7 12h10M10 17h4"/></svg>Filters</button><button id="addBtn" class="primary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add Job</button></div></div>
+<div class="tbar"><div><h1 class="pt">Job Matcher</h1><div class="ps">Step 1 of building a job structure: load your job descriptions or job titles and each one is matched to a market survey job. Company jobs are already matched below.</div></div>
+  <div class="btns"><button id="csv"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Export</button><button id="fltBtn" aria-expanded="true" aria-controls="flt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M7 12h10M10 17h4"/></svg>Filters</button><button id="addBtn" class="primary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add your jobs</button></div></div>
 
 <div class="drop" id="drop" hidden>
-  <h2>Drop a folder or files of job descriptions here</h2>
-  <p>Word (.docx), PDF, text or HTML. One job per file.</p>
+  <h2>Add your jobs</h2>
+  <p>Job descriptions (Word, PDF) or a list of job titles (Excel, CSV). Or paste titles below.</p>
   <div class="btns">
-    <label class="btn primary">Choose a folder<input id="pickDir" type="file" webkitdirectory directory multiple hidden></label>
-    <label class="btn">Choose files<input id="pickFiles" type="file" multiple accept=".docx,.pdf,.txt,.md,.html,.htm" hidden></label>
-    <button id="samples">Try sample job descriptions</button>
+    <label class="btn primary">Upload files<input id="pickFiles" type="file" multiple accept=".docx,.pdf,.txt,.md,.html,.htm,.xlsx,.xls,.csv" hidden></label>
+    <button id="samples">Try a sample</button>
   </div>
+  <textarea id="paste" rows="3" placeholder="Or paste job titles, one per line" aria-label="Paste job titles, one per line"></textarea>
+  <div class="btns"><button id="pasteGo" hidden>Match these titles</button></div>
   <div class="priv">Files are read in your browser. Nothing is uploaded or stored.</div>
   <div class="busy" id="busy"></div>
 </div>
@@ -173,7 +175,7 @@
 <div class="filters" id="flt">
   <label class="srch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" placeholder="Search job title, survey job or code"></label>
   <label>Job family<select id="fFam"><option value="">All families</option></select></label>
-  <label>Level<select id="fLvl"><option value="">All levels</option><option>Executive</option><option>Management</option><option>Professional</option><option>Support</option><option value="file">Added files</option></select></label>
+  <label>Level<select id="fLvl"><option value="">All levels</option><option>Executive</option><option>Management</option><option>Professional</option><option>Support</option><option value="file">Your jobs</option></select></label>
   <label>Confidence<select id="fConf"><option value="">All</option><option>High</option><option>Medium</option><option>Low</option><option value="diff">Differs from current mapping</option></select></label>
 </div>
 
@@ -287,9 +289,17 @@ function scopeOf(t){
 }
 
 // ---------- match ----------
+// Everyday words for jobs the survey names differently, so a bare job title still lands in the right family.
+const SYN = [[/\bfork ?lift|forklift\b/, 'hi-lo driver'], [/\bpayroll\b/, 'accountant accounts finance'], [/\bmechanic|electrician|millwright\b/, 'maintenance technician'], [/\bpicker|harvester|labou?rer\b/, 'crop care worker'], [/\bsales\b/, 'sales account'], [/\b(hr|human resources|people)\b/, 'hr human resources'], [/\btalent acquisition( partner| specialist)?\b/, 'recruiter'], [/\bshipping|receiving\b/, 'warehouse'], [/\bbuyer|purchasing\b/, 'procurement'], [/\bcontroller\b/, 'finance manager'], [/\bhelp ?desk|desktop support\b/, 'support analyst information technology'], [/\breceivable|billing|bookkeeper\b/, 'accounts accountant finance'], [/\btruck\b/, 'delivery driver'], [/\binspector\b/, 'quality technician'], [/\bgeneral manager\b/, 'site general manager']];
+const LEVEL_WORDS = new Set(['manager','director','senior','head','lead','officer','chief','vice','president','supervisor','assistant','associate','specialist','coordinator','junior','principal','technician']);
+const famTitleToks = fams.map(f => new Set(toks(f.area + ' ' + f.roles.map(r => r.t).join(' '))));
 function match(file, raw){
   const text = raw.replace(/\r/g,'').replace(/ /g,' ');
   const title = titleOf(text, file);
+  // A title with little or no description: weigh the title's own words against each survey job title.
+  const bare = toks(text).length < 25;
+  const tlow = title.toLowerCase(), extra = SYN.filter(x => x[0].test(tlow)).map(x => x[1]).join(' ');
+  const tWords = [...new Set(toks(SYN.reduce((t, x) => t.replace(x[0], ' '), tlow) + ' ' + extra))].filter(w => !LEVEL_WORDS.has(w));
   const low = title.toLowerCase();
   // level signals
   const sig = []; let tSen = null, tTrack = null;
@@ -315,7 +325,7 @@ function match(file, raw){
 
   // family scores
   const tv = {}; toks(text).forEach(w => tv[w] = (tv[w]||0)+1);
-  toks(title).forEach(w => tv[w] = (tv[w]||0)+3);
+  toks(title + ' ' + extra).forEach(w => tv[w] = (tv[w]||0)+3);
   const qv = vec(tv);
   const scored = fams.map((f,i) => {
     let s = cos(qv, famV[i]);
@@ -323,6 +333,7 @@ function match(file, raw){
     else if (track === 'E' && f.track === 'M' && f.levels.includes('M6')) s *= 1.1;
     else if ((track === 'M' && f.track === 'P') || (track === 'P' && f.track === 'M')) s *= .85;
     else s *= .7;
+    if (bare && tWords.length) { const fi = fams.indexOf(f), hit = tWords.filter(w => famTitleToks[fi].has(w)).length / tWords.length; s = s * .5 + hit * .45; }
     return { f, s };
   }).sort((a,b) => b.s - a.s);
   const top = scored[0], second = scored[1];
@@ -506,11 +517,38 @@ async function readFile(file){
   if (n.endsWith('.html') || n.endsWith('.htm')) { const d = new DOMParser().parseFromString(await file.text(), 'text/html'); return d.body.innerText || d.body.textContent; }
   return file.text();
 }
-const OK = /\.(docx|pdf|txt|md|html?)$/i;
+const OK = /\.(docx|pdf|txt|md|html?)$/i, LIST = /\.(xlsx|xls|csv)$/i;
+let xlsxP = null;
+function xlsx(){ return xlsxP || (xlsxP = loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js').then(() => window.XLSX)); }
+function csvRows(t){ const out = []; let row = [], cell = '', q = false; for (let i = 0; i < t.length; i++) { const c = t[i]; if (q) { if (c === '"' && t[i+1] === '"') { cell += '"'; i++; } else if (c === '"') q = false; else cell += c; } else if (c === '"') q = true; else if (c === ',') { row.push(cell); cell = ''; } else if (c === '\n' || c === '\r') { if (c === '\r' && t[i+1] === '\n') i++; row.push(cell); out.push(row); row = []; cell = ''; } else cell += c; } if (cell || row.length) { row.push(cell); out.push(row); } return out; }
+// A job list: one job per row. The title column is found by its heading; a description column is used when there is one.
+async function readList(file){
+  let rows;
+  if (/\.csv$/i.test(file.name)) rows = csvRows(await file.text());
+  else { const X = await xlsx(); const wb = X.read(await file.arrayBuffer(), { type:'array' }); rows = X.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header:1, defval:'' }); }
+  rows = rows.map(r => r.map(c => String(c == null ? '' : c).trim())).filter(r => r.some(Boolean));
+  if (!rows.length) return [];
+  const head = rows[0].map(h => h.toLowerCase());
+  let ti = head.findIndex(h => /title|job|position|role/.test(h) && !/code|id|family|level|grade|desc/.test(h));
+  const di = head.findIndex(h => /desc|summary|duties|responsib/.test(h));
+  const hasHead = ti >= 0;
+  if (!hasHead) ti = 0;
+  return rows.slice(hasHead ? 1 : 0).filter(r => r[ti]).map(r => [r[ti], di >= 0 ? r[di] : '']);
+}
+function addTitles(list, src){
+  list.forEach(([t, d]) => { const k = src + '/' + t; if (!RESULTS.some(r => r.file === k)) RESULTS.push(match(k, t + (d ? '\n\n' + d : ''))); });
+}
 async function handle(files){
-  files = files.filter(f => OK.test(f.name) && !f.name.startsWith('~$'));
-  if (!files.length) { $('#busy').textContent = 'No job descriptions found. Use Word, PDF, text or HTML files.'; return; }
+  files = files.filter(f => !f.name.startsWith('~$'));
+  const lists = files.filter(f => LIST.test(f.name));
+  files = files.filter(f => OK.test(f.name));
+  if (!files.length && !lists.length) { $('#busy').textContent = 'Nothing to read. Use Word, PDF or text job descriptions, or an Excel or CSV list of job titles.'; return; }
   let done = 0, failed = [];
+  for (const f of lists) {
+    $('#busy').textContent = 'Reading job list: ' + f.name;
+    try { const l = await readList(f); if (l.length) addTitles(l, f.name); else failed.push(f.name + ' (no job titles found)'); }
+    catch (e) { failed.push(f.name + ' (' + e.message + ')'); }
+  }
   for (const f of files) {
     $('#busy').textContent = 'Reading ' + (++done) + ' of ' + files.length + ': ' + f.name;
     try { const t = await readFile(f); if (t && t.trim().length > 40) RESULTS.push(match(f.webkitRelativePath || f.name, t)); else failed.push(f.name + ' (no text found)'); }
@@ -520,7 +558,8 @@ async function handle(files){
   $('#fLvl').value = 'file'; PAGE = 0;
   render();
 }
-$('#pickDir').onchange = e => handle([...e.target.files]);
+$('#paste').oninput = () => { $('#pasteGo').hidden = !$('#paste').value.trim(); };
+$('#pasteGo').onclick = () => { const l = $('#paste').value.split(/\n/).map(s => s.replace(/\t.*/, '').trim()).filter(s => s.length > 1).map(t => [t, '']); if (!l.length) return; addTitles(l, 'pasted'); $('#paste').value = ''; $('#pasteGo').hidden = true; $('#busy').textContent = l.length + ' job title' + (l.length > 1 ? 's' : '') + ' matched.'; $('#fLvl').value = 'file'; PAGE = 0; render(); };
 $('#pickFiles').onchange = e => handle([...e.target.files]);
 const drop = $('#drop');
 ['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
@@ -546,7 +585,7 @@ const SAMPLES = [
 ];
 window.__jd = { match, nextStep };
 
-$('#samples').onclick = () => { SAMPLES.forEach(([n, t]) => { if (!RESULTS.some(r => r.file === 'sample/' + n)) RESULTS.push(match('sample/' + n, t)); }); $('#fLvl').value = 'file'; PAGE = 0; render(); };
+$('#samples').onclick = () => { SAMPLES.forEach(([n, t]) => { if (!RESULTS.some(r => r.file === 'sample/' + n)) RESULTS.push(match('sample/' + n, t)); }); addTitles([['Payroll Specialist', ''], ['Head Grower', ''], ['Food Safety Manager', ''], ['HR Business Partner', '']], 'sample job list'); $('#fLvl').value = 'file'; PAGE = 0; render(); };
 // Every company job, matched from its own description, so the table is full on arrival.
 LITE.roles.forEach(role => { const j = WFJ[role.k]; if (!j) return; const g = GRADES[role.g], t = role.t + '\n\n' + role.sum + '\n\nSkills: ' + (Array.isArray(role.skl) ? role.skl.join(', ') : role.skl) + (g && g.fw ? '\n\nQualifications: ' + g.fw.typ : ''); const r = match('company/' + role.k, t); r.role = role; r.job = j; r.title = role.t; RESULTS.push(r); });
 [...new Set(WF.jobs.map(j => j.tw))].sort().forEach(t => $('#fFam').insertAdjacentHTML('beforeend', '<option value="'+t+'">'+famName(t)+'</option>'));
