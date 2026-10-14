@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JD Matcher · MGI Insight</title>
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<style>
+  :root { --deep:#072A1F; --green:#0B4A36; --accent:#0F8A5F; --ink:#16241e; --muted:#5C6F66; --line:#DDE6E0; --soft:#F2F7F4; --bg:#F5F7F6;
+          --hi:#0F8A5F; --hisoft:#E3F4EC; --md:#B45309; --mdsoft:#FDF1E3; --lo:#B42318; --losoft:#FDECEA; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14.5px/1.5 "Segoe UI", Arial, Helvetica, sans-serif; }
+  header { background:linear-gradient(135deg,var(--deep),var(--green)); color:#fff; padding:22px 16px 24px; }
+  .w { max-width:1180px; margin:0 auto; }
+  header a { color:#9BE7C4; text-decoration:none; font-size:13px; font-weight:600; }
+  .k { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#9BE7C4; font-weight:800; margin-top:10px; }
+  h1 { font:600 27px/1.2 Georgia, serif; margin:4px 0 6px; }
+  header p { margin:0; color:#cfe9dd; max-width:820px; }
+  main { padding:20px 16px 48px; }
+  .drop { border:2px dashed #9cc7b2; background:#fff; border-radius:14px; padding:26px; text-align:center; transition:.15s; }
+  .drop.over { background:var(--hisoft); border-color:var(--accent); }
+  .drop h2 { font:600 19px Georgia, serif; margin:0 0 6px; }
+  .drop p { margin:0 0 14px; color:var(--muted); }
+  .btns { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+  button, .btn { font:600 13.5px "Segoe UI", Arial, sans-serif; border-radius:8px; padding:9px 14px; cursor:pointer; border:1px solid var(--green); background:#fff; color:var(--green); }
+  button.primary, .btn.primary { background:var(--green); color:#fff; }
+  button:disabled { opacity:.5; cursor:default; }
+  .priv { font-size:12px; color:var(--muted); margin-top:12px; }
+  .bar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin:22px 0 10px; }
+  .bar h2 { font:600 20px Georgia, serif; margin:0; }
+  .wrap { overflow-x:auto; background:#fff; border:1px solid var(--line); border-radius:12px; }
+  table { border-collapse:collapse; width:100%; }
+  th { text-align:left; font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--deep); padding:9px 10px; white-space:nowrap; }
+  td { border-bottom:1px solid var(--line); padding:9px 10px; vertical-align:top; }
+  tbody tr { cursor:pointer; } tbody tr:hover td { background:var(--soft); } tbody tr.sel td { background:var(--hisoft); }
+  .sub { display:block; color:var(--muted); font-size:12px; }
+  .badge { display:inline-block; border-radius:999px; padding:2px 9px; font-size:12px; font-weight:700; white-space:nowrap; }
+  .b-High { background:var(--hisoft); color:var(--hi); } .b-Medium { background:var(--mdsoft); color:var(--md); } .b-Low { background:var(--losoft); color:var(--lo); }
+  .meter { height:6px; background:#e7ece9; border-radius:4px; margin-top:4px; width:90px; } .meter i { display:block; height:6px; border-radius:4px; }
+  .detail { margin-top:18px; display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 18px; }
+  .card h3 { font:600 17px Georgia, serif; margin:0 0 8px; }
+  .card h4 { font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:14px 0 6px; }
+  .why li { margin:0 0 4px; } ul { margin:0; padding-left:18px; }
+  .chips span { display:inline-block; background:var(--soft); border:1px solid var(--line); border-radius:999px; padding:1px 8px; margin:0 4px 4px 0; font-size:12px; }
+  .ladder { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin:6px 0 4px; }
+  .step { border:1px solid var(--line); border-radius:8px; padding:6px 9px; font-size:12.5px; background:#fff; }
+  .step.cur { background:var(--green); color:#fff; border-color:var(--green); }
+  .step.nxt { border-color:var(--accent); background:var(--hisoft); font-weight:700; }
+  .arrow { color:var(--muted); }
+  .jd { border:1px solid var(--line); border-radius:10px; padding:14px 16px; background:#fcfdfc; margin-top:8px; }
+  .jd h5 { font-size:12px; letter-spacing:.08em; text-transform:uppercase; margin:12px 0 4px; color:var(--deep); }
+  .jd h5:first-child { margin-top:0; }
+  .new { color:var(--accent); font-weight:700; font-size:11px; letter-spacing:.06em; margin-left:6px; }
+  .empty { color:var(--muted); text-align:center; padding:28px; }
+  .alts td { font-size:12.5px; }
+  .note { color:var(--muted); font-size:12px; margin-top:8px; }
+  .busy { color:var(--muted); font-size:13px; margin-top:10px; }
+  @media (max-width:900px) { .detail { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header><div class="w">
+  <a href="/" target="_top">&larr; Back to MGI Insight</a>
+  <div class="k">Step 1 · Market data</div>
+  <h1>JD Matcher: benchmark job descriptions against survey jobs</h1>
+  <p>Drop in a folder of job descriptions. Each one is matched to the closest survey job and level, with a confidence score and the reasons behind it, then a career path showing how the job description expands at the next level.</p>
+</div></header>
+<main><div class="w">
+
+<div class="drop" id="drop">
+  <h2>Drop a folder or files of job descriptions here</h2>
+  <p>Word (.docx), PDF, text or HTML. One job per file.</p>
+  <div class="btns">
+    <label class="btn primary">Choose a folder<input id="pickDir" type="file" webkitdirectory directory multiple hidden></label>
+    <label class="btn">Choose files<input id="pickFiles" type="file" multiple accept=".docx,.pdf,.txt,.md,.html,.htm" hidden></label>
+    <button id="samples">Try sample job descriptions</button>
+  </div>
+  <div class="priv">Files are read in your browser. Nothing is uploaded or stored.</div>
+  <div class="busy" id="busy"></div>
+</div>
+
+<div id="out" hidden>
+  <div class="bar"><h2 id="count">Results</h2><div class="btns"><button id="csv">Download results (CSV)</button><button id="clear">Clear</button></div></div>
+  <div class="wrap"><table>
+    <thead><tr><th>File</th><th>Best survey match</th><th>Level</th><th>Family fit</th><th>Level fit</th><th>Overall confidence</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table></div>
+  <p class="note">Confidence combines how clearly the text matches one survey job over the next best, and how well the title, years of experience and scope agree on a level. Low confidence means a person should confirm the match.</p>
+  <div class="detail" id="detail"></div>
+</div>
+
+</div></main>
+
+<script>
+const LIB = {{include:data/survey-lib.json}};
+const LITE = {{include:data/shared-lite.json}};
+</script>
+<script>
+(function(){
+// ---------- reference data ----------
+const R = LIB.radford;
+const LVL_ORDER = ['S1','S2','S3','S4','P1','P2','P3','M1','M2','M3','M5','M6','E1','E2'];
+const LVL_NAME = {}; R.lvl.forEach(n => { const m = n.match(/\((\w+)\)/); if (m) LVL_NAME[m[1]] = n.replace(/\s*\(\w+\)/,''); });
+const SEN = {S1:0,S2:1,S3:2,S4:3,P1:3,P2:4,P3:5,M1:4,M2:5,M3:6,M5:7,M6:8,E1:9,E2:10};
+const TRACK = l => l[0];
+const GRADE_OF = {S1:'S1',S2:'S2',S3:'S3',S4:'S4',P1:'P5',P2:'P6',P3:'P7',M1:'M7',M2:'M8',M3:'M9',M5:'M10',M6:'M11',E1:'E12',E2:'E13'};
+const GRADES = {}; LITE.grades.forEach(g => GRADES[g.g] = g);
+const ipasByTitle = {}; LIB.ipas.jobs.forEach(j => ipasByTitle[j[1]] = j);
+
+const fams = R.ourFamilies.map(code => {
+  const rows = R.jobs.filter(j => j[0].startsWith(code + '.'));
+  const area = R.area[rows[0][2]], fn = R.fn[rows[0][1]];
+  const levels = LVL_ORDER.filter(l => rows.some(j => j[0].endsWith('.' + l)));
+  const roles = LITE.roles.filter(r => r.fam === code);
+  const ip = ipasByTitle[area];
+  const text = [area, area, area, fn, R.pre[code] || '', ip ? ip[4] : '', roles.map(r => r.sum + ' ' + r.skl.join(' ')).join(' ')].join(' ');
+  return { code, area, fn, levels, roles, ipas: ip ? ip[0] : '', text, track: levels.some(l => l[0]==='M') ? 'M' : levels.some(l => l[0]==='E') ? 'E' : levels.some(l => l[0]==='P') ? 'P' : 'S' };
+});
+const famByCode = {}; fams.forEach(f => famByCode[f.code] = f);
+
+// ---------- text ----------
+const STOP = new Set('the and for with that this from are will you our your have has all any not can its into per who what when where which while than then them they their there these those been being also such may must able including include includes within across other more most other each both job role position work working team company employee employees duties responsibilities responsibility requirements required preferred skills skill ability abilities experience years year knowledge strong excellent good new key day days time based level levels well using use used provide provides ensure ensures support supports'.split(' '));
+function stem(w){ return w.replace(/(ies)$/,'y').replace(/(ing|ed|es|s)$/,''); }
+const SHOW = {};
+function toks(t){ return (t.toLowerCase().match(/[a-z][a-z&-]{2,}/g) || []).filter(w => !STOP.has(w)).map(w => { const st = stem(w); if (!SHOW[st] || w.length < SHOW[st].length) SHOW[st] = w; return st; }); }
+const DF = {}; const famVec = fams.map(f => { const tf = {}; toks(f.text).forEach(w => tf[w] = (tf[w]||0)+1); Object.keys(tf).forEach(w => DF[w] = (DF[w]||0)+1); return tf; });
+const N = fams.length; const idf = w => Math.log((N + 1) / ((DF[w]||0) + 1)) + 1;
+function vec(tf){ const v = {}; let n = 0; for (const w in tf) { const x = (1 + Math.log(tf[w])) * idf(w); v[w] = x; n += x*x; } n = Math.sqrt(n) || 1; for (const w in v) v[w] /= n; return v; }
+const famV = famVec.map(vec);
+function cos(a,b){ let s = 0; for (const w in a) if (b[w]) s += a[w]*b[w]; return s; }
+
+// ---------- level signals ----------
+const TITLE_RULES = [  // [pattern, seniority, track, label, strong]
+  [/\b(chief|ceo|cfo|coo|cco|chro|president)\b/, 10, 'E', 'executive title', true],
+  [/\b(evp|svp|executive vice president|senior vice president)\b/, 10, 'E', 'senior vice president title', true],
+  [/\b(vice president|vp)\b/, 9, 'E', 'vice president title', true],
+  [/\bsenior director\b|\bsr\.? director\b/, 8, 'M', 'senior director title', true],
+  [/\b(director|head of)\b/, 7, 'M', 'director title', true],
+  [/\b(account|product|project|program|category|territory) manager\b/, 5, 'P', 'individual-contributor manager title', true],
+  [/\bsenior manager\b|\bsr\.? manager\b/, 6, 'M', 'senior manager title', true],
+  [/\bmanager\b/, 5, 'M', 'manager title', true],
+  [/\b(team lead|lead hand|crew lead|line lead)\b/, 3, 'S', 'hourly lead title', true],
+  [/\b(supervisor|foreman|forewoman|shift lead)\b/, 4, 'M', 'supervisor title', true],
+  [/\b(seasonal|intern|student|co-op)\b/, 0, 'S', 'seasonal or student title', true],
+  [/\b(production|warehouse|packing|harvest|general) associate\b/, 1, 'S', 'hourly operations title', false],
+  [/\b(senior|sr\.?|lead|principal|head)\b.*\b(analyst|specialist|accountant|engineer|partner|planner|coordinator|grower|recruiter|generalist|technician|representative)\b/, 5, null, 'senior title', true],
+  [/\b(junior|jr\.?|entry|trainee)\b/, 3, null, 'entry-level title', true],
+  [/\b(worker|labou?rer|picker|packer|grader|operator|driver|clerk|helper|sanitation)\b/, 1, 'S', 'hourly operations title', false],
+  [/\b(technician|mechanic|electrician)\b/, 2, 'S', 'skilled trades title', false],
+  [/\b(analyst|specialist|coordinator|accountant|engineer|planner|partner|generalist|recruiter|grower|representative|buyer|associate|assistant)\b/, 4, 'P', 'professional title', false],
+];
+function titleOf(text, file){
+  const m = text.match(/(?:job\s*title|position\s*title|title|position)\s*[:\-–]\s*([^\n]{3,90})/i);
+  if (m) return m[1].trim();
+  const first = text.split('\n').map(s => s.trim()).find(s => s.length > 2 && s.length < 90 && !/job description/i.test(s));
+  return first || file.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ');
+}
+function yearsOf(text){
+  let best = null;
+  if (/\bmonths?\s*(?:to|-|–)\s*\d{1,2}\s*years?/i.test(text)) return 1;
+  const re = /(\d{1,2})\s*(?:\+|or more|plus)?\s*(?:(?:to|-|–)\s*(\d{1,2})\s*)?(?:\+\s*)?years?/gi; let m;
+  while ((m = re.exec(text))) { const ctx = text.slice(Math.max(0, m.index - 60), m.index + 80).toLowerCase(); if (!/experience|exp\.|progressive|leading|managing|minimum|at least/.test(ctx)) continue; const y = +m[1]; if (y <= 30 && (best === null || y > best)) best = y; }
+  return best;
+}
+function yearsToSen(y, track){
+  if (y === null) return null;
+  if (track === 'S') return y < 2 ? 1 : y < 4 ? 2 : 3;
+  if (track === 'P') return y < 3 ? 3 : y < 6 ? 4 : 5;
+  if (track === 'E') return y < 15 ? 9 : 10;
+  return y < 3 ? 4 : y < 5 ? 5 : y < 8 ? 6 : y < 10 ? 7 : y < 12 ? 8 : y < 15 ? 9 : 10;
+}
+function scopeOf(t){
+  const s = []; const low = t.toLowerCase();
+  const team = low.match(/(?:team|crew|staff) of (\d+)|(\d+)\s*(?:direct reports|employees|staff|people|workers)/);
+  if (team) s.push(['team of ' + (team[1]||team[2]), +(team[1]||team[2]) >= 50 ? 7 : +(team[1]||team[2]) >= 10 ? 5 : 4, 'M']);
+  if (/direct reports|manage (?:a|the) team|lead (?:a|the) team|people leader|supervis|hire,? (?:train|develop)|performance reviews? for/.test(low)) s.push(['leads people', null, 'M']);
+  if (/enterprise|company-wide|companywide|global|across (?:all )?(?:sites|countries|regions)|executive leadership|board of directors|\bboard\b/.test(low)) s.push(['enterprise or multi-country scope', 7, null]);
+  if (/strategy|strategic|roadmap|long-term plan/.test(low)) s.push(['sets strategy', 6, null]);
+  if (/budget|p&l|profit and loss/.test(low)) s.push(['owns a budget', 5, null]);
+  if (/hourly|shift|forklift|production line|harvest|picking|packing line/.test(low)) s.push(['hourly or shift-based work', 1, 'S']);
+  if (/seasonal|student placement|summer (?:job|work|placement)/.test(low)) s.push(['seasonal work', 0, 'S']);
+  if (/bachelor|degree|cpa|cma|mba|master/.test(low)) s.push(['degree or professional designation', null, 'P']);
+  return s;
+}
+
+// ---------- match ----------
+function match(file, raw){
+  const text = raw.replace(/\r/g,'').replace(/ /g,' ');
+  const title = titleOf(text, file);
+  const low = title.toLowerCase();
+  // level signals
+  const sig = []; let tSen = null, tTrack = null;
+  let tStrong = false;
+  for (const [re, sen, tr, label, strong] of TITLE_RULES) { if (re.test(low)) { tSen = sen; tTrack = tr; tStrong = strong; sig.push('Title "' + title + '": ' + label); break; } }
+  if (tTrack === null && tSen !== null) { tTrack = /technician|representative/.test(low) ? 'S' : 'P'; if (tTrack === 'S') tSen = 3; }
+  const yrs = yearsOf(text);
+  if (yrs !== null) sig.push(yrs + '+ years of experience asked for');
+  const sc = scopeOf(text); sc.forEach(x => sig.push(x[0].charAt(0).toUpperCase() + x[0].slice(1)));
+  const scSen = sc.filter(x => x[1] !== null).map(x => x[1]);
+  const mgmt = sc.some(x => x[2] === 'M') || tTrack === 'M';
+  let track = tTrack || (mgmt ? 'M' : sc.some(x => x[2] === 'S') && !sc.some(x => x[2] === 'P') ? 'S' : 'P');
+  if (tTrack === 'P' && mgmt && sc.some(x => x[0] === 'leads people')) track = 'M';
+  const ySen = yearsToSen(yrs, track);
+  const parts = [];  // [seniority, weight, counts toward agreement]
+  if (tSen !== null) parts.push([tSen, tStrong ? .55 : .12, tStrong]);
+  if (ySen !== null) parts.push([ySen, .45, true]);
+  if (scSen.length && (track === 'M' || track === 'E')) parts.push([Math.max(...scSen), .12, true]);
+  const wsum = parts.reduce((a,p) => a + p[1], 0);
+  const sen = wsum ? parts.reduce((a,p) => a + p[0]*p[1], 0) / wsum : 4;
+  const strongParts = parts.filter(p => p[2]);
+  const spread = strongParts.length > 1 ? Math.max(...strongParts.map(p => p[0])) - Math.min(...strongParts.map(p => p[0])) : null;
+
+  // family scores
+  const tv = {}; toks(text).forEach(w => tv[w] = (tv[w]||0)+1);
+  toks(title).forEach(w => tv[w] = (tv[w]||0)+3);
+  const qv = vec(tv);
+  const scored = fams.map((f,i) => {
+    let s = cos(qv, famV[i]);
+    if (f.track === track || (track === 'M' && f.track === 'E' && sen >= 9)) s *= 1.25;
+    else if (track === 'E' && f.track === 'M' && f.levels.includes('M6')) s *= 1.1;
+    else if ((track === 'M' && f.track === 'P') || (track === 'P' && f.track === 'M')) s *= .85;
+    else s *= .7;
+    return { f, s };
+  }).sort((a,b) => b.s - a.s);
+  const top = scored[0], second = scored[1];
+  const margin = top.s > 0 ? (top.s - second.s) / top.s : 0;
+  const famScore = Math.max(0, Math.min(1, (top.s / .32) * .6 + margin * 1.4));
+  const famConf = famScore >= .75 ? 'High' : famScore >= .5 ? 'Medium' : 'Low';
+  const matchedTerms = Object.keys(qv).filter(w => famV[fams.indexOf(top.f)][w]).sort((a,b) => qv[b]*famV[fams.indexOf(top.f)][b] - qv[a]*famV[fams.indexOf(top.f)][a]).slice(0, 8);
+
+  // level within family
+  const lvls = top.f.levels;
+  const sameTrack = lvls.filter(l => TRACK(l) === track);
+  const pool = sameTrack.length ? sameTrack : lvls;
+  let lvl = pool[0], best = 99; for (const l of pool) { const d = Math.abs(SEN[l] - sen); if (d < best) { best = d; lvl = l; } }
+  let lvlScore;
+  if (!strongParts.length) lvlScore = .3;
+  else if (strongParts.length === 1) lvlScore = .55;
+  else lvlScore = spread < 1 ? .9 : spread <= 1 ? .72 : spread <= 2 ? .55 : .35;
+  if (!sameTrack.length) lvlScore *= .7;
+  const lvlConf = lvlScore >= .75 ? 'High' : lvlScore >= .5 ? 'Medium' : 'Low';
+  const overall = Math.round(100 * (.6 * famScore + .4 * lvlScore));
+  const conf = overall >= 75 ? 'High' : overall >= 50 ? 'Medium' : 'Low';
+
+  return { file, title, text, topS: top.s, fam: top.f, lvl, code: top.f.code + '.' + lvl, famScore, famConf, lvlScore, lvlConf, overall, conf, sig, matchedTerms, alts: scored.slice(1, 4), yrs };
+}
+
+// ---------- career path & JD expansion ----------
+const ADDS = {
+  S2:['Completes the full range of routine tasks without close supervision','Keeps accurate records and follows food safety and safety rules every shift'],
+  S3:['Handles non-routine problems and knows when to escalate','Trains and supports newer team members'],
+  S4:['Acts as the go-to expert on the crew and troubleshoots complex issues','Leads small improvement projects and coaches others'],
+  P1:['Applies professional methods under guidance','Prepares analysis and reports for review'],
+  P2:['Works independently on standard projects and analysis','Recommends solutions and partners with managers in the area'],
+  P3:['Owns complex, cross-functional projects end to end','Mentors other professionals and reviews their work','Shapes policy and practice in the field'],
+  M1:['Leads a crew or small team day to day: scheduling, coaching and performance','Owns shift or area results for quality, safety and productivity'],
+  M2:['Manages a team directly or through supervisors; hires and develops people','Owns an operating budget and the area plan','Sets processes and standards for the area'],
+  M3:['Leads several teams or a larger function and develops managers','Owns a significant budget and a multi-year improvement plan','Partners across functions on company priorities'],
+  M5:['Sets the strategy and roadmap for the function across sites and countries','Owns the function budget and governance, and advises the executive team','Builds the leadership bench and succession for the function'],
+  M6:['Leads several functions or a region and is accountable for enterprise outcomes','Shapes company policy and presents to the executive team and board','Leads large-scale change and investment decisions'],
+  E1:['Sits on the senior leadership team and sets company-wide direction for the area','Accountable for major profit or enterprise results','Represents the company with customers, partners and the board'],
+  E2:['Leads a major business or the enterprise and sets company strategy','Holds final decision rights on investments and organisation','Builds the executive team and culture'],
+};
+function nextStep(r){
+  const f = r.fam, i = f.levels.indexOf(r.lvl);
+  if (i >= 0 && i < f.levels.length - 1) return { fam: f, lvl: f.levels[i+1], how: 'Next level in the same survey job' };
+  const role = f.roles.find(x => x.code.endsWith('.' + r.lvl)) || f.roles[0];
+  if (role && role.next) { const nr = LITE.roles.find(x => x.k === role.next); if (nr) { const nf = famByCode[nr.fam]; const nl = nr.code.split('.').pop(); return { fam: nf, lvl: nl, how: 'Company career path from ' + role.t + ' to ' + nr.t }; } }
+  const pre = f.code.split('.')[0];
+  const cands = fams.filter(x => x.code.split('.')[0] === pre && x !== f).map(x => ({ x, l: x.levels.find(l => SEN[l] > SEN[r.lvl]) })).filter(c => c.l).sort((a,b) => SEN[a.l] - SEN[b.l]);
+  if (cands.length) return { fam: cands[0].x, lvl: cands[0].l, how: 'Next level up in the same function' };
+  return null;
+}
+function respLines(text){
+  const lines = text.split('\n').map(s => s.trim()).filter(Boolean);
+  let bul = lines.filter(s => /^([-•*▪◦·]|\d+[.)])\s+/.test(s)).map(s => s.replace(/^([-•*▪◦·]|\d+[.)])\s+/,''));
+  if (bul.length < 3) bul = (text.replace(/\n+/g,' ').match(/[^.!?]{25,220}[.!?]/g) || []).slice(1, 7);
+  return bul.filter(s => !/years of|years'|\bdegree\b|bachelor|equal opportunity|requirements?:|qualifications?:/i.test(s)).slice(0, 7);
+}
+function levelTitle(f, l){ const n = LVL_NAME[l] || l; return f.area + ' · ' + n + ' (' + l + ')'; }
+function expansion(r){
+  const n = nextStep(r); if (!n) return null;
+  const g0 = GRADES[GRADE_OF[r.lvl]], g1 = GRADES[GRADE_OF[n.lvl]];
+  const nextRole = n.fam.roles.find(x => x.code.endsWith('.' + n.lvl)) || n.fam.roles[0];
+  const curSkills = new Set((r.fam.roles[0] || {skl:[]}).skl);
+  const skills = nextRole ? nextRole.skl.filter(s => !curSkills.has(s)).slice(0, 6) : [];
+  return { n, g0, g1, adds: ADDS[n.lvl] || [], skills, keep: respLines(r.text) };
+}
+
+// ---------- rendering ----------
+let RESULTS = [], SEL = -1;
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const color = c => c === 'High' ? 'var(--hi)' : c === 'Medium' ? 'var(--md)' : 'var(--lo)';
+function render(){
+  $('#out').hidden = !RESULTS.length;
+  $('#count').textContent = RESULTS.length + (RESULTS.length === 1 ? ' job matched' : ' jobs matched');
+  $('#rows').innerHTML = RESULTS.map((r,i) => '<tr data-i="'+i+'" class="'+(i===SEL?'sel':'')+'"><td><b>'+esc(r.title)+'</b><span class="sub">'+esc(r.file)+'</span></td>'
+    + '<td>'+esc(r.fam.area)+'<span class="sub">Radford '+r.code+(r.fam.ipas ? ' · IPAS '+r.fam.ipas : '')+'</span></td>'
+    + '<td>'+esc(LVL_NAME[r.lvl]||r.lvl)+'<span class="sub">'+r.lvl+' · grade '+GRADE_OF[r.lvl]+'</span></td>'
+    + '<td><span class="badge b-'+r.famConf+'">'+r.famConf+'</span></td>'
+    + '<td><span class="badge b-'+r.lvlConf+'">'+r.lvlConf+'</span></td>'
+    + '<td><span class="badge b-'+r.conf+'">'+r.conf+' · '+r.overall+'%</span><div class="meter"><i style="width:'+r.overall+'%;background:'+color(r.conf)+'"></i></div></td></tr>').join('');
+  $('#rows').querySelectorAll('tr').forEach(tr => tr.onclick = () => { SEL = +tr.dataset.i; render(); $('#detail').scrollIntoView({behavior:'smooth', block:'start'}); });
+  renderDetail();
+}
+function renderDetail(){
+  const r = RESULTS[SEL]; if (!r) { $('#detail').innerHTML = RESULTS.length ? '<div class="card empty" style="grid-column:1/-1">Select a job above to see why it matched, and its career path.</div>' : ''; return; }
+  const x = expansion(r);
+  let left = '<div class="card"><h3>'+esc(r.title)+'</h3>'
+    + '<div><span class="badge b-'+r.conf+'">'+r.conf+' confidence · '+r.overall+'%</span></div>'
+    + '<h4>Best match</h4><div><b>'+esc(levelTitle(r.fam, r.lvl))+'</b><span class="sub">Radford '+r.code+(r.fam.ipas?' · IPAS '+r.fam.ipas:'')+' · '+esc(r.fam.fn)+' · company grade '+GRADE_OF[r.lvl]+'</span></div>'
+    + '<div class="note" style="margin-top:6px">'+esc(R.def[r.code] || R.pre[r.fam.code] || '')+'</div>'
+    + '<h4>Why this job</h4><div class="chips">'+(r.matchedTerms.length ? r.matchedTerms.map(w => '<span>'+esc(SHOW[w] || w)+'</span>').join('') : '<span>few shared terms</span>')+'</div>'
+    + '<h4>Why this level</h4><ul class="why">'+(r.sig.length ? r.sig.map(s => '<li>'+esc(s)+'</li>').join('') : '<li>No clear title, experience or scope signals: level is a default and should be checked.</li>')+'</ul>'
+    + '<h4>Other close matches</h4><table class="alts"><tbody>'+r.alts.map(a => '<tr><td>'+esc(a.f.area)+'<span class="sub">'+a.f.code+'</span></td><td style="text-align:right;white-space:nowrap">'+Math.round(100*a.s/(r.topS||1))+'% as close</td></tr>').join('')+'</tbody></table>'
+    + '</div>';
+  let right = '<div class="card"><h3>Career path and JD expansion</h3>';
+  if (!x) right += '<p class="note">This is the top of the ladder for this job family.</p></div>';
+  else {
+    const f = r.fam;
+    right += '<div class="ladder">' + f.levels.map(l => '<span class="step'+(l===r.lvl?' cur':'')+(x.n.fam===f && l===x.n.lvl?' nxt':'')+'">'+l+' · '+esc(LVL_NAME[l]||l)+'</span>').join('<span class="arrow">›</span>') + (x.n.fam!==f ? '<span class="arrow">›</span><span class="step nxt">'+esc(x.n.fam.area)+' · '+x.n.lvl+'</span>' : '') + '</div>'
+      + '<div class="note">'+esc(x.n.how)+'.</div>'
+      + '<h4>What changes at the next level</h4><ul>'
+      + (x.g1 ? '<li><b>Scope:</b> '+esc(x.g1.fw.analogy)+'.</li><li><b>Complexity:</b> '+esc(x.g1.fw.complexity)+'</li><li><b>Typical background:</b> '+esc(x.g1.fw.typ)+'</li>' : '')
+      + '</ul>'
+      + '<h4>Expanded job description, '+esc(levelTitle(x.n.fam, x.n.lvl))+'</h4>'
+      + '<div class="jd" id="jdx">'
+      + '<h5>Summary</h5><p style="margin:0">'+esc((R.pre[x.n.fam.code]||'') + (x.g1 ? ' At this level: ' + x.g1.fw.analogy.charAt(0).toLowerCase() + x.g1.fw.analogy.slice(1) + '.' : ''))+'</p>'
+      + '<h5>Responsibilities</h5><ul>' + x.keep.map(s => '<li>'+esc(s)+'</li>').join('') + x.adds.map(s => '<li>'+esc(s)+'<span class="new">NEW</span></li>').join('') + '</ul>'
+      + (x.skills.length ? '<h5>Skills to build</h5><ul>' + x.skills.map(s => '<li>'+esc(s)+'<span class="new">NEW</span></li>').join('') + '</ul>' : '')
+      + (x.g1 ? '<h5>Qualifications</h5><p style="margin:0">'+esc(x.g1.fw.typ)+'</p>' : '')
+      + '</div>'
+      + '<div class="btns" style="justify-content:flex-start;margin-top:10px"><button id="dlDoc" class="primary">Download expanded JD (Word)</button><button id="cpJd">Copy text</button></div>'
+      + '</div>';
+  }
+  $('#detail').innerHTML = left + right;
+  if (x) {
+    const name = (x.n.fam.area + ' ' + x.n.lvl).replace(/[^\w ]+/g,'').replace(/\s+/g,'_');
+    $('#dlDoc').onclick = () => { const html = '<html><head><meta charset="utf-8"><title>'+esc(levelTitle(x.n.fam,x.n.lvl))+'</title></head><body style="font-family:Arial"><h1 style="font-size:18pt">'+esc(levelTitle(x.n.fam,x.n.lvl))+'</h1>'+$('#jdx').innerHTML.replace(/<span class="new">NEW<\/span>/g,' <b>(new)</b>')+'</body></html>'; dl(new Blob([html], {type:'application/msword'}), name + '.doc'); };
+    $('#cpJd').onclick = () => { navigator.clipboard.writeText(levelTitle(x.n.fam,x.n.lvl) + '\n\n' + $('#jdx').innerText.replace(/NEW/g,'(new)')); $('#cpJd').textContent = 'Copied'; };
+  }
+}
+function dl(blob, name){ const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); }
+$('#csv').onclick = () => {
+  const q = s => '"' + String(s).replace(/"/g,'""') + '"';
+  const rows = [['File','Title','Survey job','Radford code','IPAS code','Level','Company grade','Family fit','Level fit','Overall confidence','Score','Next step']].concat(RESULTS.map(r => { const n = nextStep(r); return [r.file, r.title, r.fam.area, r.code, r.fam.ipas, LVL_NAME[r.lvl]||r.lvl, GRADE_OF[r.lvl], r.famConf, r.lvlConf, r.conf, r.overall, n ? n.fam.area + ' ' + n.lvl : '']; }));
+  dl(new Blob([rows.map(r => r.map(q).join(',')).join('\n')], {type:'text/csv'}), 'jd-matches.csv');
+};
+$('#clear').onclick = () => { RESULTS = []; SEL = -1; render(); };
+
+// ---------- file reading ----------
+let mammothP = null, pdfP = null;
+function loadScript(src){ return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('could not load ' + src)); document.head.appendChild(s); }); }
+function mammoth(){ return mammothP || (mammothP = loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js').then(() => window.mammoth)); }
+function pdfjs(){ return pdfP || (pdfP = loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js').then(() => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; return window.pdfjsLib; })); }
+async function readFile(file){
+  const n = file.name.toLowerCase();
+  if (n.endsWith('.docx')) { const m = await mammoth(); const r = await m.extractRawText({ arrayBuffer: await file.arrayBuffer() }); return r.value; }
+  if (n.endsWith('.pdf')) { const lib = await pdfjs(); const doc = await lib.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise; let out = ''; for (let p = 1; p <= doc.numPages; p++) { const pg = await doc.getPage(p); const c = await pg.getTextContent(); let last = null; c.items.forEach(it => { if (last !== null && Math.abs(it.transform[5] - last) > 2) out += '\n'; out += it.str + (it.hasEOL ? '\n' : ' '); last = it.transform[5]; }); out += '\n'; } return out; }
+  if (n.endsWith('.html') || n.endsWith('.htm')) { const d = new DOMParser().parseFromString(await file.text(), 'text/html'); return d.body.innerText || d.body.textContent; }
+  return file.text();
+}
+const OK = /\.(docx|pdf|txt|md|html?)$/i;
+async function handle(files){
+  files = files.filter(f => OK.test(f.name) && !f.name.startsWith('~$'));
+  if (!files.length) { $('#busy').textContent = 'No job descriptions found. Use Word, PDF, text or HTML files.'; return; }
+  let done = 0, failed = [];
+  for (const f of files) {
+    $('#busy').textContent = 'Reading ' + (++done) + ' of ' + files.length + ': ' + f.name;
+    try { const t = await readFile(f); if (t && t.trim().length > 40) RESULTS.push(match(f.webkitRelativePath || f.name, t)); else failed.push(f.name + ' (no text found)'); }
+    catch (e) { failed.push(f.name + ' (' + e.message + ')'); }
+  }
+  $('#busy').textContent = failed.length ? 'Could not read: ' + failed.join('; ') : '';
+  if (SEL < 0 && RESULTS.length) SEL = 0;
+  render();
+}
+$('#pickDir').onchange = e => handle([...e.target.files]);
+$('#pickFiles').onchange = e => handle([...e.target.files]);
+const drop = $('#drop');
+['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', async e => {
+  const items = [...(e.dataTransfer.items || [])].map(i => i.webkitGetAsEntry && i.webkitGetAsEntry()).filter(Boolean);
+  if (!items.length) return handle([...e.dataTransfer.files]);
+  const files = [];
+  async function walk(en, path){
+    if (en.isFile) await new Promise(r => en.file(f => { try { Object.defineProperty(f, 'webkitRelativePath', { value: path + f.name }); } catch (_) {} files.push(f); r(); }, r));
+    else if (en.isDirectory) { const rd = en.createReader(); let batch; do { batch = await new Promise(r => rd.readEntries(r, () => r([]))); for (const c of batch) await walk(c, path + en.name + '/'); } while (batch.length); }
+  }
+  for (const en of items) await walk(en, '');
+  handle(files);
+});
+
+// ---------- samples ----------
+const SAMPLES = [
+  ['Director_Total_Rewards.txt', 'Job Title: Director, Total Rewards, Compensation Strategy & Analytics\nReports to: Senior Vice President, Human Resources\n\nSummary\nDesign and govern rewards programs that are competitive, equitable and performance-aligned across the US, Canada and Mexico.\n\nResponsibilities\n- Build the compensation strategy, job architecture, leveling and salary range structure\n- Design executive compensation and short- and long-term incentive plans for a private company\n- Lead market benchmarking and pay equity reviews\n- Build compensation dashboards and analytics for the executive leadership team\n- Partner with Finance, Legal and Talent Acquisition on offers and annual planning\n- Lead a small team of compensation analysts\n\nQualifications\nBachelor degree required; MBA preferred. 10+ years of progressive compensation experience, including leading a team. Experience with enterprise-wide programs across multiple countries.'],
+  ['Compensation_Analyst.docx.txt', 'Compensation Analyst\n\nWe are looking for a Compensation Analyst to support pay programs across our greenhouse sites.\n\n- Match jobs to salary survey data and maintain market pricing\n- Prepare merit and bonus planning analysis\n- Maintain salary ranges in the HRIS and answer pay questions from HR business partners\n- Build reports on range position and compa-ratios\n\nRequirements: bachelor degree in business or HR; 3 to 5 years of experience in compensation or HR analytics; advanced Excel.'],
+  ['Greenhouse_Crop_Supervisor.pdf.txt', 'Position: Crop Care Supervisor\n\nSupervise a crew of 25 crop care workers on the night shift. Schedule work, coach and train new hires, track harvest and pruning productivity, and enforce food safety and safety rules. Work with the head grower on the crop plan and scouting for pests and disease.\n\n2 to 3 years of experience in greenhouse operations, including time as a lead hand.'],
+  ['Forklift_Operator.txt', 'Hi-Lo Driver (forklift)\nMove pallets of packed produce between the packing line, cold storage and shipping. Load and unload trucks, keep inventory counts accurate and complete daily equipment checks. Hourly, rotating shifts. Forklift certification required. 1 year of experience preferred.'],
+];
+window.__jd = { match, nextStep };
+if (window.top !== window) document.querySelector('header a').style.display = 'none';
+$('#samples').onclick = () => { SAMPLES.forEach(([n, t]) => RESULTS.push(match('sample/' + n, t))); if (SEL < 0) SEL = 0; render(); };
+})();
+</script>
+</body>
+</html>

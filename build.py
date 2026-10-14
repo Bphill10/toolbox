@@ -5,7 +5,8 @@
   src/modules/*.html  one file per tool (comp, offer, merit, ...)
   src/data/*          shared data the tools read (people, grades, ...)
   src/i18n.js         translations
-  src/pages/*.html    standalone pages, each served at /<name> (e.g. /analysis)
+  src/pages/*.html    standalone pages, each served at /<name> (e.g. /analysis);
+                      they may use {{include:...}} too
 
 src/index.html marks where each file goes with {{include:<path under src/>}}.
 Run:  python3 build.py   -> writes dist/index.html
@@ -51,7 +52,7 @@ def main():
     for p in sorted((SRC / "pages").glob("*.html")):
         dest = OUT.parent / p.stem / "index.html"
         dest.parent.mkdir(exist_ok=True)
-        dest.write_bytes(p.read_bytes())
+        dest.write_bytes(MARK.sub(include, read(p)).encode("utf-8"))
         print(f"page /{p.stem}")
     print(f"built dist/index.html: {len(used)} files stitched, {len(out.encode('utf-8')):,} bytes")
 
