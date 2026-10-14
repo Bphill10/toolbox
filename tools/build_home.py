@@ -56,5 +56,22 @@ for i in range(n):
     if sta[i] == "Active": payc[ctry[i]] += usd[i]
 out = {"months": [months[m] for m in win], "hc": hc, "payroll": [round(p) for p in payroll], "payc": {k: round(v) for k, v in payc.items()},
        "sites": sorted([{"name": s, "c": c, "hc": k} for (s, c), k in sites.items()], key=lambda x: -x["hc"])}
+# Briefing figures, computed the same way the tools compute them (How Competitive Should We Be,
+# Org Chart, AI Time Savings), so the home screen and the tools always agree.
+wf = json.loads((ROOT / "src/data/workforce.json").read_text())
+repl = lambda pay: 16 if pay < 30000 else 20 if pay < 50000 else 21 if pay < 100000 else 50 if pay < 200000 else 100
+fam = defaultdict(lambda: {"tc": 0.0, "hc": 0, "rs": 0.0, "rn": 0})
+for j in wf["jobs"]:
+    f = fam[j["tw"]]; f["tc"] += j["hc"] * j["turnover"] / 100 * j["pay"] * repl(j["pay"]) / 100; f["hc"] += j["hc"]
+    if j["ratio"]: f["rs"] += j["ratio"] * j["hc"]; f["rn"] += j["hc"]
+tc = sum(f["tc"] for f in fam.values()); top = max(fam.items(), key=lambda kv: kv[1]["tc"])
+below = [k for k, f in fam.items() if f["rn"] and f["rs"] / f["rn"] < 0.97]
+grade = {j["k"]: j["g"] for j in wf["jobs"]}
+kids = Counter(o[3] for o in wf["org"] if o[3] >= 0)
+narrow = sum(1 for i, o in enumerate(wf["org"]) if 1 <= kids.get(i, 0) <= 2 and not grade.get(o[4], "-").startswith("E"))
+CAT = {"Executive": (85, 6), "Management": (65, 5), "Professional": (75, 7), "Support": (15, 2)}
+ai = sum(j["hc"] * CAT[j["cat"]][0] / 100 * 2080 * CAT[j["cat"]][1] / 100 for j in wf["jobs"])
+out["brief"] = {"turnoverCost": round(tc), "topFam": top[0], "topShare": round(100 * top[1]["tc"] / tc), "famsBelow": len(below), "fams": len(fam),
+                "belowNames": sorted(below), "narrow": narrow, "aiHours": round(ai), "roles": len(wf["jobs"])}
 (ROOT / "src/data/home.json").write_text(json.dumps(out, separators=(",", ":")))
-print(out["months"][0], out["months"][-1], out["hc"]["ALL"], len(out["sites"]))
+print(out["months"][0], out["months"][-1], out["hc"]["ALL"], len(out["sites"]), out["brief"])
