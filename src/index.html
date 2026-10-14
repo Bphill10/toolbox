@@ -171,8 +171,7 @@ header .logo .mark{background:linear-gradient(135deg,#14A877,#0B3B2C)!important;
 <header>
   <div class="hwrap">
     <div class="logo" onclick="goHome()">
-      <div class="mark">MGI</div>
-      <div><b>MGI Insight</b><span data-i="tag"></span></div>
+      <img class="wm" src="img/mgi/wordmark-light.svg" alt="MGI Insight, people and pay intelligence" width="168" height="38">
     </div>
     <div class="hspace"></div>
     <div class="ctl">
@@ -342,15 +341,14 @@ header .logo .mark{background:linear-gradient(135deg,#14A877,#0B3B2C)!important;
     <div id="dataUpdated" class="dataUpd" hidden></div>
     <h1 data-i="h1"></h1>
     <p data-i="h2"></p>
-    <div class="heroBtns"><a class="hb1" href="#grp-data" onclick="event.preventDefault();var e=document.getElementById('grp-data');window.scrollTo({top:e.getBoundingClientRect().top+scrollY-76,behavior:'smooth'})">Explore the tools &rarr;</a><a class="hb2" href="/roadmap/">&#9654;&nbsp; Read the roadmap</a></div>
-    <div class="heroTag" aria-hidden="true">People<br>Pay<br>Opportunity<small>Grown in three countries</small></div>
+    <div class="heroBtns"><a class="hb1" href="#featured" id="exploreBtn">Explore the platform <span aria-hidden="true">&rarr;</span></a><button type="button" class="hb2" id="tourBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10-6.5z"/></svg>Watch a quick tour</button></div>
+    <div class="heroTag" aria-hidden="true">People<br>Food<br>Opportunity<small>A brighter tomorrow</small></div>
     <div class="heroFine">Every name, number and site in this demonstration is fictional.</div>
   </div>
 </div>
 
 <div id="mgiOverview"></div>
 <script type="application/json" id="mgi-home">{{include:data/home.json}}</script>
-<script type="application/json" id="mgi-map">{{include:data/namap.json}}</script>
 <div class="missionBand"><div class="mwrap"><div class="m1"><div class="ml" data-i="ms_label"></div><p class="mt" data-i="ms_text"></p></div><div class="m2"><div class="ml" data-i="ms_vl"></div><div class="mv"><span data-i="ms_v1"></span><span data-i="ms_v2"></span><span data-i="ms_v3"></span><span data-i="ms_v4"></span><span data-i="ms_v5"></span></div></div><div class="m3"><div class="ml" data-i="ms_cl"></div><div class="mc" data-i="ms_crops"></div><div class="mf"><b>1,013</b> <span data-i="ms_acres"></span> &middot; <b>25</b> <span data-i="ms_sites"></span></div></div></div></div>
 <div class="main">
   <div class="sech" data-i="mods"></div>
@@ -385,8 +383,8 @@ const CAT={
  region:{en:'Region',pt:'Região',es:'Región'},
  r_all:{en:'All regions',pt:'Todas as regiões',es:'Todas las regiones'},
  r_brazil:{en:'Brazil',pt:'Brasil',es:'Brasil'},
- h1:{en:'People and pay intelligence that grows with the company.',pt:'People and pay intelligence that grows with the company.',es:'People and pay intelligence that grows with the company.'},
- h2:{en:'Design jobs. Benchmark pay. Build careers. Strengthen teams. One tool on one company dataset.',pt:'Design jobs. Benchmark pay. Build careers. Strengthen teams. One tool on one company dataset.',es:'Design jobs. Benchmark pay. Build careers. Strengthen teams. One tool on one company dataset.'},
+ h1:{en:'People intelligence that grows possibility.',pt:'People intelligence that grows possibility.',es:'People intelligence that grows possibility.'},
+ h2:{en:'Design jobs. Benchmark pay. Build careers. Strengthen teams.',pt:'Design jobs. Benchmark pay. Build careers. Strengthen teams.',es:'Design jobs. Benchmark pay. Build careers. Strengthen teams.'},
  k1:{en:'Employees priced',pt:'Empregados precificados',es:'Empleados preciados'},
  k2:{en:'Countries',pt:'Países',es:'Países'},
  k3:{en:'People in the HR data',pt:'People in the HR data',es:'People in the HR data'},
@@ -551,8 +549,8 @@ const CAT={
 };
 
 const MODS=[
-  {id:'jdmatch', url:'/jdmatch/', icon:'⇄', grad:'linear-gradient(135deg,#0F7A57,#0A5A41)', desktop:true, group:'data'},
-  {id:'positioning', url:'/positioning/', icon:'◎', grad:'linear-gradient(135deg,#0F7A57,#0A5A41)', desktop:true, group:'data'},
+  {id:'jdmatch', url:'/jdmatch/', icon:'⇄', grad:'linear-gradient(135deg,#0F7A57,#067451)', desktop:true, group:'data'},
+  {id:'positioning', url:'/positioning/', icon:'◎', grad:'linear-gradient(135deg,#0F7A57,#067451)', desktop:true, group:'data'},
   {id:'archbuild', icon:'▤', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
   {id:'jdlib', icon:'✎', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
   {id:'ranges', icon:'▥', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
