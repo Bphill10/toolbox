@@ -3,163 +3,289 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Director, Total Rewards · Compensation Analysis</title>
-<style>
-  :root { --navy:#003e7e; --ink:#1f2933; --muted:#5f6b7a; --line:#c9d3df; --soft:#eaf1f8; --gold:#f89728; --golddark:#b8640a; --goldsoft:#fef4e8; --green:#47aa42; --greensoft:#edf7ec; --bg:#fff; }
-  * { box-sizing:border-box; }
-  body { margin:0; background:#e9edf2; color:var(--ink); font:13.5px/1.45 "Segoe UI", Arial, Helvetica, sans-serif; }
-  .page { max-width:860px; margin:20px auto; background:var(--bg); padding:36px 44px 30px; box-shadow:0 1px 4px rgba(0,0,0,.1); }
-  .conf { color:var(--golddark); font-weight:700; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; margin:0 0 6px; }
-  h1 { color:var(--navy); font-size:25px; line-height:1.2; margin:0 0 4px; }
-  .sub { color:var(--muted); margin:0 0 10px; padding-bottom:10px; border-bottom:2px solid var(--navy); }
-  h2 { color:var(--navy); font-size:11.5px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; margin:20px 0 8px; }
-  .tiles { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:10px; }
-  .tile { border:1px solid var(--line); border-top:3px solid var(--navy); background:var(--soft); padding:10px 12px; }
-  .tile.gold { border-top-color:var(--gold); background:var(--goldsoft); }
-  .tile .v { color:var(--navy); font-size:21px; font-weight:700; }
-  .tile .k { color:var(--navy); font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; margin:2px 0 4px; }
-  .tile .d { color:var(--muted); font-size:12px; margin-top:2px; }
-  .watch { background:var(--goldsoft); border:1px solid #f6d3a8; border-left:4px solid var(--gold); padding:9px 12px; margin:10px 0; }
-  .wrap { overflow-x:auto; }
-  table { border-collapse:collapse; width:100%; }
-  th { color:var(--navy); font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; text-align:left; padding:6px 8px; border-bottom:2px solid var(--navy); vertical-align:bottom; }
-  td { padding:8px 9px; border-bottom:1px solid #e3e8ee; vertical-align:top; }
-  .n { text-align:right; }
-  tr.key td { background:var(--greensoft); font-weight:700; }
-  .page { border-top:6px solid; border-image:linear-gradient(90deg,var(--navy) 0 60%,var(--gold) 60% 80%,var(--green) 80% 100%) 1; }
-  .m { display:block; color:var(--muted); font-size:11px; font-weight:400; }
-  .tile { min-height:0; }
-  .r { display:block; color:var(--navy); font-weight:700; font-size:12px; margin-top:2px; }
-  table.mkt td.n { white-space:nowrap; width:20%; }
-  table.mkt td:last-child, table.mkt th:last-child { background:var(--greensoft); }
-  .thsub { display:block; font-weight:400; letter-spacing:0; text-transform:none; color:var(--muted); font-size:10px; margin-top:2px; }
-  .small { color:var(--muted); font-size:11.5px; margin:6px 0 0; }
-  .cols { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
-  ul.change { margin:0; padding-left:18px; }
-  ul.change li { margin:0 0 7px; }
-  .method { color:var(--muted); font-size:11px; border-top:1px solid var(--line); margin-top:18px; padding-top:8px; }
-  @media (max-width:700px) {
-    .page { margin:0; padding:22px 16px; box-shadow:none; }
-    .tiles { grid-template-columns:1fr 1fr; }
-    .cols { grid-template-columns:1fr; gap:0; }
-    h1 { font-size:21px; }
-  }
-  .pno { text-align:right; color:var(--muted); font-size:11px; margin-top:14px; }
-  .print { position:fixed; top:16px; right:16px; background:var(--navy); color:#fff; border:0; border-radius:6px; padding:10px 16px; font:600 14px "Segoe UI", Arial, sans-serif; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.2); }
-  .print:hover { background:#1d3a66; }
-  @page { size:letter; margin:0.4in 0.45in; }
-  @media print {
-    .print { display:none; }
-
-    body { background:#fff; font-size:12.5px; line-height:1.4; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-    h1 { font-size:21px; } h2 { margin:13px 0 6px; } .tile .v { font-size:18px; } .tile .d { font-size:11px; }
-    td { padding:4px 7px; } th { padding:4px 7px; } h2 { margin:13px 0 6px; } .method { margin-top:6px; padding-top:4px; } .page { break-after:avoid; } ul.change li { margin:0 0 4px; } .m { font-size:10px; } .small, .method { font-size:11px; }
-    .tiles { grid-template-columns:repeat(4,1fr); } .cols { grid-template-columns:1fr 1fr; gap:24px; }
-    table, .tiles, .watch, .cols, .keep { break-inside:avoid; }
-    h2 { break-after:avoid; }
-    .page + .page { break-before:page; }
-    .pno { font-size:9.5px; margin-top:2px; } .page { box-shadow:none; margin:0; padding:0; max-width:none; } }
-@media screen and (max-width:600px){button.print{position:static;display:block;margin:8px 16px 0 auto}}
-</style>
+<meta name="robots" content="noindex">
+<title>Compensation Analysis · Director, Total Rewards</title>
 <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
 <script defer src="/_vercel/insights/script.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+  /* The compensation analysis as a two-page document: the same two pages on screen and on paper.
+     Look follows the approved analysis design kit (forest, mint, champagne gold). */
+  :root { --forest:#041d1c; --ink:#143b34; --emerald:#007c65; --mint:#42e6c5; --gold:#c9a75e; --line:#dce6df; --muted:#5f736c; --soft:#f1f6f3; --pale:#ecfaf3; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; }
+  body { font:10px/1.4 Inter, Arial, Helvetica, sans-serif; color:var(--ink); background:#dfe7e2; -webkit-font-smoothing:antialiased; font-feature-settings:"tnum" 1; }
+  .bar { position:sticky; top:0; z-index:5; display:flex; justify-content:flex-end; gap:10px; padding:12px 20px; }
+  .bar button { border:0; border-radius:10px; background:var(--forest); color:#fff; font:700 13px Inter, Arial, sans-serif; padding:10px 16px; cursor:pointer; box-shadow:0 6px 18px rgba(4,29,28,.25); }
+  .bar button:hover { background:#0b3a33; }
+  .bar button:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+
+  /* sheets: letter size on screen */
+  .sheet { width:8.5in; min-height:11in; margin:0 auto 26px; background:#fff; box-shadow:0 10px 40px rgba(4,29,28,.18); padding:.42in .45in .55in; position:relative; }
+  .pgno { position:absolute; left:.45in; right:.45in; bottom:.22in; display:flex; justify-content:space-between; font-size:8px; color:var(--muted); border-top:1px solid var(--line); padding-top:5px; }
+
+  /* page 1 header */
+  .head { border-radius:12px; overflow:hidden; position:relative; background:linear-gradient(90deg,#f6fbf8 0%,#f6fbf8 46%,rgba(246,251,248,.55) 72%,rgba(246,251,248,0) 100%), url("/analysis-assets/hero.jpg") right 40%/auto 260% no-repeat; border:1px solid var(--line); padding:14px 16px; display:flex; justify-content:space-between; gap:16px; align-items:stretch; }
+  .eyebrow { font-size:8px; letter-spacing:.24em; font-weight:700; color:var(--emerald); text-transform:uppercase; }
+  .head h1 { font-size:21px; line-height:1.12; letter-spacing:-.03em; margin:5px 0 4px; }
+  .head h1 span { color:var(--emerald); }
+  .head p { margin:0; color:var(--muted); font-size:9.5px; max-width:330px; }
+  .pill { display:inline-block; margin-top:7px; font-size:8px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink); border:1px solid #b9d6ca; background:rgba(255,255,255,.75); border-radius:999px; padding:3px 9px; }
+  .rec { flex:none; width:215px; background:var(--forest); color:#fff; border-radius:10px; padding:10px 13px; }
+  .rec .k { font-size:7.5px; letter-spacing:.2em; color:#a0cfbe; font-weight:700; }
+  .rec .big { font-size:23px; font-weight:800; letter-spacing:-.03em; margin:2px 0 0; }
+  .rec .sub { font-size:8.5px; color:#a7d2c4; }
+  .rec dl { margin:6px 0 0; border-top:1px solid #2e5d50; padding-top:3px; }
+  .rec dl div { display:flex; justify-content:space-between; font-size:9px; padding:1.5px 0; color:#d6f4e6; } .rec dd { margin:0; font-weight:700; color:#fff; }
+  .meta { display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; margin:7px 0 8px; font-size:8.5px; color:var(--muted); }
+  .notice { background:#fbf6ea; border:1px solid #ecdcb4; color:#6d5823; border-radius:999px; padding:2px 9px; font-weight:600; }
+
+  .kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; }
+  .kpi { border:1px solid var(--line); border-radius:9px; padding:6px 9px; background:linear-gradient(160deg,#fff 60%,#f1fbf6); }
+  .kpi .t { font-size:7.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:700; color:var(--muted); }
+  .kpi .v { font-size:17px; font-weight:800; letter-spacing:-.03em; margin-top:1px; }
+  .kpi .s { font-size:8px; color:var(--muted); line-height:1.35; }
+
+  h3 { font-size:11.5px; letter-spacing:-.01em; margin:9px 0 4px; display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  h3 small { font-size:8px; font-weight:500; color:var(--muted); }
+  .sec { font-size:8.5px; letter-spacing:.2em; text-transform:uppercase; font-weight:800; color:var(--emerald); margin:12px 0 0; padding-top:8px; border-top:2px solid var(--forest); }
+  .g2 { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:8px; }
+  .box { border:1px solid var(--line); border-radius:9px; padding:7px 10px; }
+  .why { background:var(--pale); border-color:#bfe6d4; }
+  .why h4 { margin:0 0 3px; font-size:10px; }
+  .why p { margin:0 0 4px; font-size:9px; line-height:1.45; }
+  .tiles { display:grid; grid-template-columns:1fr 1fr; gap:5px; margin:4px 0 5px; }
+  .tile { background:#fff; border:1px solid #bfe6d4; border-radius:7px; padding:3px 7px; }
+  .tile b { font-size:12px; display:block; } .tile b.g { color:#8a6a1f; } .tile span { font-size:7.5px; color:var(--muted); }
+
+  /* offer vs median bars */
+  .cmp { display:grid; grid-template-columns:96px minmax(0,1fr) 82px; gap:8px; align-items:center; padding:4px 0; border-top:1px solid #edf2ef; }
+  .cmp:first-of-type { border-top:0; }
+  .cmp b { font-size:9.5px; } .cmp .lab b { display:block; } .cmp .lab span { font-size:7.5px; color:var(--muted); }
+  .track { position:relative; height:6px; border-radius:4px; background:#e6efea; }
+  .track .fill { position:absolute; left:0; top:0; bottom:0; border-radius:4px; background:linear-gradient(90deg,#0b6f5c,#42e6c5); }
+  .track .med { position:absolute; top:-4px; bottom:-4px; width:1.5px; background:var(--ink); opacity:.6; }
+  .track .dot { position:absolute; top:50%; width:11px; height:11px; margin:-5.5px 0 0 -5.5px; border-radius:50%; background:#0d4b40; border:2px solid #fff; box-shadow:0 0 0 1.5px #0d4b40; }
+  .cmp .r { text-align:right; } .cmp .r b { font-size:12px; } .cmp .r span { font-size:7.5px; color:var(--emerald); font-weight:600; white-space:nowrap; }
+
+  /* authority */
+  .auth { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+  .ac { border:1px solid var(--line); border-radius:9px; padding:5px 9px; }
+  .ac.on { background:var(--pale); border-color:#8fd9bd; }
+  .ac .k { font-size:7.5px; letter-spacing:.12em; text-transform:uppercase; font-weight:800; color:var(--muted); }
+  .ac .v { font-size:14px; font-weight:800; letter-spacing:-.02em; }
+  .ac .s { font-size:8px; color:var(--muted); }
+  .ac dl { display:grid; grid-template-columns:auto auto auto auto auto auto; justify-content:start; gap:0 6px; margin:3px 0 0; padding-top:3px; border-top:1px solid #e3ece7; font-size:8px; }
+  .ac dt { color:var(--muted); } .ac dd { margin:0 6px 0 0; font-weight:700; }
+
+  /* corridor */
+  .corr { position:relative; height:24px; margin:4px 6px 0; }
+  .corr .bg { position:absolute; left:0; right:0; top:9px; height:6px; border-radius:4px; background:#e6efea; }
+  .corr .iqr { position:absolute; top:9px; height:6px; border-radius:4px; background:linear-gradient(90deg,#77c4b2,#1a9e83); }
+  .corr .mk { position:absolute; top:2px; width:1.5px; height:20px; background:var(--ink); }
+  .corr .alt { position:absolute; top:9px; width:6px; height:6px; margin-left:-3px; border-radius:50%; background:#fff; border:1.5px solid var(--ink); }
+  .corr .pin { position:absolute; top:4px; width:13px; height:13px; margin-left:-6.5px; border-radius:50%; background:#d9bf89; border:2px solid #fff; box-shadow:0 0 0 1.5px var(--ink); }
+  .corrl { display:flex; justify-content:space-between; gap:8px; font-size:7.5px; color:var(--muted); }
+
+  table { width:100%; border-collapse:collapse; font-size:9px; }
+  th { text-align:left; font-size:7px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); background:var(--soft); padding:3px 6px; font-weight:700; white-space:nowrap; }
+  td { padding:2.5px 6px; border-bottom:1px solid #e9f0ec; }
+  td.n, th.n { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  td .r { color:var(--emerald); font-weight:700; font-size:8px; margin-left:4px; }
+  td .rg { color:var(--muted); font-size:7.5px; margin-left:4px; }
+  tr.hl td { background:var(--pale); font-weight:700; }
+  tr.tot td { font-weight:800; }
+  .fine { font-size:7.5px; color:var(--muted); line-height:1.4; margin:3px 0 0; }
+
+  .src { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+  .src .box .k { font-size:7px; letter-spacing:.18em; text-transform:uppercase; font-weight:800; color:var(--emerald); }
+  .src .box b { display:block; font-size:9.5px; margin:1px 0; } .src .box span { font-size:8px; color:var(--muted); }
+  ol.chg { list-style:none; margin:0; padding:0; counter-reset:c; columns:2; column-gap:14px; }
+  ol.chg li { counter-increment:c; break-inside:avoid; display:grid; grid-template-columns:18px 1fr; font-size:8.5px; line-height:1.42; margin-bottom:3px; }
+  ol.chg li::before { content:counter(c,decimal-leading-zero); color:var(--emerald); font-weight:800; }
+
+  /* phones: still two pages, at the width of the screen */
+  @media screen and (max-width:860px) {
+    body { font-size:11px; }
+    .sheet { width:auto; min-height:0; margin:0 10px 18px; padding:16px 14px 40px; border-radius:6px; }
+    .pgno { left:14px; right:14px; bottom:10px; }
+    .head { flex-direction:column; } .rec { width:100%; }
+    .kpis { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .g2, .src, .auth { grid-template-columns:minmax(0,1fr); }
+    .tw { overflow-x:auto; }
+    ol.chg { columns:1; }
+    table { font-size:10px; }
+    .corrl { flex-wrap:wrap; }
+  }
+  @media print {
+    @page { size:letter; margin:0; }
+    body { background:#fff; }
+    .bar { display:none; }
+    .sheet { width:8.5in; height:11in; min-height:0; margin:0; box-shadow:none; break-after:page; overflow:hidden; }
+    .sheet:last-of-type { break-after:auto; }
+    * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
+</style>
 </head>
 <body>
-<button class="print" onclick="window.print()">Save as PDF</button>
-<div class="page">
+<div class="bar"><button type="button" onclick="window.print()">&#8595; Save as PDF</button></div>
 
-<p class="conf">Confidential · Prepared for Mastronardi Produce · Contains licensed survey data</p>
-<h1>Director, Total Rewards, Compensation Strategy &amp; Analytics: compensation analysis</h1>
-<p class="sub">Director level · United States · Prepared 13 October 2026 by Ben Phillips · Market: Radford (M5, Compensation) and IPAS (M4)*, averaged</p>
-
-<h2>Recommendation</h2>
-<div class="tiles">
-  <div class="tile"><div class="v">$230,000</div><div class="k">Base salary</div><div class="d">1.04 of market median · 59th percentile</div></div>
-  <div class="tile"><div class="v">35%</div><div class="k">Target bonus · $80,500</div><div class="d">market median 22%, top quarter 25%</div></div>
-  <div class="tile"><div class="v">$310,500</div><div class="k">Total target cash</div><div class="d">1.17 of market median</div></div>
-  <div class="tile gold"><div class="v">1.04</div><div class="k">Market ratio, total direct comp</div><div class="d">no equity offered ($0) · 55th percentile</div></div>
-</div>
-<div class="watch"><b>Why the 35% bonus:</b> with no equity offered, total direct compensation is base plus bonus. At 35% it lands at the market median: $310,500 against $297,561, a ratio of 1.04. At the market's 22% bonus it would be $280,600, a ratio of 0.94. <b>Why above the median on base:</b> the role builds the rewards function from scratch, from executive pay and job architecture to incentive governance and analytics, and integrates AI into how that work gets done.</div>
-
-<h2>Authority range at a 35% bonus</h2>
-<div class="wrap"><table>
-  <tr><th>Level of offer</th><th class="n">Base</th><th class="n">Bonus</th><th class="n">Total cash</th><th class="n">Base ratio</th><th class="n">TDC ratio</th><th class="n">Base percentile</th></tr>
-  <tr><td>Open</td><td class="n">$215,000</td><td class="n">$75,250</td><td class="n">$290,250</td><td class="n">0.97</td><td class="n">0.98</td><td class="n">42nd</td></tr>
-  <tr><td>Strong candidate</td><td class="n">$222,500</td><td class="n">$77,875</td><td class="n">$300,375</td><td class="n">1.00</td><td class="n">1.01</td><td class="n">51st</td></tr>
-  <tr class="key"><td>Recommended (base cap)</td><td class="n">$230,000</td><td class="n">$80,500</td><td class="n">$310,500</td><td class="n">1.04</td><td class="n">1.04</td><td class="n">59th</td></tr>
-</table></div>
-
-<h2>Position to market</h2>
-<div class="wrap"><table>
-  <tr><th>Market median · ratio</th><th class="n">Offer</th><th class="n">Radford</th><th class="n">IPAS*</th><th class="n">Average</th></tr>
-  <tr><td>Base salary</td><td class="n">$230,000</td><td class="n">$221,450<span class="r">1.04</span></td><td class="n">$221,550<span class="r">1.04</span></td><td class="n">$221,500<span class="r">1.04</span></td></tr>
-  <tr><td>Total target cash</td><td class="n">$310,500</td><td class="n">$268,145<span class="r">1.16</span></td><td class="n">$263,189<span class="r">1.18</span></td><td class="n">$265,667<span class="r">1.17</span></td></tr>
-  <tr class="key"><td>Total direct comp (equity $0)</td><td class="n">$310,500</td><td class="n">$300,039<span class="r">1.03</span></td><td class="n">—</td><td class="n">$297,561<span class="r">1.04</span></td></tr>
-</table></div>
-<p class="small">Ratio = offer ÷ market median; 1.00 is the median. Market total direct comp includes equity; IPAS does not report it, so the average uses Radford's equity ($31,894).<br>* IPAS is not an exact match: its compensation and benefits job is broader than this role, so it is a general comparison.</p>
-
-<div class="pno">Page 1 of 2</div>
-</div>
-<div class="page">
-<h2 style="margin-top:0">Total direct compensation, with equity</h2>
-<div class="wrap"><table>
-  <tr><th>Component</th><th class="n">This offer</th><th class="n">Radford</th><th class="n">IPAS*</th><th class="n">Average</th></tr>
-  <tr><td>Base salary</td><td class="n">$230,000</td><td class="n">$221,450</td><td class="n">$221,550</td><td class="n">$221,500</td></tr>
-  <tr><td>Target bonus</td><td class="n">35%</td><td class="n">22%</td><td class="n">—</td><td class="n">22%†</td></tr>
-  <tr><td>Target total cash</td><td class="n">$310,500</td><td class="n">$268,145</td><td class="n">$263,189</td><td class="n">$265,667</td></tr>
-  <tr><td>Equity</td><td class="n">$0</td><td class="n">$31,894</td><td class="n">—</td><td class="n">$31,894†</td></tr>
-  <tr class="key"><td>Total direct compensation</td><td class="n">$310,500</td><td class="n">$300,039</td><td class="n">—</td><td class="n">$297,561</td></tr>
-  <tr class="key"><td>Market ratio</td><td class="n"></td><td class="n">1.03</td><td class="n">—</td><td class="n">1.04</td></tr>
-</table></div>
-<p class="small">Market equity averages in people who receive none; the median for recipients is $69,981.</p>
-
-<h2>Market data, Director level</h2>
-<div class="wrap"><table class="mkt">
-  <tr><th>Median <span class="thsub">25th – 75th below</span></th><th class="n">Radford (M5)</th><th class="n">IPAS (M4)*</th><th class="n">Average</th></tr>
-  <tr><td>Sample, people / companies</td><td class="n">636 / 448</td><td class="n">230 / 66</td><td class="n"></td></tr>
-  <tr><td>Base salary</td><td class="n">$221,450<span class="m">$200,750 – $247,000</span></td><td class="n">$221,550<span class="m">$203,210 – $241,697</span></td><td class="n"><b>$221,500</b><span class="m">$201,980 – $244,349</span></td></tr>
-  <tr><td>Target bonus</td><td class="n">22%<span class="m">20% – 25%</span></td><td class="n">—</td><td class="n"><b>22%†</b><span class="m">20% – 25%</span></td></tr>
-  <tr><td>Total cash</td><td class="n">$268,145</td><td class="n">$263,189</td><td class="n"><b>$265,667</b></td></tr>
-  <tr><td>Total direct comp</td><td class="n">$300,039<span class="m">$258,225 – $365,420</span></td><td class="n">—</td><td class="n"><b>$297,561</b><span class="m">$258,225 – $365,420†</span></td></tr>
-</table></div>
-<p class="small">Equal-weight average of Radford and IPAS. — not reported by IPAS. † Radford figure used where IPAS does not report.</p>
-
-<div class="cols">
-  <div>
-    <h2>Value of the bonus</h2>
-    <table>
-      <tr><th>Payout</th><th class="n">Total cash</th></tr>
-      <tr><td>0% of target</td><td class="n">$230,000</td></tr>
-      <tr><td>50% of target</td><td class="n">$270,250</td></tr>
-      <tr><td>100% of target</td><td class="n">$310,500</td></tr>
-      <tr><td>150% of target (maximum)</td><td class="n">$350,750</td></tr>
-    </table>
-    <h2>Bonus options at a $230,000 base</h2>
-    <table>
-      <tr><th>Bonus</th><th class="n">Total cash</th><th class="n">vs median</th></tr>
-      <tr><td>22%</td><td class="n">$280,600</td><td class="n">1.06</td></tr>
-      <tr><td>25%</td><td class="n">$287,500</td><td class="n">1.08</td></tr>
-      <tr><td>30%</td><td class="n">$299,000</td><td class="n">1.13</td></tr>
-      <tr class="key"><td>35%</td><td class="n">$310,500</td><td class="n">1.17</td></tr>
-    </table>
+<!-- PAGE 1 -->
+<section class="sheet" aria-label="Page 1 of 2">
+  <div class="head">
+    <div>
+      <div class="eyebrow">Executive compensation decision brief · October 2026</div>
+      <h1>The right offer, <span>backed by intelligence.</span></h1>
+      <p>Director, Total Rewards, Compensation Strategy &amp; Analytics: market position, offer authority and total direct compensation.</p>
+      <div class="pill">United States · Director level · Radford + IPAS</div>
+    </div>
+    <aside class="rec" aria-label="Recommendation">
+      <div class="k">RECOMMENDATION</div>
+      <div class="big" data-f="base"></div>
+      <div class="sub">Base salary · <span data-f="baseRatio"></span> of market median · <span data-f="basePctl"></span> percentile</div>
+      <dl><div><dt>Target bonus</dt><dd>35% · <span data-f="bonusAmt"></span></dd></div><div><dt>Target total cash</dt><dd data-f="ttc"></dd></div><div><dt>Equity</dt><dd>$0</dd></div></dl>
+    </aside>
   </div>
-  <div>
-    <h2>What could change the number</h2>
-    <ul class="change">
-      <li><b>Bonus level.</b> At the market's 22%, total cash is $280,600: above the cash median, but only 0.94 of market total direct comp, because there is no equity.</li>
-      <li><b>Scope.</b> Building the function from scratch is what puts the base above the median.</li>
-      <li><b>No equity.</b> Total direct comp equals total cash, 1.04 of a market that includes equity.</li>
-      <li><b>Survey choice.</b> Radford leans toward tech but fits the role's analytics skill set; IPAS is within $100 of it on median base.</li>
-      <li><b>Blending.</b> Good practice blends like-for-like matches, and a hybrid role has no exact one. Broader cuts would lower the number: Radford's comp and benefits family pays $213,200 vs $221,450 median base because it includes benefits roles, so it is left out.</li>
-      <li><b>Location.</b> US figures. A Canada-based role needs a Canadian cut.</li>
-      <li><b>Timing.</b> Data is not aged; past six months, add about 3% a year (an assumption).</li>
-    </ul>
+  <div class="meta"><span>Prepared 13 October 2026 by Ben Phillips · Market: Radford (M5, Compensation) and IPAS (M4)*, averaged</span><span class="notice">Confidential · Prepared for Mastronardi Produce · Contains licensed survey data</span></div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="t">Base salary</div><div class="v" data-f="base"></div><div class="s"><b data-f="baseRatio"></b> of market median · <span data-f="basePctl"></span> percentile</div></div>
+    <div class="kpi"><div class="t">Target bonus</div><div class="v">35%</div><div class="s"><span data-f="bonusAmt"></span> · market median 22%, top quarter 25%</div></div>
+    <div class="kpi"><div class="t">Total target cash</div><div class="v" data-f="ttc"></div><div class="s"><b data-f="ttcRatio"></b> of market <b>cash</b> median (<span data-f="mTtc"></span>)</div></div>
+    <div class="kpi"><div class="t">Total direct comp ratio</div><div class="v" data-f="tdcRatio"></div><div class="s">of market <b>TDC</b> median (<span data-f="mTdc"></span>) · no equity offered ($0) · <span data-f="tdcPctl"></span> percentile</div></div>
   </div>
-</div>
 
-<p class="method">Method: Radford M5 (Director) and IPAS M4, averaged with equal weight; Radford fills measures IPAS does not report. Measures are current fiscal year base, target bonus, target total cash and target total direct compensation, with equity at $0. Percentiles are interpolated between published points. Prepared by Ben Phillips with a benchmarking tool he built. Licensed market data, shared for this hiring discussion only.</p>
+  <div class="g2" style="margin-top:8px">
+    <div class="box">
+      <h3 style="margin-top:0">Offer versus market median <small>ratio = offer ÷ median; 1.00 is the median</small></h3>
+      <div id="cmp"></div>
+    </div>
+    <div class="box why">
+      <h4>Why the 35% bonus</h4>
+      <p>With no equity offered, total direct compensation is base plus bonus. At 35% it lands at the market median: <b data-f="ttc"></b> against <b data-f="mTdc"></b>, a ratio of <b data-f="tdcRatio"></b>. At the market's 22% bonus it would be <b data-f="ttc22"></b>, a ratio of <b data-f="tdc22"></b>.</p>
+      <div class="tiles"><div class="tile"><b data-f="ttcK"></b><span>35% bonus · TDC ratio <span data-f="tdcRatio"></span></span></div><div class="tile"><b class="g" data-f="ttc22K"></b><span>22% bonus · TDC ratio <span data-f="tdc22"></span></span></div></div>
+      <p style="margin:0"><b>Why above the median on base:</b> the role builds the rewards function from scratch, from executive pay and job architecture to incentive governance and analytics, and integrates AI into how that work gets done.</p>
+    </div>
+  </div>
 
-<div class="pno">Page 2 of 2</div>
-</div>
+  <h3>Authority range at a 35% bonus <small>Base ratio vs $221,500 · TDC ratio vs $297,561</small></h3>
+  <div class="auth" id="auth"></div>
+
+  <h3>Position to market <small>Market median, with the offer's ratio beside it</small></h3>
+  <div class="box">
+    <div class="corrl"><b style="font-size:8.5px;color:var(--ink)">Base salary corridor, blended 25th to 75th percentile</b><span>Gold: $230,000 · white: $215,000 and $222,500</span></div>
+    <div class="corr" id="corr" role="img"></div>
+    <div class="corrl"><span>25th · <span data-f="p25"></span></span><span>Median · <span data-f="mBase"></span></span><span>75th · <span data-f="p75"></span></span></div>
+    <div class="tw" style="margin-top:5px"><table id="pos"></table></div>
+    <p class="fine">Ratio = offer ÷ market median; 1.00 is the median. Market total direct comp includes equity; IPAS does not report it, so the average uses Radford's equity (<span data-f="eqR"></span>). * IPAS is not an exact match: its compensation and benefits job is broader than this role, so it is a general comparison.</p>
+  </div>
+
+  <div class="pgno"><span>Confidential · Contains licensed survey data</span><span>Page 1 of 2</span></div>
+</section>
+
+<!-- PAGE 2 -->
+<section class="sheet" aria-label="Page 2 of 2">
+  <h3 style="margin-top:0">Total direct compensation, with equity <small>Component by component</small></h3>
+  <div class="tw"><table id="tdcT"></table></div>
+  <p class="fine">Market equity averages in people who receive none; the median for recipients is <span data-f="eqRecip"></span>.</p>
+
+  <h3>Market data, Director level <small>Median, with the 25th to 75th percentile beside it</small></h3>
+  <div class="tw"><table id="mkt"></table></div>
+  <p class="fine">Equal-weight average of Radford and IPAS. — not reported by IPAS. † Radford figure used where IPAS does not report.</p>
+
+  <div class="g2" style="margin-top:2px">
+    <div><h3>Bonus options at a $230,000 base <small>Against both medians</small></h3><div class="tw"><table id="opts"></table></div></div>
+    <div><h3>Value of the bonus <small>At 35%</small></h3><div class="tw"><table id="pay"></table></div></div>
+  </div>
+
+  <div class="sec">Methodology</div>
+  <div class="src" style="margin-top:6px">
+    <div class="box"><div class="k">Source 01</div><b>Radford M5 · Compensation</b><span>Director-level base, target bonus, total cash and total direct comp. Sample 636 people / 448 companies.</span></div>
+    <div class="box"><div class="k">Source 02</div><b>IPAS M4 · broader role*</b><span>Compensation and benefits director; a general comparison, not an exact match. Sample 230 people / 66 companies.</span></div>
+    <div class="box"><div class="k">Blending</div><b>Equal-weight market view</b><span>Medians averaged with equal weight; Radford fills measures IPAS does not report, including equity.</span></div>
+  </div>
+
+  <h3>What could change the number</h3>
+  <ol class="chg">
+    <li><span><b>Bonus level.</b> At the market's 22%, total cash is $280,600: above the cash median, but only 0.94 of market total direct comp, because there is no equity.</span></li>
+    <li><span><b>Scope.</b> Building the function from scratch is what puts the base above the median.</span></li>
+    <li><span><b>No equity.</b> Total direct comp equals total cash, 1.04 of a market that includes equity.</span></li>
+    <li><span><b>Survey choice.</b> Radford leans toward tech but fits the role's analytics skill set; IPAS is within $100 of it on median base.</span></li>
+    <li><span><b>Blending.</b> Good practice blends like-for-like matches, and a hybrid role has no exact one. Broader cuts would lower the number: Radford's comp and benefits family pays $213,200 vs $221,450 median base because it includes benefits roles, so it is left out.</span></li>
+    <li><span><b>Location.</b> US figures. A Canada-based role needs a Canadian cut.</span></li>
+    <li><span><b>Timing.</b> Data is not aged; past six months, add about 3% a year (an assumption).</span></li>
+  </ol>
+  <p class="fine" style="margin-top:6px"><b>Method:</b> Radford M5 (Director) and IPAS M4, averaged with equal weight; Radford fills measures IPAS does not report. Measures are current fiscal year base, target bonus, target total cash and target total direct compensation, with equity at $0. Percentiles are interpolated between published points. Prepared by Ben Phillips with a benchmarking tool he built. Licensed market data, shared for this hiring discussion only.</p>
+
+  <div class="pgno"><span>Confidential · Contains licensed survey data</span><span>Page 2 of 2</span></div>
+</section>
+
+<script>
+(function(){
+  /* Report figures. Only the published survey numbers live here; every ratio, total and percentile
+     is computed from them and checked against the report by the test suite. */
+  const D = {
+    base: 230000, bonus: .35,
+    levels: [['Open', 215000], ['Strong candidate', 222500], ['Recommended (base cap)', 230000]],
+    radford: { base:221450, p25:200750, p75:247000, bonusRg:'20% – 25%', ttc:268145, tdc:300039, tdcRg:[258225,365420], eq:31894, eqRecip:69981, n:'636 / 448' },
+    ipas:    { base:221550, p25:203210, p75:241697, ttc:263189, n:'230 / 66' },
+    avg:     { base:221500, p25:201980, p75:244349, ttc:265667, tdc:297561 }
+  };
+  const $ = s => document.querySelector(s);
+  const usd = v => '$' + Math.round(v).toLocaleString('en-US');
+  const k = v => '$' + (v / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+  const r2 = v => v.toFixed(2);
+  const ord = n => n + (n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th','st','nd','rd'][n % 10] || 'th');
+  const pctl = (v, p25, med, p75) => Math.round(v <= med ? 25 + 25 * (v - p25) / (med - p25) : 50 + 25 * (v - med) / (p75 - med));
+  const A = D.avg, R = D.radford, I = D.ipas, ttcAt = (b, x) => b * (1 + x), T = ttcAt(D.base, D.bonus);
+  const F = {
+    base: usd(D.base), bonusAmt: usd(D.base * D.bonus), ttc: usd(T), ttcK: k(T),
+    baseRatio: r2(D.base / A.base), ttcRatio: r2(T / A.ttc), tdcRatio: r2(T / A.tdc),
+    basePctl: ord(pctl(D.base, A.p25, A.base, A.p75)), tdcPctl: ord(pctl(T, R.tdcRg[0], A.tdc, R.tdcRg[1])),
+    mBase: usd(A.base), mTtc: usd(A.ttc), mTdc: usd(A.tdc),
+    ttc22: usd(ttcAt(D.base, .22)), ttc22K: k(ttcAt(D.base, .22)), tdc22: r2(ttcAt(D.base, .22) / A.tdc),
+    p25: usd(A.p25), p75: usd(A.p75), eqR: usd(R.eq), eqRecip: usd(R.eqRecip)
+  };
+  document.querySelectorAll('[data-f]').forEach(el => { if (F[el.dataset.f] != null) el.textContent = F[el.dataset.f]; });
+
+  const lo = .8, hi = 1.3, at = v => Math.max(0, Math.min(100, 100 * (v - lo) / (hi - lo))).toFixed(1) + '%';
+  $('#cmp').innerHTML = [['Base salary', D.base, A.base], ['Total target cash', T, A.ttc], ['Total direct comp', T, A.tdc]].map(([l, o, m]) => { const q = o / m;
+    return '<div class="cmp"><div class="lab"><b>' + l + '</b><span>' + usd(o) + ' / ' + usd(m) + '</span></div><div class="track" role="img" aria-label="' + l + ' ' + r2(q) + ' of market median"><span class="fill" style="width:' + at(q) + '"></span><span class="med" style="left:' + at(1) + '"></span><span class="dot" style="left:' + at(q) + '"></span></div><div class="r"><b>' + r2(q) + '</b> <span>' + (q >= 1 ? '+' : '') + Math.round((q - 1) * 100) + '% to median</span></div></div>'; }).join('');
+
+  $('#auth').innerHTML = D.levels.map(([l, b], i) => { const t = ttcAt(b, D.bonus);
+    return '<div class="ac' + (i === 2 ? ' on' : '') + '"><div class="k">' + (i === 2 ? '★ ' : '') + l + '</div><div class="v">' + usd(b) + '</div><div class="s">Bonus ' + usd(b * D.bonus) + ' · total cash ' + usd(t) + '</div><dl><dt>Base ratio</dt><dd>' + r2(b / A.base) + '</dd><dt>TDC ratio</dt><dd>' + r2(t / A.tdc) + '</dd><dt>Percentile</dt><dd>' + ord(pctl(b, A.p25, A.base, A.p75)) + '</dd></dl></div>'; }).join('');
+
+  const cl = A.p25 - 8000, ch = A.p75 + 8000, cx = v => (100 * (v - cl) / (ch - cl)).toFixed(1) + '%';
+  $('#corr').setAttribute('aria-label', 'Recommended $230,000 between the 25th percentile ' + F.p25 + ' and the 75th ' + F.p75 + ', median ' + F.mBase);
+  $('#corr').innerHTML = '<span class="bg"></span><span class="iqr" style="left:' + cx(A.p25) + ';width:calc(' + cx(A.p75) + ' - ' + cx(A.p25) + ')"></span><span class="mk" style="left:' + cx(A.base) + '"></span>' + D.levels.slice(0, 2).map(([, b]) => '<span class="alt" style="left:' + cx(b) + '"></span>').join('') + '<span class="pin" style="left:' + cx(D.base) + '"></span>';
+
+  const cell = (m, o) => '<td class="n">' + (m ? usd(m) + '<span class="r">' + r2(o / m) + '</span>' : '—') + '</td>';
+  $('#pos').innerHTML = '<thead><tr><th>Measure</th><th class="n">Offer</th><th class="n">Radford</th><th class="n">IPAS*</th><th class="n">Average</th></tr></thead><tbody>'
+    + '<tr><td><b>Base salary</b></td><td class="n">' + usd(D.base) + '</td>' + cell(R.base, D.base) + cell(I.base, D.base) + cell(A.base, D.base) + '</tr>'
+    + '<tr><td><b>Total target cash</b></td><td class="n">' + usd(T) + '</td>' + cell(R.ttc, T) + cell(I.ttc, T) + cell(A.ttc, T) + '</tr>'
+    + '<tr class="hl"><td>Total direct comp (equity $0)</td><td class="n">' + usd(T) + '</td>' + cell(R.tdc, T) + cell(null) + cell(A.tdc, T) + '</tr></tbody>';
+  $('#tdcT').innerHTML = '<thead><tr><th>Component</th><th class="n">This offer</th><th class="n">Radford</th><th class="n">IPAS*</th><th class="n">Average</th></tr></thead><tbody>'
+    + '<tr><td>Base salary</td><td class="n">' + usd(D.base) + '</td><td class="n">' + usd(R.base) + '</td><td class="n">' + usd(I.base) + '</td><td class="n">' + usd(A.base) + '</td></tr>'
+    + '<tr><td>Target bonus</td><td class="n">35%</td><td class="n">22%</td><td class="n">—</td><td class="n">22%†</td></tr>'
+    + '<tr><td>Target total cash</td><td class="n">' + usd(T) + '</td><td class="n">' + usd(R.ttc) + '</td><td class="n">' + usd(I.ttc) + '</td><td class="n">' + usd(A.ttc) + '</td></tr>'
+    + '<tr><td>Equity</td><td class="n">$0</td><td class="n">' + usd(R.eq) + '</td><td class="n">—</td><td class="n">' + usd(R.eq) + '†</td></tr>'
+    + '<tr class="tot"><td>Total direct compensation</td><td class="n">' + usd(T) + '</td><td class="n">' + usd(R.tdc) + '</td><td class="n">—</td><td class="n">' + usd(A.tdc) + '</td></tr>'
+    + '<tr class="hl"><td>Market ratio</td><td></td><td class="n">' + r2(T / R.tdc) + '</td><td class="n">—</td><td class="n">' + r2(T / A.tdc) + '</td></tr></tbody>';
+  const rg = (a, b) => '<span class="rg">' + usd(a) + ' – ' + usd(b) + '</span>';
+  $('#mkt').innerHTML = '<thead><tr><th></th><th class="n">Radford (M5)</th><th class="n">IPAS (M4)*</th><th class="n">Average</th></tr></thead><tbody>'
+    + '<tr><td>Sample, people / companies</td><td class="n">' + R.n + '</td><td class="n">' + I.n + '</td><td class="n"></td></tr>'
+    + '<tr><td>Base salary</td><td class="n">' + usd(R.base) + rg(R.p25, R.p75) + '</td><td class="n">' + usd(I.base) + rg(I.p25, I.p75) + '</td><td class="n">' + usd(A.base) + rg(A.p25, A.p75) + '</td></tr>'
+    + '<tr><td>Target bonus</td><td class="n">22%<span class="rg">' + R.bonusRg + '</span></td><td class="n">—</td><td class="n">22%†<span class="rg">' + R.bonusRg + '</span></td></tr>'
+    + '<tr><td>Total cash</td><td class="n">' + usd(R.ttc) + '</td><td class="n">' + usd(I.ttc) + '</td><td class="n">' + usd(A.ttc) + '</td></tr>'
+    + '<tr><td>Total direct comp</td><td class="n">' + usd(R.tdc) + rg(R.tdcRg[0], R.tdcRg[1]) + '</td><td class="n">—</td><td class="n">' + usd(A.tdc) + '<span class="rg">' + usd(R.tdcRg[0]) + ' – ' + usd(R.tdcRg[1]) + '†</span></td></tr></tbody>';
+  $('#opts').innerHTML = '<thead><tr><th>Bonus</th><th class="n">Total cash</th><th class="n">vs cash median</th><th class="n">vs TDC median</th></tr></thead><tbody>'
+    + [[.22, 'market median'], [.25, 'top quarter'], [.30, ''], [.35, 'recommended']].map(([b, l]) => { const t = ttcAt(D.base, b); return '<tr' + (b === D.bonus ? ' class="hl"' : '') + '><td>' + Math.round(b * 100) + '%' + (l ? '<span class="rg">' + l + '</span>' : '') + '</td><td class="n">' + usd(t) + '</td><td class="n">' + r2(t / A.ttc) + '</td><td class="n">' + r2(t / A.tdc) + '</td></tr>'; }).join('') + '</tbody>';
+  const bon = D.base * D.bonus;
+  $('#pay').innerHTML = '<thead><tr><th>Payout</th><th class="n">Total cash</th></tr></thead><tbody>'
+    + [[0, '0% of target'], [.5, '50% of target'], [1, '100% of target'], [1.5, '150% of target (maximum)']].map(([p, l]) => '<tr' + (p === 1 ? ' class="hl"' : '') + '><td>' + l + '</td><td class="n">' + usd(D.base + bon * p) + '</td></tr>').join('') + '</tbody>';
+  window.__brief = { D, F, pctl, ttcAt };
+})();
+</script>
 </body>
 </html>
