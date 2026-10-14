@@ -8,7 +8,7 @@
 <script defer src="/_vercel/insights/script.js"></script>
 <style>
   :root { --deep:#072A1F; --green:#0B4A36; --accent:#0F8A5F; --ink:#16241e; --muted:#5C6F66; --line:#DDE6E0; --soft:#F2F7F4; --bg:#F5F7F6;
-          --hi:#0F8A5F; --hisoft:var(--tint-g); --md:#B45309; --mdsoft:var(--tint-o); --lo:#B42318; --losoft:var(--tint-r); }
+          --hi:#2F8F2B; --hisoft:var(--tint-g); --md:#E0A100; --mdsoft:var(--tint-o); --lo:#B42318; --losoft:var(--tint-r); }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); font:14.5px/1.5 Inter, "Segoe UI", Arial, Helvetica, sans-serif; }
   header { background:linear-gradient(135deg,var(--deep),var(--green)); color:#fff; padding:22px 16px 24px; }
@@ -57,6 +57,40 @@
   .alts td { font-size:12.5px; }
   .note { color:var(--muted); font-size:12px; margin-top:8px; }
   .busy { color:var(--muted); font-size:13px; margin-top:10px; }
+  .tbar { display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end; justify-content:space-between; margin:4px 0 16px; }
+  .pt { font:700 26px/1.1 Inter, "Segoe UI", Arial, sans-serif; margin:0; letter-spacing:-.02em; }
+  .ps { color:var(--muted); font-size:13px; margin-top:4px; max-width:640px; }
+  .drop { margin-bottom:16px; }
+  .kring { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin-bottom:14px; }
+  .kr { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 14px; display:flex; gap:12px; align-items:center; min-width:0; }
+  .kr[data-c] { cursor:pointer; } .kr[data-c]:hover { border-color:#F89728; }
+  .kr b { display:block; font-size:22px; line-height:1.1; letter-spacing:-.02em; }
+  .kr span { display:block; font-size:12.5px; color:var(--ink); font-weight:600; }
+  .kr small { display:block; font-size:11.5px; color:var(--muted); }
+  .kic { width:44px; height:44px; border-radius:10px; background:var(--soft); display:flex !important; align-items:center; justify-content:center; flex:none; }
+  .kic svg { width:24px; height:24px; fill:none; stroke:var(--green); stroke-width:1.8; stroke-linecap:round; }
+  .ring { width:44px; height:44px; flex:none; } .ring circle { fill:none; stroke-width:4.5; stroke-linecap:round; } .ring .rt { stroke:var(--track); }
+  .ring text { font:700 12px Inter, sans-serif; fill:var(--muted); }
+  .filters { display:grid; grid-template-columns:minmax(0,2fr) repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:12px; }
+  .filters label { font-size:11.5px; color:var(--muted); display:flex; flex-direction:column; gap:3px; }
+  .filters select, .filters input { font:13px Inter, "Segoe UI", Arial, sans-serif; padding:8px 10px; border:1px solid var(--line2); border-radius:8px; background:var(--card); color:var(--ink); width:100%; }
+  .filters .srch { position:relative; justify-content:flex-end; } .filters .srch svg { position:absolute; left:10px; bottom:10px; width:15px; height:15px; fill:none; stroke:var(--muted); stroke-width:2; }
+  .filters .srch input { padding-left:32px; }
+  .jt th[data-s] { cursor:pointer; } .jt th.sorted::after { content:" ▾"; } .jt th.sorted[data-d="1"]::after { content:" ▴"; }
+  .jt td { vertical-align:middle; } .jt th.n, .jt td.n { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .rg { display:flex; align-items:center; gap:10px; min-width:200px; } .rg span { font-size:12px; color:var(--muted); white-space:nowrap; }
+  .rgb { position:relative; height:6px; background:var(--track); border-radius:3px; width:110px; flex:none; }
+  .rgb i { position:absolute; top:0; height:6px; border-radius:3px; background:rgba(71,170,66,.55); }
+  .rgb b { position:absolute; top:-3px; width:12px; height:12px; margin-left:-6px; border-radius:50%; background:var(--green); border:2px solid var(--card); }
+  .sm { white-space:nowrap; }
+  .cr-lo { color:#E07F0E; font-weight:700; }
+  .ok { color:var(--hi); font-weight:600; } .df { color:#E07F0E; font-weight:600; }
+  .cb { display:flex; align-items:center; gap:8px; } .cb .meter { margin:0; width:110px; } .cb span { font-size:12px; color:var(--muted); width:34px; }
+  .chev { color:var(--muted); font-size:18px; width:20px; }
+  .pager { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; margin-top:12px; font-size:12.5px; color:var(--muted); }
+  .pager button { min-width:32px; padding:5px 9px; border-radius:7px; border:1px solid var(--line); background:var(--card); color:var(--ink); font-weight:600; margin-right:4px; }
+  .pager button.on { background:var(--green); border-color:var(--green); color:#fff; } .pager span { margin:0 6px 0 2px; }
+  @media (max-width:900px) { .kring { grid-template-columns:repeat(2,minmax(0,1fr)); } .filters { grid-template-columns:1fr 1fr; } .filters .srch { grid-column:1/-1; } }
   @media (max-width:900px) { .detail { grid-template-columns:1fr; } }
 </style>
 {{include:theme/head.html}}<style>{{include:theme/page.css}}</style>
@@ -65,12 +99,15 @@
 <header><div class="w">
   <a href="/" target="_top">&larr; Back to MGI Insight</a>
   <div class="k">Step 1 · Market data</div>
-  <h1>JD Matcher: benchmark job descriptions against survey jobs</h1>
-  <p>Drop in a folder of job descriptions. Each one is matched to the closest survey job and level, with a confidence score and the reasons behind it, then a career path showing how the job description expands at the next level.</p>
+  <h1>JD Matcher: benchmark every job against the market survey</h1>
+  <p>Every company job is matched to the closest survey job and level, with a confidence score, the reasons behind it and a career path showing how the job description expands at the next level. Drop in a folder of job descriptions to add more.</p>
 </div></header>
 <main><div class="w">
 
-<div class="drop" id="drop">
+<div class="tbar"><div><h2 class="pt">Job Matcher</h2><div class="ps">Every company job matched to the market survey, with pay range, compa-ratio and match confidence. Add your own job descriptions any time.</div></div>
+  <div class="btns"><button id="csv">&#8681; Export</button><button id="addBtn" class="primary">+ Add job descriptions</button></div></div>
+
+<div class="drop" id="drop" hidden>
   <h2>Drop a folder or files of job descriptions here</h2>
   <p>Word (.docx), PDF, text or HTML. One job per file.</p>
   <div class="btns">
@@ -82,13 +119,22 @@
   <div class="busy" id="busy"></div>
 </div>
 
-<div id="out" hidden>
-  <div class="bar"><h2 id="count">Results</h2><div class="btns"><button id="csv">Download results (CSV)</button><button id="clear">Clear</button></div></div>
-  <div class="wrap"><table>
-    <thead><tr><th>File</th><th>Best survey match</th><th>Level</th><th>Family fit</th><th>Level fit</th><th>Overall confidence</th></tr></thead>
+<div class="kring" id="kpis"></div>
+
+<div class="filters">
+  <label class="srch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" placeholder="Search job title, survey job or code"></label>
+  <label>Job family<select id="fFam"><option value="">All families</option></select></label>
+  <label>Level<select id="fLvl"><option value="">All levels</option><option>Executive</option><option>Management</option><option>Professional</option><option>Support</option><option value="file">Added files</option></select></label>
+  <label>Confidence<select id="fConf"><option value="">All</option><option>High</option><option>Medium</option><option>Low</option><option value="diff">Differs from current mapping</option></select></label>
+</div>
+
+<div id="out">
+  <div class="wrap"><table class="jt">
+    <thead><tr><th data-s="title">Job title</th><th class="n" data-s="hc">Employees</th><th>Market pay range</th><th class="n" data-s="mid">Market P50 (US$)</th><th class="n" data-s="ratio">Compa ratio</th><th>Survey match</th><th data-s="overall">Confidence</th><th></th></tr></thead>
     <tbody id="rows"></tbody>
   </table></div>
-  <p class="note">Confidence combines how clearly the text matches one survey job over the next best, and how well the title, years of experience and scope agree on a level. Low confidence means a person should confirm the match.</p>
+  <div class="pager"><div id="pages"></div><span id="count"></span></div>
+  <p class="note">Market range is the survey median for each job &plusmn;20%, with the dot at the company&rsquo;s average pay against its own country&rsquo;s market; compa ratio is average pay against the market median for each person&rsquo;s own country. Confidence combines how clearly the description matches one survey job over the next, and how well title, experience and scope agree on a level. Click any row for the reasons and the career path.</p>
   <div class="detail" id="detail"></div>
 </div>
 
@@ -97,6 +143,7 @@
 <script>
 const LIB = {{include:data/survey-lib.json}};
 const LITE = {{include:data/shared-lite.json}};
+const WF = {{include:data/workforce.json}};
 </script>
 <script>
 (function(){
@@ -299,16 +346,55 @@ let RESULTS = [], SEL = -1;
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const color = c => c === 'High' ? 'var(--hi)' : c === 'Medium' ? 'var(--md)' : 'var(--lo)';
+const WFJ = {}; WF.jobs.forEach(j => WFJ[j.k] = j);
+const fmtK = v => '$' + Math.round(v / 1000) + 'K';
+const PER = 10; let PAGE = 0, SORT = { k:'hc', d:-1 };
+const famName = t => t ? t.charAt(0) + t.slice(1).toLowerCase() : '';
+function view(){
+  const q = $('#q').value.trim().toLowerCase(), ff = $('#fFam').value, fl = $('#fLvl').value, fc = $('#fConf').value;
+  return RESULTS.map((r, i) => ({ r, i })).filter(({ r }) => {
+    if (q && !(r.title + ' ' + r.fam.area + ' ' + saCode(r.fam, r.lvl)).toLowerCase().includes(q)) return false;
+    if (ff && (!r.job || r.job.tw !== ff)) return false;
+    if (fl === 'file' ? r.job : (fl && (!r.job || r.job.cat !== fl))) return false;
+    if (fc === 'diff' ? !(r.role && r.role.code !== r.code) : (fc && r.conf !== fc)) return false;
+    return true;
+  }).sort((a, b) => {
+    const k = SORT.k, va = k === 'hc' ? (a.r.job ? a.r.job.hc : -1) : k === 'mid' ? (a.r.job ? a.r.job.mid : -1) : k === 'ratio' ? (a.r.job ? a.r.job.ratio || 0 : -1) : k === 'title' ? a.r.title : a.r[k];
+    const vb = k === 'hc' ? (b.r.job ? b.r.job.hc : -1) : k === 'mid' ? (b.r.job ? b.r.job.mid : -1) : k === 'ratio' ? (b.r.job ? b.r.job.ratio || 0 : -1) : k === 'title' ? b.r.title : b.r[k];
+    return (va < vb ? -1 : va > vb ? 1 : 0) * SORT.d;
+  });
+}
+function ring(pct, col, inner){
+  const r = 17, c = 2 * Math.PI * r;
+  return '<svg class="ring" viewBox="0 0 44 44"><circle cx="22" cy="22" r="'+r+'" class="rt"/><circle cx="22" cy="22" r="'+r+'" stroke="'+col+'" stroke-dasharray="'+(c*pct/100).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 22 22)"/><text x="22" y="26" text-anchor="middle">'+inner+'</text></svg>';
+}
 function render(){
-  $('#out').hidden = !RESULTS.length;
-  $('#count').textContent = RESULTS.length + (RESULTS.length === 1 ? ' job matched' : ' jobs matched');
-  $('#rows').innerHTML = RESULTS.map((r,i) => '<tr data-i="'+i+'" class="'+(i===SEL?'sel':'')+'"><td><b>'+esc(r.title)+'</b><span class="sub">'+esc(r.file)+'</span></td>'
-    + '<td>'+esc(r.fam.area)+'<span class="sub">'+codes(r.fam, r.lvl)+'</span></td>'
-    + '<td>'+esc(LVL_NAME[r.lvl]||r.lvl)+'<span class="sub">'+r.lvl+' · grade '+GRADE_OF[r.lvl]+'</span></td>'
-    + '<td><span class="badge b-'+r.famConf+'">'+r.famConf+'</span></td>'
-    + '<td><span class="badge b-'+r.lvlConf+'">'+r.lvlConf+'</span></td>'
-    + '<td><span class="badge b-'+r.conf+'">'+r.conf+' · '+r.overall+'%</span><div class="meter"><i style="width:'+r.overall+'%;background:'+color(r.conf)+'"></i></div></td></tr>').join('');
-  $('#rows').querySelectorAll('tr').forEach(tr => tr.onclick = () => { SEL = +tr.dataset.i; render(); $('#detail').scrollIntoView({behavior:'smooth', block:'start'}); });
+  const all = RESULTS, n = all.length || 1;
+  const cnt = c => all.filter(r => r.conf === c).length, diff = all.filter(r => r.role && r.role.code !== r.code).length;
+  const people = all.reduce((s, r) => s + (r.job ? r.job.hc : 0), 0);
+  $('#kpis').innerHTML = '<div class="kr"><span class="kic"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.4 3-5.2 6-5.2s5.4 1.8 6 5.2"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 13.9c2.6.2 4.6 1.8 5.1 4.6"/></svg></span><div><b>'+all.length+'</b><span>Jobs matched</span><small>'+people.toLocaleString()+' employees</small></div></div>'
+    + [['High','High confidence','var(--hi)','✓'],['Medium','Good confidence','var(--md)','~'],['Low','Review needed','var(--lo)','!']].map(([c, l, col, ic]) => { const k = cnt(c); return '<div class="kr" data-c="'+c+'">'+ring(100*k/n, col, ic)+'<div><b>'+k+'</b><span>'+l+'</span><small>'+Math.round(100*k/n)+'% of jobs</small></div></div>'; }).join('')
+    + '<div class="kr" data-c="diff">'+ring(100*diff/n, 'var(--green)', '≠')+'<div><b>'+diff+'</b><span>Differ from current mapping</span><small>worth a second look</small></div></div>';
+  $('#kpis').querySelectorAll('[data-c]').forEach(el => el.onclick = () => { $('#fConf').value = $('#fConf').value === el.dataset.c ? '' : el.dataset.c; PAGE = 0; render(); });
+  const v = view(), pages = Math.max(1, Math.ceil(v.length / PER)); if (PAGE >= pages) PAGE = pages - 1;
+  const pg = v.slice(PAGE * PER, PAGE * PER + PER).filter(x => x.r.job).map(x => x.r.job);   // scale to the jobs on this page
+  const lo = pg.length ? Math.min(...pg.map(j => j.mid * Math.min(.8, (j.ratio || 1) - .04))) * .97 : 1, hi = pg.length ? Math.max(...pg.map(j => j.mid * Math.max(1.2, (j.ratio || 1) + .04))) * 1.03 : 2;
+  const pos = x => Math.max(0, Math.min(100, 100 * (Math.log(x) - Math.log(lo)) / (Math.log(hi) - Math.log(lo))));
+  $('#rows').innerHTML = v.slice(PAGE * PER, PAGE * PER + PER).map(({ r, i }) => {
+    const j = r.job, agree = r.role ? r.role.code === r.code : null;
+    const rng = j ? '<div class="rg"><div class="rgb"><i style="left:'+pos(j.mid*.8).toFixed(1)+'%;width:'+(pos(j.mid*1.2)-pos(j.mid*.8)).toFixed(1)+'%"></i><b style="left:'+pos(j.mid*(j.ratio||1)).toFixed(1)+'%"></b></div><span>'+fmtK(j.mid*.8)+' – '+fmtK(j.mid*1.2)+'</span></div>' : '<span class="sub">added file</span>';
+    return '<tr data-i="'+i+'" class="'+(i===SEL?'sel':'')+'"><td><b>'+esc(r.title)+'</b><span class="sub">'+(j ? esc(famName(j.tw)) + ' · ' + j.g : esc(r.file))+'</span></td>'
+      + '<td class="n">'+(j ? j.hc.toLocaleString() : '—')+'</td><td>'+rng+'</td><td class="n">'+(j ? '$' + Math.round(j.mid).toLocaleString() : '—')+'</td>'
+      + '<td class="n '+(j && j.ratio < .97 ? 'cr-lo' : '')+'">'+(j && j.ratio ? j.ratio.toFixed(2) : '—')+'</td>'
+      + '<td><span class="sm">'+esc(r.fam.area)+' · '+r.lvl+'</span><span class="sub">'+saCode(r.fam, r.lvl)+(agree === null ? '' : agree ? ' · <span class="ok">✓ agrees</span>' : ' · <span class="df">≠ current</span>')+'</span></td>'
+      + '<td><div class="cb"><div class="meter"><i style="width:'+r.overall+'%;background:'+color(r.conf)+'"></i></div><span>'+r.overall+'%</span></div></td><td class="chev">›</td></tr>';
+  }).join('') || '<tr><td colspan="8" class="empty">No jobs match these filters.</td></tr>';
+  $('#rows').querySelectorAll('tr[data-i]').forEach(tr => tr.onclick = () => { SEL = +tr.dataset.i; render(); $('#detail').scrollIntoView({behavior:'smooth', block:'start'}); });
+  const nums = []; for (let p = 0; p < pages; p++) if (p < 2 || p > pages - 3 || Math.abs(p - PAGE) < 2) nums.push(p); else if (nums[nums.length-1] !== '…') nums.push('…');
+  $('#pages').innerHTML = '<button data-p="'+(PAGE-1)+'"'+(PAGE?'':' disabled')+'>‹</button>' + nums.map(p => p === '…' ? '<span>…</span>' : '<button data-p="'+p+'" class="'+(p===PAGE?'on':'')+'">'+(p+1)+'</button>').join('') + '<button data-p="'+(PAGE+1)+'"'+(PAGE<pages-1?'':' disabled')+'>›</button>';
+  $('#pages').querySelectorAll('button[data-p]').forEach(b => b.onclick = () => { PAGE = +b.dataset.p; render(); });
+  $('#count').textContent = v.length ? 'Showing ' + (PAGE*PER+1) + '–' + Math.min(v.length, PAGE*PER+PER) + ' of ' + v.length + ' jobs' : '';
+  document.querySelectorAll('.jt th[data-s]').forEach(th => { th.classList.toggle('sorted', th.dataset.s === SORT.k); th.dataset.d = SORT.d; });
   renderDetail();
 }
 function renderDetail(){
@@ -354,7 +440,6 @@ $('#csv').onclick = () => {
   const rows = [['File','Title','Survey job','Survey A code','Survey B code','Level','Company grade','Family fit','Level fit','Overall confidence','Score','Next step']].concat(RESULTS.map(r => { const n = nextStep(r); return [r.file, r.title, r.fam.area, saCode(r.fam, r.lvl), r.fam.sb, LVL_NAME[r.lvl]||r.lvl, GRADE_OF[r.lvl], r.famConf, r.lvlConf, r.conf, r.overall, n ? n.fam.area + ' ' + n.lvl : '']; }));
   dl(new Blob([rows.map(r => r.map(q).join(',')).join('\n')], {type:'text/csv'}), 'jd-matches.csv');
 };
-$('#clear').onclick = () => { RESULTS = []; SEL = -1; render(); };
 
 // ---------- file reading ----------
 let mammothP = null, pdfP = null;
@@ -379,7 +464,7 @@ async function handle(files){
     catch (e) { failed.push(f.name + ' (' + e.message + ')'); }
   }
   $('#busy').textContent = failed.length ? 'Could not read: ' + failed.join('; ') : '';
-  if (SEL < 0 && RESULTS.length) SEL = 0;
+  $('#fLvl').value = 'file'; PAGE = 0;
   render();
 }
 $('#pickDir').onchange = e => handle([...e.target.files]);
@@ -408,7 +493,14 @@ const SAMPLES = [
 ];
 window.__jd = { match, nextStep };
 if (window.top !== window) document.querySelector('header a').style.display = 'none';
-$('#samples').onclick = () => { SAMPLES.forEach(([n, t]) => RESULTS.push(match('sample/' + n, t))); if (SEL < 0) SEL = 0; render(); };
+$('#samples').onclick = () => { SAMPLES.forEach(([n, t]) => RESULTS.push(match('sample/' + n, t))); $('#fLvl').value = 'file'; PAGE = 0; render(); };
+// Every company job, matched from its own description, so the table is full on arrival.
+LITE.roles.forEach(role => { const j = WFJ[role.k]; if (!j) return; const g = GRADES[role.g], t = role.t + '\n\n' + role.sum + '\n\nSkills: ' + (Array.isArray(role.skl) ? role.skl.join(', ') : role.skl) + (g && g.fw ? '\n\nQualifications: ' + g.fw.typ : ''); const r = match('company/' + role.k, t); r.role = role; r.job = j; r.title = role.t; RESULTS.push(r); });
+[...new Set(WF.jobs.map(j => j.tw))].sort().forEach(t => $('#fFam').insertAdjacentHTML('beforeend', '<option value="'+t+'">'+famName(t)+'</option>'));
+['#q','#fFam','#fLvl','#fConf'].forEach(id => $(id).addEventListener('input', () => { PAGE = 0; render(); }));
+document.querySelectorAll('.jt th[data-s]').forEach(th => th.onclick = () => { SORT = { k: th.dataset.s, d: SORT.k === th.dataset.s ? -SORT.d : (th.dataset.s === 'title' ? 1 : -1) }; render(); });
+$('#addBtn').onclick = () => { $('#drop').hidden = !$('#drop').hidden; };
+render();
 })();
 </script>
 {{include:theme/page-end.html}}</body>

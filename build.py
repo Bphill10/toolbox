@@ -55,6 +55,13 @@ def main():
         dest.parent.mkdir(exist_ok=True)
         dest.write_bytes(MARK.sub(include, read(p)).encode("utf-8"))
         print(f"page /{p.stem}")
+    # Static files: src/static/<path> is served at /<path> (images and the like).
+    import shutil
+    for f in sorted((SRC / "static").rglob("*")):
+        if f.is_file():
+            dest = OUT.parent / f.relative_to(SRC / "static")
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(f, dest)
     print(f"built dist/index.html: {len(used)} files stitched, {len(out.encode('utf-8')):,} bytes")
 
 

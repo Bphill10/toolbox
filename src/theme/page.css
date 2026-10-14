@@ -24,4 +24,5 @@ html[data-theme] header a { color:#F89728; }
 .mgi-tt { position:absolute; top:14px; right:16px; z-index:3; width:34px; height:34px; border-radius:8px; border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.08); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; }
 .mgi-tt.inline { position:static; align-self:center; }
 .mgi-tt:hover { background:rgba(255,255,255,.16); }
+header button.mgi-tt { padding:0 !important; background:rgba(255,255,255,.08) !important; border:1px solid rgba(255,255,255,.28) !important; color:#fff !important; min-width:0 !important; }
 @media print { .mgi-tt { display:none; } }

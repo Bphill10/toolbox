@@ -159,8 +159,9 @@ header .logo .mark{background:linear-gradient(135deg,#14A877,#0B3B2C)!important;
 @media(prefers-reduced-motion:reduce){.hero .produce{animation:none}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
 <script id="mgi-theme-js">{{include:theme/theme.js}}</script>
+<script>{{include:theme/ill.js}}</script>
 <style id="mgiShell">{{include:theme/shell.css}}</style>
 <script type="text/plain" id="mgi-mod-css">{{include:theme/module.css}}</script>
 <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
@@ -341,15 +342,15 @@ header .logo .mark{background:linear-gradient(135deg,#14A877,#0B3B2C)!important;
     <div id="dataUpdated" class="dataUpd" hidden></div>
     <h1 data-i="h1"></h1>
     <p data-i="h2"></p>
-    <div class="kpis">
-      <div class="kpi"><b>3,152</b><span data-i="k1"></span></div>
-      <div class="kpi"><b>3</b><span data-i="k2"></span></div>
-      <div class="kpi"><b>3,152</b><span data-i="k3"></span></div>
-      <div class="kpi"><b>25</b><span data-i="k4"></span></div>
-    </div>
+    <div class="heroBtns"><a class="hb1" href="#grp-data" onclick="event.preventDefault();var e=document.getElementById('grp-data');window.scrollTo({top:e.getBoundingClientRect().top+scrollY-76,behavior:'smooth'})">Explore the tools &rarr;</a><a class="hb2" href="/roadmap/">&#9654;&nbsp; Read the roadmap</a></div>
+    <div class="heroTag" aria-hidden="true">People<br>Pay<br>Opportunity<small>Grown in three countries</small></div>
+    <div class="heroFine">Every name, number and site in this demonstration is fictional.</div>
   </div>
 </div>
 
+<div id="mgiOverview"></div>
+<script type="application/json" id="mgi-home">{{include:data/home.json}}</script>
+<script type="application/json" id="mgi-map">{{include:data/namap.json}}</script>
 <div class="missionBand"><div class="mwrap"><div class="m1"><div class="ml" data-i="ms_label"></div><p class="mt" data-i="ms_text"></p></div><div class="m2"><div class="ml" data-i="ms_vl"></div><div class="mv"><span data-i="ms_v1"></span><span data-i="ms_v2"></span><span data-i="ms_v3"></span><span data-i="ms_v4"></span><span data-i="ms_v5"></span></div></div><div class="m3"><div class="ml" data-i="ms_cl"></div><div class="mc" data-i="ms_crops"></div><div class="mf"><b>1,013</b> <span data-i="ms_acres"></span> &middot; <b>25</b> <span data-i="ms_sites"></span></div></div></div></div>
 <div class="main">
   <div class="sech" data-i="mods"></div>
@@ -384,8 +385,8 @@ const CAT={
  region:{en:'Region',pt:'Região',es:'Región'},
  r_all:{en:'All regions',pt:'Todas as regiões',es:'Todas las regiones'},
  r_brazil:{en:'Brazil',pt:'Brasil',es:'Brasil'},
- h1:{en:'People and pay intelligence, in one place.',pt:'People and pay intelligence, in one place.',es:'People and pay intelligence, in one place.'},
- h2:{en:'Design jobs, price them against the market, plan careers, pay and performance, and watch the workforce KPIs: one tool on one company dataset. Every name, number and site in this demonstration is fictional.',pt:'Design jobs, price them against the market, plan careers, pay and performance, and watch the workforce KPIs: one tool on one company dataset. Every name, number and site in this demonstration is fictional.',es:'Design jobs, price them against the market, plan careers, pay and performance, and watch the workforce KPIs: one tool on one company dataset. Every name, number and site in this demonstration is fictional.'},
+ h1:{en:'People and pay intelligence that grows with the company.',pt:'People and pay intelligence that grows with the company.',es:'People and pay intelligence that grows with the company.'},
+ h2:{en:'Design jobs. Benchmark pay. Build careers. Strengthen teams. One tool on one company dataset.',pt:'Design jobs. Benchmark pay. Build careers. Strengthen teams. One tool on one company dataset.',es:'Design jobs. Benchmark pay. Build careers. Strengthen teams. One tool on one company dataset.'},
  k1:{en:'Employees priced',pt:'Empregados precificados',es:'Empleados preciados'},
  k2:{en:'Countries',pt:'Países',es:'Países'},
  k3:{en:'People in the HR data',pt:'People in the HR data',es:'People in the HR data'},
@@ -586,8 +587,8 @@ const GROUPS={data:'Step 1 · Market data, then competitive assessment · weeks 
 function renderCards(){
   var out='',last='';
   MODS.forEach(function(m){
-    if(m.group&&m.group!==last){ last=m.group; out+='<div class="grp">'+(GROUPS[m.group]||'')+'</div>'; }
-    out+='<div class="card" onclick="openMod(\''+m.id+'\')"><div class="ic" style="background:'+m.grad+'">'+m.icon+'</div><h3>'+t('m_'+m.id)+'</h3><p>'+t('m_'+m.id+'_d')+'</p><div class="go">'+t('open')+'</div></div>';
+    if(m.group&&m.group!==last){ last=m.group; out+='<div class="grp" id="grp-'+m.group+'">'+(GROUPS[m.group]||'')+'</div>'; }
+    out+='<div class="card" data-g="'+(m.group||'')+'" onclick="openMod(\''+m.id+'\')"><h3>'+t('m_'+m.id)+'</h3><p>'+t('m_'+m.id+'_d')+'</p><div class="cf"><span class="arr" aria-hidden="true">&rarr;</span>'+(window.MGI_ILL?MGI_ILL(m.id):'')+'</div></div>';
   });
   $('#cards').innerHTML=out;
 }
@@ -1412,6 +1413,7 @@ if('serviceWorker' in navigator && (location.protocol==='https:' || location.hos
 <script type="text/plain" id="mod-lti">{{include:modules/lti.html}}</script>
 <script type="text/plain" id="mod-harvest">{{include:modules/harvest.html}}</script>
 <script id="saiPeopleJs">(function(){var el=document.getElementById("shared-people");window.__getPeople=function(){if(window.__peoplePromise)return window.__peoplePromise;window.__peoplePromise=(async function(){if(!el)return "";var b=atob(el.textContent.replace(/\s+/g,"")),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);var blob=await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream("gzip"))).blob();return URL.createObjectURL(new Blob([blob],{type:"application/json"}))})().catch(function(){return ""});return window.__peoplePromise};window.addEventListener("message",function(e){var d=e&&e.data;if(!d||!d.ghr_people_req||!e.source)return;window.__getPeople().then(function(u){return u?fetch(u).then(function(r){return r.text();}):"";}).then(function(txt){if(txt)e.source.postMessage({ghr_people_json:txt},"*");});});})();</script>
+<script>{{include:theme/home.js}}</script>
 <script>["mgiTT1","mgiTT2"].forEach(function(id){var h=document.getElementById(id);if(h)h.replaceWith(mgiTheme.button());});</script>
 </body>
 </html>

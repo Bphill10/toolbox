@@ -1,0 +1,27 @@
+/* Small illustrations for the tool cards on the home screen. Colours come from CSS (.i1 .i2 .i3). */
+window.MGI_ILL = (function(){
+  var S = function(body){ return '<svg class="ill" viewBox="0 0 96 56" aria-hidden="true">' + body + '</svg>'; };
+  var bars = function(hs, x0, w, gap){ return hs.map(function(h, i){ return '<rect class="' + (i === hs.length - 1 ? 'i2' : 'i1') + '" x="' + (x0 + i*(w+gap)) + '" y="' + (52-h) + '" width="' + w + '" height="' + h + '" rx="1.5" opacity="' + (.45 + .55*(i+1)/hs.length).toFixed(2) + '"/>'; }).join(''); };
+  var K = {
+    match: S('<rect class="i3" x="8" y="10" width="26" height="34" rx="3"/><path class="ln" d="M13 19h16M13 25h16M13 31h10"/>' + bars([12,18,26,36],50,8,4)),
+    bars: S(bars([10,16,14,24,30,40],16,8,4) + '<path class="ln2" d="M10 20h80" stroke-dasharray="3 3"/>'),
+    blocks: S('<rect class="i1" x="14" y="36" width="20" height="14" rx="2"/><rect class="i1" x="38" y="36" width="20" height="14" rx="2" opacity=".7"/><rect class="i2" x="26" y="20" width="20" height="14" rx="2"/><rect class="i3" x="50" y="20" width="20" height="14" rx="2"/><rect class="i2" x="62" y="36" width="20" height="14" rx="2" opacity=".8"/><rect class="i1" x="38" y="4" width="20" height="14" rx="2"/>'),
+    doc: S('<rect class="i3" x="30" y="4" width="36" height="48" rx="3"/><rect class="i1" x="36" y="11" width="18" height="4" rx="2"/><path class="ln" d="M36 22h24M36 28h24M36 34h18M36 40h22"/><circle class="i2" cx="66" cy="46" r="8"/><path class="lnw" d="M62.5 46l2.5 2.5 4.5-5"/>'),
+    range: S('<path class="ln" d="M10 50h78"/>' + [[18,40,26],[30,60,44],[44,78,60]].map(function(r, i){ return '<rect class="i3" x="' + r[0] + '" y="' + (38-i*14) + '" width="' + (r[1]-r[0]) + '" height="8" rx="4"/><circle class="i2" cx="' + r[2] + '" cy="' + (42-i*14) + '" r="4"/>'; }).join('')),
+    line: S('<path class="ln" d="M8 50h82M8 50V6"/><path class="ln3" d="M12 46 L30 36 L44 38 L60 22 L80 10"/>' + [[12,46],[30,36],[44,38],[60,22]].map(function(p){ return '<circle class="i1" cx="' + p[0] + '" cy="' + p[1] + '" r="3"/>'; }).join('') + '<circle class="i2" cx="80" cy="10" r="4.5"/>'),
+    people: S('<circle class="i1" cx="34" cy="18" r="9"/><path class="i1" d="M18 52c1-11 7-17 16-17s15 6 16 17z"/><circle class="i2" cx="62" cy="24" r="7.5"/><path class="i2" d="M49 52c1-9 6-14 13-14s12 5 13 14z"/>'),
+    org: S('<rect class="i1" x="40" y="4" width="16" height="12" rx="2"/><path class="ln" d="M48 16v8M20 24h56M20 24v8M48 24v8M76 24v8"/><rect class="i2" x="12" y="32" width="16" height="12" rx="2"/><rect class="i2" x="40" y="32" width="16" height="12" rx="2"/><rect class="i2" x="68" y="32" width="16" height="12" rx="2"/>'),
+    coins: S([0,1,2,3].map(function(i){ return '<ellipse class="' + (i===3?'i2':'i1') + '" cx="34" cy="' + (46-i*7) + '" rx="15" ry="5" opacity="' + (.5+.15*i) + '"/>'; }).join('') + bars([14,22,30],58,8,4)),
+    pie: S('<circle class="i3" cx="48" cy="28" r="22"/><path class="i1" d="M48 28V6a22 22 0 0 1 19 33z"/><path class="i2" d="M48 28l19 11a22 22 0 0 1-30 7z"/>'),
+    gauge: S('<path class="ln4" d="M18 46a30 30 0 0 1 60 0"/><path class="ln5" d="M18 46a30 30 0 0 1 46-25"/><path class="ln" d="M48 46l14-16"/><circle class="i1" cx="48" cy="46" r="4"/>'),
+    dash: S('<rect class="i3" x="8" y="6" width="38" height="20" rx="3"/><rect class="i3" x="50" y="6" width="38" height="20" rx="3"/><path class="ln3" d="M12 20l8-6 8 3 8-8 7 4"/>' + bars([6,10,14],56,6,4) + '<rect class="i3" x="8" y="30" width="80" height="22" rx="3"/>' + bars([8,12,10,16,14,18],14,8,4).replace(/y="(\d+)"/g, function(m, y){ return 'y="' + (+y - 2) + '"'; })),
+    scatter: S('<path class="ln" d="M8 50h82M8 50V6"/>' + [[16,40],[24,34],[30,38],[38,28],[46,30],[52,22],[60,24],[68,16],[76,12],[82,18]].map(function(p, i){ return '<circle class="' + (i%3===0?'i2':'i1') + '" cx="' + p[0] + '" cy="' + p[1] + '" r="3"/>'; }).join('') + '<path class="ln2" d="M12 44L86 10"/>'),
+    matrix: S([0,1,2].map(function(r){ return [0,1,2,3].map(function(c){ var o = .25 + .2*(c + (2-r)); return '<rect class="' + (r===0&&c===3?'i2':'i1') + '" x="' + (14 + c*18) + '" y="' + (6 + r*16) + '" width="15" height="13" rx="2" opacity="' + Math.min(1,o).toFixed(2) + '"/>'; }).join(''); }).join('')),
+    clock: S('<circle class="i3" cx="34" cy="28" r="20"/><path class="ln" d="M34 16v12l9 6"/>' + bars([10,18,28,40],60,6,3)),
+    donut: S('<circle class="ln6" cx="40" cy="28" r="18"/><path class="ln7" d="M40 10a18 18 0 0 1 17 23"/><path class="ln8" d="M57 33a18 18 0 0 1-12 12"/><path class="ln" d="M66 16h18M66 26h14M66 36h18"/>'),
+    mail: S('<rect class="i3" x="16" y="12" width="56" height="36" rx="4"/><path class="ln" d="M18 15l26 18 26-18"/><circle class="i2" cx="74" cy="14" r="9"/><path class="lnw" d="M70 14l3 3 5-6"/>'),
+    cal: S('<rect class="i3" x="14" y="8" width="56" height="42" rx="4"/><rect class="i1" x="14" y="8" width="56" height="10" rx="4"/>' + [0,1,2,3,4,5,6,7].map(function(i){ return '<rect class="' + (i===5?'i2':'i1') + '" x="' + (20 + (i%4)*12) + '" y="' + (24 + Math.floor(i/4)*12) + '" width="8" height="8" rx="1.5" opacity="' + (i===5?1:.45) + '"/>'; }).join('') + bars([10,16,22],74,5,2))
+  };
+  var BY = { jdmatch:'match', positioning:'bars', archbuild:'blocks', jdlib:'doc', ranges:'range', career:'line', succession:'people', orgchart:'org', sti:'coins', lti:'pie', perf:'gauge', ghr:'dash', analysis:'scatter', merit:'matrix', aisavings:'clock', trs:'donut', offer:'mail', harvest:'cal' };
+  return function(id){ return K[BY[id]] || K.bars; };
+})();
