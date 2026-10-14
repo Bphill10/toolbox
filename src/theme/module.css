@@ -52,3 +52,12 @@ html[data-theme]:not(.mgi-own) .chip.info{background:#E7F8F0;color:#005540}
 html[data-theme]:not(.mgi-own) .bar i{background:linear-gradient(90deg,#11A361,#067451)}
 html[data-theme]:not(.mgi-own) .scroll{border-radius:12px}
 html[data-theme]:not(.mgi-own) .note{border-radius:12px}
+html[data-theme=dark] :is(.seg button.on,.btn.pri,.tabs button.on,.vtabs button.on,th.cs,.st .no,.st.on .no){color:#04100B !important}
+html[data-theme]:not(.mgi-own) .seg{height:auto;min-height:32px;max-width:100%;overflow-x:auto}
+html[data-theme]:not(.mgi-own) .seg button{white-space:nowrap}
+html[data-theme]:not(.mgi-own) .card{min-width:0}
+html[data-theme]:not(.mgi-own) .fld select{max-width:100%;min-width:0}
+@media(max-width:1000px){html[data-theme]:not(.mgi-own) .dgrid{grid-template-columns:minmax(0,1fr) !important}}
+@media(max-width:900px){html[data-theme]:not(.mgi-own) :is(.g2,.g3,.g4){grid-template-columns:minmax(0,1fr) !important}}
+@media(max-width:600px){html[data-theme]:not(.mgi-own) .mast{background:radial-gradient(400px 140px at 90% 20%,#0A4A37,#00291F) !important}}
+html[data-theme]:not(.mgi-own) :focus-visible{outline:2px solid #D5B76C;outline-offset:2px}

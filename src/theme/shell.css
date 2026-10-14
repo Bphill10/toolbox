@@ -221,3 +221,12 @@ html[data-theme] #jobArchGroup{background:#00392D !important}
   .fgrid,.bgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.fcard .fb img{width:84px}
   .mappanel{padding:20px}.mappanel h2{font-size:24px}.mp-r{display:flex}}
 @media(max-width:420px){.fgrid,.bgrid{grid-template-columns:minmax(0,1fr)}}
+
+/* accessibility touches from the audit */
+.fcard:focus-visible,html[data-theme] .card:focus-visible{outline:2px solid #D5B76C !important;outline-offset:3px}
+html[data-theme] .foot,html[data-theme] .buildStamp{color:#5C6E66 !important}
+html[data-theme=dark] .foot,html[data-theme=dark] .buildStamp{color:#93B3A5 !important}
+html[data-theme=dark] .fcard .fb img{filter:brightness(.82) saturate(.95)}
+.skip{position:absolute;left:12px;top:-60px;z-index:300;background:#FFF6DD;color:#1F2A1F;font-weight:600;padding:10px 14px;border-radius:10px;text-decoration:none}
+.skip:focus{top:12px}
+@media(max-width:600px){html[data-theme] #modBar label[for=regSel2]{display:none}}

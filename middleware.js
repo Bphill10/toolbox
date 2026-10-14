@@ -5,7 +5,7 @@ import { next } from '@vercel/functions';
 
 // The compensation analysis is open to anyone with the link; /_vercel carries
 // the page-view analytics beacons.
-const OPEN = ['/analysis', '/_vercel'];
+const OPEN = ['/analysis', '/_vercel', '/manifest.json', '/sw.js', '/icon-'];
 const login = { user: 'mastronardi', pass: 'demo', realm: 'MGI Insight demo' };
 
 export default function middleware(request) {

@@ -41,8 +41,19 @@
       if (fix) { el.dataset.mgiFix = 1; el.dataset.mgiBg = el.style.backgroundColor; el.dataset.mgiCol = el.style.color; if (nb) el.style.backgroundColor = nb; if (nc) el.style.color = nc; el.dataset.mgiNb = el.style.backgroundColor; el.dataset.mgiNc = el.style.color; }
     }
   }
+  /* controls a tool made clickable with the mouse only get a tab stop and Enter/Space */
+  var CLICKY = '.st, th.th-s, th[onclick], tr.rowlink, tr.rowclick, .opt[onclick], [data-v]:not(button):not(a), [data-p]:not(button):not(a)';
+  function keyFix(){
+    if (!root.classList.contains('mgi-mod') || !document.body) return;
+    var els = document.body.querySelectorAll(CLICKY);
+    for (var i = 0; i < els.length; i++) { var el = els[i]; if (el.tabIndex < 0 && !el.hasAttribute('tabindex')) { el.tabIndex = 0; if (!el.getAttribute('role')) el.setAttribute('role', 'button'); } }
+  }
+  if (root.classList.contains('mgi-mod')) document.addEventListener('keydown', function(e){
+    var t = e.target; if ((e.key === 'Enter' || e.key === ' ') && t && t.getAttribute && t.getAttribute('role') === 'button' && t.tabIndex === 0 && t.tagName !== 'BUTTON' && t.tagName !== 'A') { e.preventDefault(); t.click(); }
+  });
+  if (window.parent !== window) document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !/^(INPUT|SELECT|TEXTAREA)$/.test((e.target || {}).tagName || '')) { try { window.parent.postMessage({ mgi_escape: 1 }, '*'); } catch(x) {} } });
   var fixT = 0;
-  function queueFix(){ clearTimeout(fixT); fixT = setTimeout(darkFix, 120); }
+  function queueFix(){ clearTimeout(fixT); fixT = setTimeout(function(){ darkFix(); keyFix(); }, 120); }
   if (root.classList.contains('mgi-mod')) {
     var start = function(){ queueFix(); try { new MutationObserver(queueFix).observe(document.body, { childList:true, subtree:true, attributes:true, attributeFilter:['class'] }); } catch(e) {} };
     if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);

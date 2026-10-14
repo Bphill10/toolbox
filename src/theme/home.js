@@ -86,6 +86,19 @@
     requestAnimationFrame(step);
   }
 
+  /* ---- the tool overlay behaves as a dialog: focus moves to Back, Escape closes it ---- */
+  if (window.openMod) {
+    var om = window.openMod;
+    window.openMod = function(id){
+      var r = om.apply(this, arguments);
+      setTimeout(function(){ var f = document.getElementById('modFrame'), t = document.getElementById('modTitle'), b = document.querySelector('#modBar .back'); if (f && t) f.title = t.textContent || 'Tool'; if (b) b.focus({ preventScroll:true }); }, 60);
+      return r;
+    };
+  }
+  var escHome = function(){ if (document.body.classList.contains('modOpen') && window.goHome) goHome(); };
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && tour.hidden) escHome(); });
+  window.addEventListener('message', function(e){ if (e.data && e.data.mgi_escape) escHome(); });
+
   /* ---- quick tour ---- */
   var TOUR = [
     ['Step 1 · Market data', 'Start with the market', 'Every job is matched to the salary survey with a confidence score and a market pay range, so pay decisions start from evidence.', 'job_matcher', 'jdmatch', 'Open Job Matcher'],

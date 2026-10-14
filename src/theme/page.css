@@ -17,6 +17,9 @@ html[data-theme] .kpi b { font-weight:700; letter-spacing:-.02em; }
 :where(html[data-theme]) th { color:var(--muted); border-bottom-color:var(--green); }
 :where(html[data-theme]) a { color:var(--green); }
 :where(html[data-theme=dark]) a { color:#8BF0C8; }
+html[data-theme=dark] :is(.tabs button.on, .vtabs button.on) { color:#04120C; }
+html[data-theme=dark] .sh > span.sn { color:#BFE6D6; }
+:where(html[data-theme]) :focus-visible { outline:2px solid #D5B76C; outline-offset:2px; }
 html[data-theme=dark] :is(button.primary, .btn.primary, .step.cur) { color:#04120C; }
 html[data-theme] header a { color:#D5B76C; }
 :where(html[data-theme]) input, :where(html[data-theme]) select, :where(html[data-theme]) textarea { background:var(--card); color:var(--ink); border-color:var(--line2); }

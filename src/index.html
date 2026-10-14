@@ -168,6 +168,7 @@ header .logo .mark{background:linear-gradient(135deg,#14A877,#0B3B2C)!important;
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
+<a class="skip" href="#featured">Skip to the tools</a>
 <header>
   <div class="hwrap">
     <div class="logo" onclick="goHome()">
@@ -176,7 +177,7 @@ header .logo .mark{background:linear-gradient(135deg,#14A877,#0B3B2C)!important;
     <div class="hspace"></div>
     <div class="ctl">
       <label data-i="region"></label>
-      <select id="regSel"><option value="all" data-i="r_all"></option><option value="canada">Canada</option><option value="usa">United States</option><option value="latam">Mexico</option></select>
+      <select id="regSel" aria-label="Region"><option value="all" data-i="r_all"></option><option value="canada">Canada</option><option value="usa">United States</option><option value="latam">Mexico</option></select>
       
       
       <button id="appBtn" type="button" data-i="app_btn"></button>
@@ -359,12 +360,12 @@ header .logo .mark{background:linear-gradient(135deg,#14A877,#0B3B2C)!important;
 <div class="foot" data-i="foot"></div>
 <div class="buildStamp" id="buildStamp" style="text-align:center;font-size:11px;color:#8a93a6;padding:0 0 22px;letter-spacing:.02em">Lite demonstration 2026-10-13 01:48 UTC &middot; 13 tools &middot; fictional company</div>
 
-<div id="modView">
+<div id="modView" role="dialog" aria-modal="true" aria-labelledby="modTitle">
   <div id="modBar">
     <button class="back" onclick="goHome()" data-i="back"></button>
     <b id="modTitle"></b>
     <div class="mspace"></div>
-    <label style="font-size:10px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.06em;font-weight:700" data-i="region"></label>
+    <label for="regSel2" style="font-size:10px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.06em;font-weight:700" data-i="region"></label>
     <select id="regSel2"><option value="all" data-i="r_all"></option><option value="canada">Canada</option><option value="usa">United States</option><option value="latam">Mexico</option></select>
     <span id="mgiTT2"></span>
     
@@ -577,7 +578,7 @@ function renderCards(){
   var out='',last='';
   MODS.forEach(function(m){
     if(m.group&&m.group!==last){ last=m.group; out+='<div class="grp" id="grp-'+m.group+'">'+(GROUPS[m.group]||'')+'</div>'; }
-    out+='<div class="card" data-g="'+(m.group||'')+'" onclick="openMod(\''+m.id+'\')"><h3>'+t('m_'+m.id)+'</h3><p>'+t('m_'+m.id+'_d')+'</p><div class="cf"><span class="arr" aria-hidden="true">&rarr;</span>'+(window.MGI_ILL?MGI_ILL(m.id):'')+'</div></div>';
+    out+='<div class="card" role="button" tabindex="0" data-g="'+(m.group||'')+'" onclick="openMod(\''+m.id+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openMod(\''+m.id+'\')}"><h3>'+t('m_'+m.id)+'</h3><p>'+t('m_'+m.id+'_d')+'</p><div class="cf"><span class="arr" aria-hidden="true">&rarr;</span>'+(window.MGI_ILL?MGI_ILL(m.id):'')+'</div></div>';
   });
   $('#cards').innerHTML=out;
 }
