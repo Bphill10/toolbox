@@ -71,6 +71,20 @@
   .cost { margin:10px 0 0; font-size:14px; }
   .est { font-size:10.5px; font-weight:700; color:var(--or); background:var(--tint-o); border-radius:4px; padding:1px 4px; }
   table.fam .sub { display:inline; font-size:12px; }
+  .ctl { position:sticky; top:60px; z-index:10; background:var(--bg); margin:-20px -16px 14px; padding:12px 16px 4px; border-bottom:1px solid var(--line); }
+  html.framed .ctl { top:0; }
+  .ctl .ttl { display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 14px; margin-bottom:8px; }
+  .ctl .pt { font-size:21px; margin:0; } .ctl .ps { margin:0; font-size:13.5px; }
+  .ctl .try { margin:0; } .ctl { padding-bottom:10px; }
+  .ctl .toprow .find { flex:1 1 260px; max-width:420px; }
+  .ctl .find input { padding-top:9px; padding-bottom:9px; } .ctl .find svg { top:10px; }
+  .card.sum { padding:14px 18px; } .card.sum .who { display:flex; flex-wrap:wrap; align-items:baseline; gap:2px 14px; }
+  .card.sum .who h2 { font-size:20px; margin:0; }
+  .card.sum .kpis { grid-template-columns:repeat(4,minmax(0,1fr)); margin:10px 0; gap:10px; }
+  .card.sum .kpi { padding:9px 12px; } .card.sum .kpi .v { font-size:19px; }
+  .card.sum .say { padding:9px 12px; font-size:14px; }
+  .two .card { padding:12px 18px; margin-bottom:14px; } .two .hs { margin-bottom:4px; } .two .legend { margin-top:2px; }
+  .two svg.ch { max-height:140px; }
   .seg2 { display:inline-flex; border:1px solid var(--line2); border-radius:12px; overflow:hidden; background:var(--card); }
   .seg2 button { font:600 13.5px Inter, "Segoe UI", Arial, sans-serif; border:0; background:none; color:var(--muted); padding:11px 14px; cursor:pointer; }
   .seg2 button.on { background:var(--green); color:#fff; }
@@ -79,6 +93,8 @@
   .toprow .find { flex:1 1 320px; }
   .dist .barq { fill:var(--accent); } .dist .barq.out { fill:var(--or); }
   @media (max-width:760px) {
+    .ctl { position:static; }
+    .card.sum .kpis { grid-template-columns:1fr 1fr; }
     .kpis { grid-template-columns:1fr; } .two { grid-template-columns:1fr; }
     .who .pay { text-align:left; } .card { padding:16px; }
     .hide-sm { display:none; }
@@ -95,9 +111,8 @@
 <nav class="rail" aria-label="Tools"><a href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a><a href="/jdmatch/"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="11" height="15" rx="2"/><path d="M7 7h5M7 10h5M7 13h3"/><circle cx="17" cy="16" r="4"/><path d="M15.4 16l1.2 1.2 2.2-2.4"/></svg><span>Job Matcher</span></a><a href="/benchmark/" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16"/><path d="M7 16V9M12 16V5M17 16v-4"/><circle cx="12" cy="5" r="1.6"/></svg><span>Benchmarking</span></a><a href="/roadmap/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20L9 4M20 20L15 4M12 6v2M12 11v2M12 16v2"/></svg><span>Roadmap</span></a></nav>
 <main><div class="w">
 
-<h1 class="pt">Benchmarking</h1>
-<p class="ps">Pick a job to see its average pay against the market, and how pay compares at each level of that job.</p>
-
+<div class="ctl">
+<div class="ttl"><h1 class="pt">Benchmarking</h1><p class="ps">Pick a job to see its average pay against the market, level by level.</p></div>
 <div class="toprow">
   <div class="find">
     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
@@ -105,8 +120,9 @@
     <ul class="sug" id="sug" role="listbox" hidden></ul>
   </div>
   <div class="seg2" id="ctry" role="group" aria-label="Country"><button data-c="USA">US</button><button data-c="CANADA">Canada</button><button data-c="MEXICO">Mexico</button></div>
+  <div class="try">Try: <button data-ex="below">Paid below market</button><button data-ex="at">At market</button><button data-ex="above">Paid above market</button></div>
 </div>
-<div class="try">Try: <button data-ex="below">Paid below market</button><button data-ex="at">At market</button><button data-ex="above">Paid above market</button></div>
+</div>
 
 <div id="out"></div>
 
@@ -226,7 +242,7 @@ function ladderCard(j){
       (r.n ? '<td class="n hide-sm">' + money(r.lo, c) + '</td><td class="n">' + money(r.avg, c) + '</td><td class="n hide-sm">' + money(r.hi, c) + '</td><td class="n">' + (r.avg / r.mid).toFixed(2) + '</td>' : '<td class="n hide-sm">&mdash;</td><td class="n">&mdash;</td><td class="n hide-sm">&mdash;</td><td class="n">&mdash;</td>') + '</tr>').join('') +
     '</tbody></table></div><p class="note">Position 1.00 means average pay sits at the range midpoint.' + (est ? ' <span class="est">est.</span> marks a level with no one at the company yet; its midpoint is estimated from this job&rsquo;s market and the usual step between levels.' : '') + '</p></div>';
 }
-document.addEventListener('click', e => { const tr = e.target.closest('tr[data-k]'); if (tr) { show(byKey[tr.dataset.k + '|' + CTY]); $('#out').scrollIntoView({ behavior:'smooth', block:'start' }); } });
+document.addEventListener('click', e => { const tr = e.target.closest('tr[data-k]'); if (tr) { show(byKey[tr.dataset.k + '|' + CTY]); } });
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches && e.target.matches('tr[data-k]')) e.target.click(); });
 
 // ---------- pay change for the whole job ----------
@@ -260,9 +276,9 @@ function show(j){
   if (outside) say += ' ' + outside + ' of ' + j.n + ' ' + (outside > 1 ? 'are' : 'is') + ' outside the pay range.';
   const others = ['USA', 'CANADA', 'MEXICO'].filter(x => byKey[j.k + '|' + x]);
   $('#out').innerHTML =
-    '<div class="card"><div class="who"><div><h2>' + esc(j.title) + '</h2><div class="meta">Grade ' + esc(j.grade) + ' · ' + CTRY[j.ctry] + ' · ' + j.n + ' ' + (j.n > 1 ? 'people' : 'person') + '</div></div>' +
-    '<div class="pay"><b>' + money(j.avg, c) + '</b><span>average annual base' + (HOURLY(j.k) ? '<br>about ' + hourly(j.avg, c) + ' an hour' : '') + '</span></div></div>' +
+    '<div class="card sum"><div class="who"><h2>' + esc(j.title) + '</h2><div class="meta">Grade ' + esc(j.grade) + ' · ' + CTRY[j.ctry] + ' · ' + j.n + ' ' + (j.n > 1 ? 'people' : 'person') + '</div></div>' +
     '<div class="kpis">' +
+      '<div class="kpi"><div class="l">Average base pay</div><div class="v">' + money(j.avg, c) + '</div><div class="s">' + (HOURLY(j.k) ? 'about ' + hourly(j.avg, c) + ' an hour' : 'a year') + '</div></div>' +
       '<div class="kpi"><div class="l">Against market median</div><div class="v ' + (vs < -.03 ? 'dn' : vs > .03 ? 'up' : '') + '">' + pct(vs) + '</div><div class="s">market median ' + money(j.p50, c) + '</div></div>' +
       '<div class="kpi"><div class="l">Average position in range</div><div class="v">' + qq.q + ' &middot; ' + (j.avg / j.mid).toFixed(2) + '</div><div class="s">' + qq.l + '; 1.00 is the midpoint (' + money(j.mid, c) + ')</div></div>' +
       '<div class="kpi"><div class="l">Pay spread</div><div class="v">' + short(j.lo, c) + '&ndash;' + short(j.hi, c) + '</div><div class="s">lowest to highest in this job</div></div>' +
@@ -275,6 +291,7 @@ function show(j){
       '<button type="button" class="q" data-q="3">+3%</button><button type="button" class="q" data-q="mkt">To market median</button>' + (j.avg < j.min ? '<button type="button" class="q" data-q="min">To range minimum</button>' : '') + '</div>' +
       '<div style="overflow-x:auto"><table class="cmp"><thead><tr><th></th><th class="n">Now</th><th class="n">After</th></tr></thead><tbody id="chgRows"></tbody></table></div><p class="cost" id="chgCost"></p></div>';
   CUR = j; draw(); chgInit(j);
+  if (window.scrollY > 0) window.scrollTo({ top:0, behavior:'smooth' });   // a new pick starts at the top, under the picker
   document.querySelectorAll('#ctry button').forEach(b => b.disabled = !others.includes(b.dataset.c) && b.dataset.c !== CTY);
 }
 window.__bm = { J, byKey, example, show };
