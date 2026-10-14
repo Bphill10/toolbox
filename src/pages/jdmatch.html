@@ -119,6 +119,10 @@ const fams = R.ourFamilies.map(code => {
   return { code, area, fn, levels, roles, ipas: ip ? ip[0] : '', text, track: levels.some(l => l[0]==='M') ? 'M' : levels.some(l => l[0]==='E') ? 'E' : levels.some(l => l[0]==='P') ? 'P' : 'S' };
 });
 const famByCode = {}; fams.forEach(f => famByCode[f.code] = f);
+// The demo survey is fictional: show made-up codes, not the library's internal keys.
+fams.forEach((f, i) => { f.sa = 'A-' + (1010 + i * 15); f.sb = f.ipas ? 'B-' + (5200 + i * 7) : ''; });
+const saCode = (f, l) => f.sa + '-' + l;
+const codes = (f, l) => 'Survey A ' + saCode(f, l) + (f.sb ? ' · Survey B ' + f.sb : '');
 
 // ---------- text ----------
 const STOP = new Set('the and for with that this from are will you our your have has all any not can its into per who what when where which while than then them they their there these those been being also such may must able including include includes within across other more most other each both job role position work working team company employee employees duties responsibilities responsibility requirements required preferred skills skill ability abilities experience years year knowledge strong excellent good new key day days time based level levels well using use used provide provides ensure ensures support supports'.split(' '));
@@ -298,7 +302,7 @@ function render(){
   $('#out').hidden = !RESULTS.length;
   $('#count').textContent = RESULTS.length + (RESULTS.length === 1 ? ' job matched' : ' jobs matched');
   $('#rows').innerHTML = RESULTS.map((r,i) => '<tr data-i="'+i+'" class="'+(i===SEL?'sel':'')+'"><td><b>'+esc(r.title)+'</b><span class="sub">'+esc(r.file)+'</span></td>'
-    + '<td>'+esc(r.fam.area)+'<span class="sub">Radford '+r.code+(r.fam.ipas ? ' · IPAS '+r.fam.ipas : '')+'</span></td>'
+    + '<td>'+esc(r.fam.area)+'<span class="sub">'+codes(r.fam, r.lvl)+'</span></td>'
     + '<td>'+esc(LVL_NAME[r.lvl]||r.lvl)+'<span class="sub">'+r.lvl+' · grade '+GRADE_OF[r.lvl]+'</span></td>'
     + '<td><span class="badge b-'+r.famConf+'">'+r.famConf+'</span></td>'
     + '<td><span class="badge b-'+r.lvlConf+'">'+r.lvlConf+'</span></td>'
@@ -311,11 +315,11 @@ function renderDetail(){
   const x = expansion(r);
   let left = '<div class="card"><h3>'+esc(r.title)+'</h3>'
     + '<div><span class="badge b-'+r.conf+'">'+r.conf+' confidence · '+r.overall+'%</span></div>'
-    + '<h4>Best match</h4><div><b>'+esc(levelTitle(r.fam, r.lvl))+'</b><span class="sub">Radford '+r.code+(r.fam.ipas?' · IPAS '+r.fam.ipas:'')+' · '+esc(r.fam.fn)+' · company grade '+GRADE_OF[r.lvl]+'</span></div>'
+    + '<h4>Best match</h4><div><b>'+esc(levelTitle(r.fam, r.lvl))+'</b><span class="sub">'+codes(r.fam, r.lvl)+' · '+esc(r.fam.fn)+' · company grade '+GRADE_OF[r.lvl]+'</span></div>'
     + '<div class="note" style="margin-top:6px">'+esc(R.def[r.code] || R.pre[r.fam.code] || '')+'</div>'
     + '<h4>Why this job</h4><div class="chips">'+(r.matchedTerms.length ? r.matchedTerms.map(w => '<span>'+esc(SHOW[w] || w)+'</span>').join('') : '<span>few shared terms</span>')+'</div>'
     + '<h4>Why this level</h4><ul class="why">'+(r.sig.length ? r.sig.map(s => '<li>'+esc(s)+'</li>').join('') : '<li>No clear title, experience or scope signals: level is a default and should be checked.</li>')+'</ul>'
-    + '<h4>Other close matches</h4><table class="alts"><tbody>'+r.alts.map(a => '<tr><td>'+esc(a.f.area)+'<span class="sub">'+a.f.code+'</span></td><td style="text-align:right;white-space:nowrap">'+Math.round(100*a.s/(r.topS||1))+'% as close</td></tr>').join('')+'</tbody></table>'
+    + '<h4>Other close matches</h4><table class="alts"><tbody>'+r.alts.map(a => '<tr><td>'+esc(a.f.area)+'<span class="sub">Survey A '+a.f.sa+'</span></td><td style="text-align:right;white-space:nowrap">'+Math.round(100*a.s/(r.topS||1))+'% as close</td></tr>').join('')+'</tbody></table>'
     + '</div>';
   let right = '<div class="card"><h3>Career path and JD expansion</h3>';
   if (!x) right += '<p class="note">This is the top of the ladder for this job family.</p></div>';
@@ -346,7 +350,7 @@ function renderDetail(){
 function dl(blob, name){ const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); }
 $('#csv').onclick = () => {
   const q = s => '"' + String(s).replace(/"/g,'""') + '"';
-  const rows = [['File','Title','Survey job','Radford code','IPAS code','Level','Company grade','Family fit','Level fit','Overall confidence','Score','Next step']].concat(RESULTS.map(r => { const n = nextStep(r); return [r.file, r.title, r.fam.area, r.code, r.fam.ipas, LVL_NAME[r.lvl]||r.lvl, GRADE_OF[r.lvl], r.famConf, r.lvlConf, r.conf, r.overall, n ? n.fam.area + ' ' + n.lvl : '']; }));
+  const rows = [['File','Title','Survey job','Survey A code','Survey B code','Level','Company grade','Family fit','Level fit','Overall confidence','Score','Next step']].concat(RESULTS.map(r => { const n = nextStep(r); return [r.file, r.title, r.fam.area, saCode(r.fam, r.lvl), r.fam.sb, LVL_NAME[r.lvl]||r.lvl, GRADE_OF[r.lvl], r.famConf, r.lvlConf, r.conf, r.overall, n ? n.fam.area + ' ' + n.lvl : '']; }));
   dl(new Blob([rows.map(r => r.map(q).join(',')).join('\n')], {type:'text/csv'}), 'jd-matches.csv');
 };
 $('#clear').onclick = () => { RESULTS = []; SEL = -1; render(); };
