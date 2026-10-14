@@ -47,6 +47,9 @@
   .good { color:var(--accent); font-weight:700; } .bad { color:#B42318; font-weight:700; }
   .note { color:var(--muted); font-size:12px; margin-top:10px; }
   .legend { display:flex; flex-wrap:wrap; gap:14px; font-size:12.5px; color:var(--muted); margin-top:8px; }
+  .mgrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+  .mgrid p { margin:8px 0 0; font-size:13.5px; }
+  @media (max-width:700px) { .mgrid { grid-template-columns:minmax(0,1fr); } }
   @media (max-width:900px) { .values, .kpis { grid-template-columns:1fr 1fr; } }
   @media (max-width:520px) { .values, .kpis { grid-template-columns:1fr; } }
 </style>
@@ -63,7 +66,7 @@
 <h2>What do we value most?</h2>
 <p class="lead">Move the sliders. Each one changes how much that factor pushes a family toward leading or lagging the market.</p>
 <div class="card"><div class="values" id="values"></div>
-<p class="note" style="margin-top:12px">Assumption: every 5% of pay above today's position means <input id="el" type="number" min="0" max="60" value="15" style="width:52px;font:13px Segoe UI,Arial;padding:2px 4px;border:1px solid var(--line);border-radius:5px">% fewer people leaving. Set it from exit interviews and past raises.</p></div>
+<p class="note" style="margin-top:12px">Every 5% of pay above today's position means <select id="elm" style="font:13px Segoe UI,Arial;padding:2px 4px;border:1px solid var(--line);border-radius:5px"><option value="split">our data: hourly 6%, salaried 17%</option><option value="17">our data, everyone: 17%</option><option value="15" selected>planning figure: 15%</option><option value="20">research: about 20%</option><option value="custom">my own number</option></select> <input id="el" type="number" min="0" max="60" value="15" style="width:52px;font:13px Segoe UI,Arial;padding:2px 4px;border:1px solid var(--line);border-radius:5px">% fewer people leaving. <a href="#method">Where this comes from</a>.</p></div>
 
 <div class="kpis" id="kpis"></div>
 
@@ -71,6 +74,25 @@
 <div class="wrap"><table><thead id="th"></thead><tbody id="rows"></tbody></table></div>
 <div class="legend"><span><span class="stance" style="background:var(--lag)">Lag</span> 40th percentile, 0.95</span><span><span class="stance" style="background:var(--match)">Match</span> median, 1.00</span><span><span class="stance" style="background:var(--lead)">Lead</span> 60th percentile, 1.05</span><span><span class="stance" style="background:var(--leadp)">Lead+</span> 75th percentile, 1.12</span></div>
 <p class="note" id="note"></p>
+
+<h2 id="method">Where “5% above market, 15% fewer leavers” comes from</h2>
+<p class="lead">It is a planning figure, and it should be replaced with Mastronardi’s own number as soon as the data allows. Four ways to get there, from quickest to strongest.</p>
+<div class="mgrid">
+<div class="card"><b>1. Read it from today’s data</b> <span class="sub">weeks 4 to 8, once the market data is in</span>
+<p>Give every employee a market ratio (their pay ÷ the market median for their job and country). Then, job by job, compare turnover in jobs paid above market with jobs paid below. The slope of turnover against the ratio is the answer: how many fewer leavers each extra 5% of pay buys.</p>
+<p>On this demo data, across the 30 jobs with at least 10 people: <b>17% fewer leavers overall</b>, about <b>6% for hourly jobs</b> and <b>17% for salaried</b>. Hourly turnover here is driven more by seasons, shifts and commuting than by a few points of pay.</p></div>
+<div class="card"><b>2. Look at past raises</b> <span class="sub">the strongest evidence a company has</span>
+<p>Find sites or jobs that got a market adjustment and compare their turnover for the 12 months before and after with similar sites that didn’t, over the same months. The difference between the two changes is the effect of the raise, with the economy, the season and the labor market taken out.</p></div>
+<div class="card"><b>3. Ask the people who leave</b> <span class="sub">checks the direction</span>
+<p>Code every exit interview and stay interview: pay, manager, schedule, commute, growth. If pay is the reason for one leaver in ten, a raise can only touch that tenth. It also shows where the money matters most.</p></div>
+<div class="card"><b>4. Check it against research</b> <span class="sub">keeps the number honest</span>
+<p>Studies of real pay changes find workers are quite sensitive to pay: <a href="http://courses.umass.edu/econ801/Dube.pdf">Dube, Giuliano and Leonard</a> (American Economic Review, 2019) found large quit responses at a US retailer, and <a href="https://www.nber.org/system/files/working_papers/w27755/w27755.pdf">Bassier, Dube and Naidu</a> put the typical effect near 4, meaning about 20% fewer quits for a 5% raise. 15% sits just under that, which is why it is a fair starting point.</p></div>
+</div>
+<div class="card" style="margin-top:14px"><b>Three cautions</b><ul style="margin:6px 0 0;padding-left:20px">
+<li><b>It doesn’t stretch.</b> The first 5% above a weak position buys the most. Going from 1.05 to 1.10 buys less, and nobody stays forever, so the tool caps the effect at 60%.</li>
+<li><b>Pay isn’t the only cause.</b> Jobs that pay more are often also better jobs. Comparing within a family and level, and using past raises, separates the two.</li>
+<li><b>Measure, then update.</b> Put the number from method 1 in the box above in month two, and the one from method 2 once a year of results is in.</li></ul></div>
+
 
 </div></main>
 
@@ -106,6 +128,9 @@ const W = {}; VALUES.forEach(v => W[v.k] = v.v);
 const replCost = pay => pay < 30000 ? 16 : pay < 50000 ? 20 : pay < 100000 ? 21 : pay < 200000 ? 50 : 100;
 const STANCES = [ ['Lag',.95,'var(--lag)'], ['Match',1,'var(--match)'], ['Lead',1.05,'var(--lead)'], ['Lead+',1.12,'var(--leadp)'] ];
 let ELASTIC = 15;   // % fewer leavers for every 5% of pay above today's position (assumption, editable)
+let SPLIT = false;  // use the demo data's hourly and salaried figures instead of one number
+const EL_HOURLY = 6.2, EL_SALARIED = 16.7;
+const elOf = r => SPLIT ? r.hs * EL_HOURLY + (1 - r.hs) * EL_SALARIED : ELASTIC;
 
 let view = 'fam';
 const rowsData = { fam: [], job: [] };
@@ -117,10 +142,10 @@ Object.entries(fams).forEach(([tw, js]) => {
   const ratio = js.filter(j => j.ratio).reduce((s,j) => s + j.ratio*j.hc, 0) / js.filter(j => j.ratio).reduce((s,j) => s + j.hc, 0);
   const turnover = js.reduce((s,j) => s + j.turnover*j.hc, 0) / hc;
   const d = FAM_DEF[tw] || { scarcity: 3, critical: 3 };
-  rowsData.fam.push({ name: FAM_NAME(tw), sub: js.length + ' jobs', hc, pay, ratio, turnover, repl: replCost(pay), scarcity: d.scarcity, critical: d.critical });
+  rowsData.fam.push({ name: FAM_NAME(tw), sub: js.length + ' jobs', hs: js.filter(j => j.hourly).reduce((s,j) => s + j.hc, 0) / hc, hc, pay, ratio, turnover, repl: replCost(pay), scarcity: d.scarcity, critical: d.critical });
   js.forEach(j => {
     const sc = /grower|technician|engineer|mechanic|electric|climate|maintenance|refrig/i.test(j.t) ? Math.min(5, d.scarcity + 1) : d.scarcity;
-    rowsData.job.push({ name: j.t, sub: FAM_NAME(tw) + ' · ' + j.g + (j.hourly ? ' · hourly' : ''), hc: j.hc, pay: j.pay, ratio: j.ratio || 1, turnover: j.turnover, repl: replCost(j.pay), scarcity: sc, critical: j.lead ? 5 : d.critical });
+    rowsData.job.push({ hs: j.hourly ? 1 : 0, name: j.t, sub: FAM_NAME(tw) + ' · ' + j.g + (j.hourly ? ' · hourly' : ''), hc: j.hc, pay: j.pay, ratio: j.ratio || 1, turnover: j.turnover, repl: replCost(j.pay), scarcity: sc, critical: j.lead ? 5 : d.critical });
   });
 });
 rowsData.job.sort((a,b) => b.hc - a.hc);
@@ -143,7 +168,7 @@ function calc(r){
   const gap = Math.max(0, target / r.ratio - 1);
   const cost = r.hc * r.pay * gap;
   const lift = (target / r.ratio - 1) * 100;                                      // % pay change vs today
-  const fewer = Math.max(-60, Math.min(60, ELASTIC * lift / 5));                  // % change in leavers
+  const fewer = Math.max(-60, Math.min(60, elOf(r) * lift / 5));                  // % change in leavers
   const saved = tc * fewer / 100;
   return { s, tc, st, target, cost, saved, net: saved - cost };
 }
@@ -178,11 +203,14 @@ function render(){
     [fmtK(T.cost), 'cost a year to reach the recommended stances'],
     [(T.cost ? Math.round(100*T.saved/T.cost) : 0) + '%', 'of that cost covered by fewer leavers; the rest is the price of what we value'],
   ].map(k => '<div class="kpi"><b>'+k[0]+'</b><span>'+k[1]+'</span></div>').join('');
-  $('#note').innerHTML = 'Turnover is the last 12 months of demo data ('+WF.window+'). Replacement cost under $100,000 of pay follows the <a href="https://www.americanprogress.org/article/there-are-significant-business-costs-to-replacing-employees/">Center for American Progress</a> review (16% under $30,000, 20% under $50,000, 21% typical); higher levels are assumptions. Turnover saved assumes '+ELASTIC+'% fewer leavers for every 5% of pay above today’s market position; check it against exit interviews and real results. Market ratio compares each person with the market midpoint for their own country.';
+  $('#note').innerHTML = 'Turnover is the last 12 months of demo data ('+WF.window+'). Replacement cost under $100,000 of pay follows the <a href="https://www.americanprogress.org/article/there-are-significant-business-costs-to-replacing-employees/">Center for American Progress</a> review (16% under $30,000, 20% under $50,000, 21% typical); higher levels are assumptions. Turnover saved assumes '+(SPLIT ? EL_HOURLY+'% (hourly) and '+EL_SALARIED+'% (salaried)' : ELASTIC+'%')+' fewer leavers for every 5% of pay above today’s market position; see how that is measured below. Market ratio compares each person with the market midpoint for their own country.';
 }
 document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { view = b.dataset.v; document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b)); render(); });
 if (window.top !== window) document.querySelector('header a').style.display = 'none';
-renderValues(); $('#el').oninput = () => { ELASTIC = +$('#el').value || 0; render(); }; render();
+renderValues();
+$('#el').oninput = () => { ELASTIC = +$('#el').value || 0; SPLIT = false; $('#elm').value = [15,17,20].includes(ELASTIC) ? String(ELASTIC) : 'custom'; render(); };
+$('#elm').onchange = () => { const v = $('#elm').value; SPLIT = v === 'split'; $('#el').hidden = SPLIT; if (!SPLIT && v !== 'custom') { ELASTIC = +v; $('#el').value = v; } render(); };
+render();
 })();
 </script>
 </body>

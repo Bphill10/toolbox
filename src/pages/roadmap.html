@@ -143,6 +143,7 @@
       <li>Pay compression, for example supervisors paid close to their crews.</li>
       <li>Turnover laid over pay, to show where low pay is costing people.</li>
       <li><b>How competitive should we be,</b> by job family or by job: lag, match or lead the market, set from what the company values most and weighed against turnover and what it costs.</li>
+      <li><b>How much pay moves turnover here,</b> measured from Mastronardi’s own data: turnover against market ratio, job by job, then checked against past raises. The tool starts at 15% fewer leavers for each 5% above market and swaps in the measured number.</li>
     </ul></div>
     <div><h4>Deliverables</h4><ul>
       <li>A one-page summary for the ELT, with a few charts.</li>
@@ -165,6 +166,7 @@
       <li>Match each job to survey codes from step 1, then build ranges: midpoints from the market, wider ranges at senior levels, and country differentials.</li>
       <li>Load the structure into the HRIS so ranges show up in everyday decisions.</li>
       <li>Publish an org chart and build succession plans for critical roles: who is ready now, in one to two years or later, and the development each needs.</li>
+      <li>Read the structure from the org chart: layers from the CEO to the front line, spans of control, one-over-one managers, and anyone graded at or above their own manager. Narrow teams get merged as managers leave, not by cutting.</li>
     </ul></div>
     <div><h4>Tool options</h4><ul>
       <li><b>Build in-house with AI tools</b>, like the Job Architecture Builder, JD Creator and Job Titles and Pay Ranges tiles in this demo.</li>
@@ -207,6 +209,7 @@
       <li><b>AI-built dashboards and tools</b>, like this demo, built on the company's own data. No BI licenses and no packaged compensation software.</li>
       <li><b>Merit matrix</b> (in Merit Budget and Planning): increase by rating and position in range, fitted to budget.</li>
       <li><b>Total Rewards Statements</b> for every employee, in local currency, saved as PDF.</li>
+      <li><b>AI time savings</b> for every job: hours given back, their value, and the roles that need not be refilled as people leave.</li>
     </ul></div>
   </div>
 </div>
@@ -225,15 +228,17 @@
 </table>
 <p class="note">Survey costs repeat every year and are shown at participant prices; buying Mercer data before participating costs about three times as much. architecture and plan design are mostly one-time. "Expand" adds non-participant premiums, a second general-industry survey, IT skill premiums, consultants and more AI seats.</p></div>
 
-<h2>Security: run it in Mastronardi's Azure</h2>
-<p class="lead">Pay and people data is the most sensitive data a company holds, so the tools run inside the company's own Microsoft environment rather than on an outside host.</p>
+<h2>Security: is Azure required?</h2>
+<p class="lead">No. Azure isn’t what makes it safe; the controls below are. Azure is the easiest way to get all of them if Mastronardi already runs Microsoft 365, because company sign-in, storage and IT’s monitoring are already there. Any setup IT approves that meets the same list is just as safe.</p>
 <div class="box"><ul>
   <li><b>Company sign-in:</b> people log in with their Mastronardi Microsoft account (Entra ID), with multi-factor authentication and access managed by IT. No shared passwords.</li>
   <li><b>Data stays in the tenant:</b> HRIS extracts and survey files sit in Azure storage the company controls, with access logs.</li>
   <li><b>AI inside the same boundary:</b> Claude is available through Microsoft Foundry on Azure and is billed through the Microsoft agreement at standard API rates, so the AI tools sit under the same contracts and controls as the rest of IT.</li>
   <li><b>Role-based access:</b> leaders see their own organisation; pay detail and succession plans are limited to HR and the executive team.</li>
+  <li><b>AI under a business contract:</b> on Claude’s business plans (Team, Enterprise and the API, including through Azure), Anthropic doesn’t train its models on company data by default and acts as the company’s data processor. API inputs are kept for 30 days, and zero retention can be arranged.</li>
   <li><b>IT review first:</b> security and IT sign off on the setup before any real employee data is loaded. This demo uses fictional data only.</li>
-</ul><p class="note">Azure doesn't publish a fixed price for Static Web Apps Standard on its pricing page; the hosting figure is an estimate to confirm in the Azure pricing calculator.</p></div>
+</ul>
+<p class="note"><b>What isn’t safe, with or without Azure:</b> pay data pasted into personal AI accounts, spreadsheets emailed around, or real data on a demo host like this one behind a shared password.</p><p class="note">Azure doesn't publish a fixed price for Static Web Apps Standard on its pricing page; the hosting figure is an estimate to confirm in the Azure pricing calculator.</p></div>
 
 <h2>AI tools and what building in-house saves</h2>
 <p class="lead">The tools in this demo replace packaged compensation software. Running them takes a few AI and hosting subscriptions.</p>
@@ -277,6 +282,9 @@
   <tr class="tot"><td>Total</td><td class="n">about $245,000 – $520,000</td><td class="n">about $150,000 – $200,000</td></tr>
 </table></div>
 
+<div class="box" style="margin-top:14px"><b>Across the whole company, not just HR</b>
+<p style="margin:6px 0 0">The hours above are the compensation team’s. The <b>AI Time Savings</b> tile runs the same idea for every job: people who use AI save about 5.4% of their hours (St. Louis Fed), desk jobs more and greenhouse crews much less. On the demo’s 3,000 fictional employees that is about <b>66,000 hours a year</b>, worth about <b>$1.9 million</b> at each job’s pay, and about <b>16 roles a year</b> that don’t need refilling as people leave: roughly <b>$1.1 million a year</b> after the cost of AI seats. No layoffs; it only comes out of turnover and growth. Rerun on the real census once a 90-day pilot has measured the time saved.</p></div>
+
 <h2>The first 30 days</h2>
 <div class="box"><ol class="first">
   <li><b>Week 1:</b> meet the ELT and Finance; confirm the fiscal year, the budget cycle and when the next bonus plan year starts.</li>
@@ -302,6 +310,9 @@
   <li><a href="https://claude.com/pricing">Claude plans and pricing</a>, <a href="https://vercel.com/pricing">Vercel pricing</a>, <a href="https://costbench.com/compare/github-vs-vercel/">GitHub Team pricing</a></li>
   <li><a href="https://www.americanprogress.org/article/there-are-significant-business-costs-to-replacing-employees/">Center for American Progress, the cost of replacing employees</a></li>
   <li><a href="https://azure.microsoft.com/en-us/pricing/details/app-service/static/">Azure Static Web Apps pricing</a></li>
+  <li>St. Louis Fed, <a href="https://www.stlouisfed.org/on-the-economy/2025/feb/impact-generative-ai-work-productivity">The Impact of Generative AI on Work Productivity</a> and <a href="https://www.stlouisfed.org/open-vault/2025/oct/generative-ai-productivity-future-work">Generative AI, productivity and the future of work</a></li>
+  <li>Pay and quits: <a href="http://courses.umass.edu/econ801/Dube.pdf">Dube, Giuliano and Leonard, American Economic Review 2019</a> and <a href="https://www.nber.org/system/files/working_papers/w27755/w27755.pdf">Bassier, Dube and Naidu, NBER</a></li>
+  <li>Anthropic: <a href="https://privacy.claude.com/en/articles/7996868-is-my-data-used-for-model-training">is my data used for model training</a> and <a href="https://privacy.claude.com/en/articles/9267385-does-anthropic-act-as-a-data-processor-or-controller">data processor or controller</a></li>
   <li><a href="https://www.complogix.io/?p=5721">CompLogix, compensation software licensing ranges</a></li>
   <li><a href="https://www.jobbank.gc.ca/marketreport/wages-occupation/23339/ca">Job Bank, greenhouse labourer wages</a> and <a href="https://www.jobbank.gc.ca/marketreport/wages-occupation/26825/ON">greenhouse supervisor wages, Ontario</a></li>
 </ul><p class="note">Prices as published by each vendor and checked October 2026; confirm before ordering.</p></div>

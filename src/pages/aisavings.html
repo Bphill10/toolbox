@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Time Savings · MGI Insight</title>
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<style>
+  :root { --deep:#072A1F; --green:#0B4A36; --accent:#0F8A5F; --ink:#16241e; --muted:#5C6F66; --line:#DDE6E0; --soft:#F2F7F4; --bg:#F5F7F6; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14.5px/1.5 "Segoe UI", Arial, Helvetica, sans-serif; }
+  header { background:linear-gradient(135deg,var(--deep),var(--green)); color:#fff; padding:22px 16px 24px; }
+  .w { max-width:1200px; margin:0 auto; }
+  header a { color:#9BE7C4; text-decoration:none; font-size:13px; font-weight:600; }
+  .k { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#9BE7C4; font-weight:800; margin-top:10px; }
+  h1 { font:600 27px/1.2 Georgia, serif; margin:4px 0 6px; }
+  header p { margin:0; color:#cfe9dd; max-width:860px; }
+  main { padding:20px 16px 48px; }
+  h2 { font:600 20px Georgia, serif; margin:26px 0 8px; color:var(--deep); }
+  .lead { color:var(--muted); margin:0 0 12px; max-width:880px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 18px; min-width:0; }
+  .card ul, .card ol { margin:6px 0 0; padding-left:20px; } .card li { margin:5px 0; }
+  .kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:16px 0; }
+  .kpi { background:#fff; border:1px solid var(--line); border-top:3px solid var(--green); border-radius:10px; padding:12px 14px; min-width:0; }
+  .kpi b { display:block; font-size:22px; color:var(--deep); } .kpi span { color:var(--muted); font-size:12.5px; }
+  .tabs { display:flex; gap:6px; margin:18px 0 10px; }
+  .tabs button { font:600 13.5px "Segoe UI", Arial, sans-serif; padding:8px 14px; border-radius:8px; border:1px solid var(--line); background:#fff; color:var(--green); cursor:pointer; }
+  .tabs button.on { background:var(--green); color:#fff; border-color:var(--green); }
+  .wrap { overflow-x:auto; background:#fff; border:1px solid var(--line); border-radius:12px; }
+  table { border-collapse:collapse; width:100%; }
+  th { text-align:left; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--deep); padding:8px 6px; vertical-align:bottom; }
+  td { border-bottom:1px solid var(--line); padding:7px 6px; vertical-align:middle; }
+  td.n, th.n { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  tfoot td { font-weight:700; border-top:2px solid var(--deep); border-bottom:0; }
+  .sub { display:block; color:var(--muted); font-size:12px; }
+  input[type=number] { font:13px "Segoe UI", Arial; width:58px; padding:3px 5px; border:1px solid var(--line); border-radius:5px; text-align:right; }
+  .grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+  .cat b { display:block; color:var(--deep); } .cat label { display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:13px; margin-top:6px; color:var(--muted); }
+  .levers { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:12px; }
+  .levers label { display:block; font-size:13px; color:var(--muted); } .levers label b { display:block; color:var(--ink); }
+  .two { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; }
+  .good { color:var(--accent); font-weight:700; }
+  .note { color:var(--muted); font-size:12px; margin-top:10px; }
+  code { background:var(--soft); padding:1px 5px; border-radius:4px; font-size:12.5px; }
+  @media (max-width:900px) { .grid, .kpis, .levers { grid-template-columns:1fr 1fr; } .two { grid-template-columns:minmax(0,1fr); } }
+  @media (max-width:520px) { .grid, .levers { grid-template-columns:minmax(0,1fr); } }
+</style>
+</head>
+<body>
+<header><div class="w">
+  <a href="/" target="_top">&larr; Back to MGI Insight</a>
+  <div class="k">Step 4 · Analytics</div>
+  <h1>AI time savings for every employee</h1>
+  <p>Hours AI gives back to each job, what those hours are worth at that job’s pay, and how much of it becomes real savings by not refilling some roles as people leave. No layoffs in the model: the savings only come out of normal turnover and growth.</p>
+</div></header>
+<main><div class="w">
+
+<h2>Who uses it, and how much time it saves them</h2>
+<p class="lead">Defaults start from the St. Louis Fed surveys: people who use generative AI save about 5.4% of their work hours, a little over two hours a week, and about four in ten workers now use it. Desk jobs sit above that, frontline hourly work well below. Change any number.</p>
+<div class="card"><div class="grid" id="cats"></div>
+<div class="levers">
+  <label><b>Share of freed time that replaces a hire</b>The rest goes into better work, not fewer people<br><input id="cap" type="number" min="0" max="100" value="50">%</label>
+  <label><b>Headcount growth a year</b>New roles a growing company would otherwise add<br><input id="gr" type="number" min="0" max="50" value="5">%</label>
+  <label><b>Benefits and payroll taxes</b>Added on top of pay for a position not filled<br><input id="ld" type="number" min="0" max="80" value="25">%</label>
+  <label><b>AI seat cost a month</b>Per user in salaried jobs; hourly crews share kiosks<br>$<input id="seat" type="number" min="0" max="500" value="25"></label>
+</div></div>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="tabs"><button data-v="fam" class="on">By job family</button><button data-v="job">By job</button></div>
+<div class="wrap"><table><thead id="th"></thead><tbody id="rows"></tbody><tfoot id="foot"></tfoot></table></div>
+<p class="note" id="note"></p>
+
+<h2>How the numbers are built</h2>
+<div class="two">
+<div class="card"><b>Time and its value</b><ol>
+  <li><b>Hours saved</b> = people × 2,080 hours × share who use AI × share of their time it saves.</li>
+  <li><b>Value of that time</b> = hours saved × the job’s average pay ÷ 2,080. This is capacity, not cash: it shows up as faster work, more output, and less overtime.</li>
+  <li><b>Full-time equivalents</b> = hours saved ÷ 2,080.</li>
+</ol></div>
+<div class="card"><b>Turning time into a smaller labor force</b><ol>
+  <li><b>Positions the time can cover</b> = full-time equivalents × the share that replaces a hire.</li>
+  <li><b>Capped by openings</b>: never more than the people who leave in a year (today’s turnover) plus the new roles growth would add. That cap is what keeps it to attrition, with no layoffs.</li>
+  <li><b>Savings</b> = positions not filled × the job’s pay × (1 + benefits and taxes), less what the AI seats cost.</li>
+</ol></div>
+</div>
+<div class="card" style="margin-top:16px"><b>Proving it with Mastronardi’s own numbers</b><ul>
+  <li><b>Pilot first.</b> Give the tools to two or three teams for 90 days and time a handful of real tasks before and after: a job description, a monthly report, a schedule, a supplier email.</li>
+  <li><b>Replace the defaults.</b> Put the measured adoption and time saved into the boxes above, by job, so the totals stand on company data instead of national surveys.</li>
+  <li><b>Track hires that weren’t needed.</b> Each time a role opens, the manager records whether it was refilled, merged or covered by the team with AI. That log is the real savings number.</li>
+  <li><b>Watch the other side.</b> Overtime, error rates and turnover in the teams carrying more work. Savings that come back as burnout aren’t savings.</li>
+</ul></div>
+<p class="note">Sources: St. Louis Fed, <a href="https://www.stlouisfed.org/on-the-economy/2025/feb/impact-generative-ai-work-productivity">The Impact of Generative AI on Work Productivity</a> (users save 5.4% of hours, 1.4% across all workers) and <a href="https://www.stlouisfed.org/open-vault/2025/oct/generative-ai-productivity-future-work">Generative AI, productivity and the future of work</a> (adoption up from 28% to 39% of workers). Headcount, pay and turnover are fictional demo data for the last 12 months.</p>
+</div></main>
+<script>
+const WF = {{include:data/workforce.json}};
+</script>
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const fmtK = v => (v < 0 ? '−' : '') + '$' + (Math.abs(v) >= 1e6 ? (Math.abs(v)/1e6).toFixed(2) + 'M' : Math.round(Math.abs(v)/1e3) + 'k');
+const num = v => Math.round(v).toLocaleString();
+const FAM_NAME = t => t.charAt(0) + t.slice(1).toLowerCase();
+// Defaults by career track: [share who use AI %, share of their time saved %]
+const CATS = [
+  { k:'Executive',    d:'Board packs, analysis, correspondence', use:85, save:6 },
+  { k:'Management',   d:'Reports, scheduling, reviews, email',   use:65, save:5 },
+  { k:'Professional', d:'Analysis, writing, research, code',     use:75, save:7 },
+  { k:'Support',      d:'Hourly crews: SOP lookup, translation, shift notes', use:15, save:2 },
+];
+const C = {}; CATS.forEach(c => C[c.k] = c);
+let view = 'fam';
+function calcJob(j){
+  const c = C[j.cat] || C.Support;
+  const users = j.hc * c.use / 100;
+  const hours = users * 2080 * c.save / 100;
+  const value = hours * j.pay / 2080;
+  const fte = hours / 2080;
+  const openings = j.hc * j.turnover / 100 + j.hc * (+$('#gr').value || 0) / 100;
+  const pos = Math.min(fte * (+$('#cap').value || 0) / 100, openings);
+  const labor = pos * j.pay * (1 + (+$('#ld').value || 0) / 100);
+  const seats = j.hourly ? 0 : users * (+$('#seat').value || 0) * 12;
+  return { users, hours, value, fte, openings, pos, labor, seats, net: labor - seats };
+}
+function renderCats(){
+  $('#cats').innerHTML = CATS.map(c => '<div class="cat"><b>'+c.k+'</b><span class="sub">'+c.d+'</span>'
+    + '<label>Use AI <span><input type="number" min="0" max="100" data-c="'+c.k+'" data-f="use" value="'+c.use+'">%</span></label>'
+    + '<label>Time saved <span><input type="number" min="0" max="50" step="0.5" data-c="'+c.k+'" data-f="save" value="'+c.save+'">%</span></label></div>').join('');
+  $('#cats').querySelectorAll('input').forEach(i => i.oninput = () => { C[i.dataset.c][i.dataset.f] = +i.value || 0; render(); });
+}
+function render(){
+  const rows = [];
+  if (view === 'job') WF.jobs.forEach(j => rows.push({ name: j.t, sub: FAM_NAME(j.tw) + ' · ' + j.g + (j.hourly ? ' · hourly' : ''), hc: j.hc, pay: j.pay, turnover: j.turnover, ...calcJob(j) }));
+  else {
+    const F = {};
+    WF.jobs.forEach(j => { const r = calcJob(j); const f = F[j.tw] = F[j.tw] || { name: FAM_NAME(j.tw), n: 0, hc: 0, payroll: 0, leavers: 0, users:0, hours:0, value:0, fte:0, pos:0, labor:0, seats:0, net:0 };
+      f.n++; f.hc += j.hc; f.payroll += j.hc * j.pay; f.leavers += j.hc * j.turnover / 100; ['users','hours','value','fte','pos','labor','seats','net'].forEach(k => f[k] += r[k]); });
+    Object.values(F).forEach(f => rows.push({ ...f, sub: f.n + ' jobs', pay: f.payroll / f.hc, turnover: 100 * f.leavers / f.hc }));
+  }
+  rows.sort((a,b) => b.value - a.value);
+  const T = rows.reduce((t,r) => { ['hc','users','hours','value','fte','pos','labor','seats','net'].forEach(k => t[k] += r[k]); return t; }, { hc:0, users:0, hours:0, value:0, fte:0, pos:0, labor:0, seats:0, net:0 });
+  $('#th').innerHTML = '<tr><th>'+(view==='fam'?'Job family':'Job')+'</th><th class="n">People</th><th class="n">Avg pay</th><th class="n">AI users</th><th class="n">Hours saved / yr</th><th class="n">Value of time</th><th class="n">FTE freed</th><th class="n">Turnover</th><th class="n">Roles not refilled</th><th class="n">Labor savings</th></tr>';
+  $('#rows').innerHTML = rows.map(r => '<tr><td><b>'+r.name+'</b><span class="sub">'+r.sub+'</span></td><td class="n">'+num(r.hc)+'</td><td class="n">'+fmtK(r.pay)+'</td><td class="n">'+num(r.users)+'</td><td class="n">'+num(r.hours)+'</td><td class="n">'+fmtK(r.value)+'</td><td class="n">'+r.fte.toFixed(1)+'</td><td class="n">'+r.turnover.toFixed(0)+'%</td><td class="n">'+r.pos.toFixed(1)+'</td><td class="n good">'+fmtK(r.labor)+'</td></tr>').join('');
+  $('#foot').innerHTML = '<tr><td>All employees with a job code</td><td class="n">'+num(T.hc)+'</td><td></td><td class="n">'+num(T.users)+'</td><td class="n">'+num(T.hours)+'</td><td class="n">'+fmtK(T.value)+'</td><td class="n">'+T.fte.toFixed(1)+'</td><td></td><td class="n">'+T.pos.toFixed(1)+'</td><td class="n">'+fmtK(T.labor)+'</td></tr>';
+  $('#kpis').innerHTML = [
+    [num(T.hours), 'hours a year given back, about '+(T.hours / T.users / 52).toFixed(1)+' a week for each of '+num(T.users)+' users'],
+    [fmtK(T.value), 'value of that time at each job’s pay ('+(100*T.value/rows.reduce((s,r) => s + r.hc*r.pay, 0)).toFixed(1)+'% of base payroll)'],
+    [T.pos.toFixed(0) + ' roles', 'not refilled as people leave or the company grows ('+T.fte.toFixed(0)+' FTE freed in total)'],
+    [fmtK(T.net), 'a year in labor savings after '+fmtK(T.seats)+' of AI seats'],
+  ].map(k => '<div class="kpi"><b>'+k[0]+'</b><span>'+k[1]+'</span></div>').join('');
+  $('#note').textContent = 'Labor savings include benefits and payroll taxes. A role is only counted where the job has that many openings a year from turnover and growth, so nobody is let go. Roles are fractions by job; they add up across a family. People with no job code in the HRIS are left out.';
+}
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { view = b.dataset.v; document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b)); render(); });
+['cap','gr','ld','seat'].forEach(id => $('#'+id).oninput = render);
+if (window.top !== window) document.querySelector('header a').style.display = 'none';
+renderCats(); render();
+})();
+</script>
+</body>
+</html>

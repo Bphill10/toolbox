@@ -40,6 +40,30 @@
   .more { color:var(--muted); font-size:13px; margin-top:12px; }
   .legend { display:flex; flex-wrap:wrap; gap:10px 16px; font-size:12px; color:var(--muted); }
   .legend i { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; vertical-align:middle; }
+  .vtabs { display:flex; gap:6px; margin:16px 0 4px; flex-wrap:wrap; }
+  .vtabs button { font:600 13.5px "Segoe UI", Arial, sans-serif; padding:8px 14px; border-radius:8px; border:1px solid var(--line); background:#fff; color:var(--green); cursor:pointer; }
+  .vtabs button.on { background:var(--green); color:#fff; border-color:var(--green); }
+  h2 { font:600 19px Georgia, serif; margin:24px 0 6px; color:var(--deep); }
+  .lead { color:var(--muted); margin:0 0 10px; max-width:880px; }
+  .kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:14px 0; }
+  .kpi { background:#fff; border:1px solid var(--line); border-top:3px solid var(--green); border-radius:10px; padding:12px 14px; min-width:0; }
+  .kpi b { display:block; font-size:22px; color:var(--deep); } .kpi span { color:var(--muted); font-size:12.5px; }
+  .kpi.warn { border-top-color:#B45309; }
+  .wrap { overflow-x:auto; background:#fff; border:1px solid var(--line); border-radius:12px; }
+  table { border-collapse:collapse; width:100%; }
+  th { text-align:left; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--deep); padding:8px; vertical-align:bottom; }
+  td { border-bottom:1px solid var(--line); padding:7px 8px; vertical-align:middle; }
+  td.n, th.n { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .sub { display:block; color:var(--muted); font-size:12px; }
+  .hb { height:10px; background:#e7ece9; border-radius:5px; min-width:80px; } .hb i { display:block; height:10px; border-radius:5px; background:var(--accent); }
+  .hb.o i { background:#B45309; }
+  .two { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px; }
+  .card ul { margin:6px 0 0; padding-left:18px; } .card li { margin:4px 0; }
+  a.go { color:var(--green); font-weight:600; cursor:pointer; text-decoration:none; }
+  .tag { display:inline-block; font-size:11px; font-weight:700; padding:1px 8px; border-radius:999px; color:#fff; white-space:nowrap; }
+  .note { color:var(--muted); font-size:12px; margin-top:10px; }
+  @media (max-width:800px) { .kpis { grid-template-columns:1fr 1fr; } .two { grid-template-columns:minmax(0,1fr); } }
   @media (max-width:600px) { .node, .node.top { width:100%; } .kids { border-top:0; padding-top:10px; } }
 </style>
 </head>
@@ -48,13 +72,18 @@
   <a href="/" target="_top">&larr; Back to MGI Insight</a>
   <div class="k">Step 2 · Job architecture and careers</div>
   <h1>Org chart</h1>
-  <p>Every active employee and who they report to. Click a person to move down; use the path to move back up, or search for anyone.</p>
+  <p>Every active employee and who they report to. Click a person to move down; use the path to move back up, or search for anyone. The other two tabs read the structure: how many levels and layers it has, and how it is managed.</p>
 </div></header>
 <div class="w" style="padding:0 16px">
+  <div class="vtabs"><button data-v="chart" class="on">Chart</button><button data-v="levels">Levels and layers</button><button data-v="mgmt">Management</button></div>
+  <div id="v-chart">
   <div class="tools"><div class="search"><input id="q" placeholder="Search by name or job title" autocomplete="off"><div class="hits" id="hits" hidden></div></div><span class="stat" id="stat"></span></div>
   <div class="legend" id="legend"></div>
   <div class="crumbs" id="crumbs"></div>
   <div class="tree" id="tree"></div>
+  </div>
+  <div id="v-levels" hidden></div>
+  <div id="v-mgmt" hidden></div>
 </div>
 <script>
 const WF = {{include:data/workforce.json}};
@@ -105,6 +134,92 @@ const spans = P.filter(p => p.kids.length).map(p => p.kids.length);
 $('#stat').textContent = P.length.toLocaleString() + ' people · ' + managers + ' managers · average span of control ' + (spans.reduce((a,b) => a+b, 0) / spans.length).toFixed(1);
 $('#legend').innerHTML = Object.entries(COLORS).map(([k, c]) => '<span><i style="background:'+c+'"></i>'+k.charAt(0)+k.slice(1).toLowerCase()+'</span>').join('');
 if (window.top !== window) document.querySelector('header a').style.display = 'none';
+
+// ---- Levels, layers and management analysis --------------------------------------
+const JOB = {}; WF.jobs.forEach(j => JOB[j.k] = j);
+const fmtK = v => '$' + (Math.abs(v) >= 1e6 ? (v/1e6).toFixed(2) + 'M' : Math.round(v/1e3) + 'k');
+const fam = k => { const t = famOf[k] || ''; return t ? t.charAt(0) + t.slice(1).toLowerCase() : 'No job code'; };
+const rank = p => { const g = (JOB[p.k] || {}).g || 'S1'; return +g.slice(1); };
+const grade = p => (JOB[p.k] || {}).g || '—';
+const payOf = p => (JOB[p.k] || {}).pay || 0;
+const depth = []; (function walk(p, d){ depth[p.i] = d; p.kids.forEach(k => walk(k, d + 1)); })(root, 1);
+const mgrs = P.filter(p => p.kids.length);
+const payroll = P.reduce((s, p) => s + payOf(p), 0);
+const LOAD = 1.25;   // pay plus benefits and payroll taxes, an assumption
+const link = p => '<a class="go" data-go="'+p.i+'">'+esc(p.name)+'</a>';
+const bar = (v, max, o) => '<div class="hb'+(o?' o':'')+'"><i style="width:'+Math.max(2, Math.round(100*v/max))+'%"></i></div>';
+const tbl = (head, rows) => '<div class="wrap"><table><thead><tr>'+head.map(h => '<th'+(h[1]?' class="n"':'')+'>'+h[0]+'</th>').join('')+'</tr></thead><tbody>'+rows.join('')+'</tbody></table></div>';
+
+function levels(){
+  const L = {}; P.forEach(p => { const d = depth[p.i]; const x = L[d] = L[d] || { n:0, m:0, pay:0, pn:0, r:0 }; x.n++; if (payOf(p)) { x.pay += payOf(p); x.pn++; } if (p.kids.length) { x.m++; x.r += p.kids.length; } });
+  const maxL = Object.keys(L).length, maxN = Math.max(...Object.values(L).map(x => x.n));
+  const G = {}; P.forEach(p => { const g = grade(p); const x = G[g] = G[g] || { n:0, m:0, pay:0, d:0 }; x.n++; x.pay += payOf(p); x.d += depth[p.i]; if (p.kids.length) x.m++; });
+  const order = g => (({E:4, M:3, P:2, S:1})[g[0]] || 0) * 100 + (+g.slice(1) || 0);
+  const gs = Object.keys(G).sort((a,b) => order(b) - order(a)), maxG = Math.max(...Object.values(G).map(x => x.n));
+  const TRACK = { E:'Executive', M:'Management', P:'Professional', S:'Support (hourly)', '—':'No job code in the HRIS' };
+  const F = {}; P.forEach(p => { const f = fam(p.k); const x = F[f] = F[f] || { n:0, max:0, sum:0, m:0 }; x.n++; x.sum += depth[p.i]; x.max = Math.max(x.max, depth[p.i]); if (p.kids.length) x.m++; });
+  const front = P.filter(p => !p.kids.length).map(p => depth[p.i]);
+  const avgFront = front.reduce((a,b) => a+b, 0) / front.length;
+  // Same grade at more than one layer is a sign of grades and structure drifting apart
+  const spread = gs.filter(g => g !== '—').map(g => { const ds = P.filter(p => grade(p) === g).map(p => depth[p.i]); return [g, Math.min(...ds), Math.max(...ds)]; }).filter(x => x[2] - x[1] >= 3);
+  $('#v-levels').innerHTML =
+    '<div class="kpis">'
+    + '<div class="kpi"><b>'+maxL+'</b><span>layers from the CEO to the furthest frontline employee</span></div>'
+    + '<div class="kpi"><b>'+avgFront.toFixed(1)+'</b><span>average layers between the CEO and a frontline employee</span></div>'
+    + '<div class="kpi"><b>'+gs.filter(g => g !== '—').length+'</b><span>grades in use across 4 career tracks; '+(G['—'] ? G['—'].n : 0)+' people have no job code to grade</span></div>'
+    + '<div class="kpi'+(spread.length?' warn':'')+'"><b>'+spread.length+'</b><span>grades that sit three or more layers apart in different parts of the company</span></div></div>'
+    + '<h2>Layers: how far each person sits from the CEO</h2><p class="lead">Layer 1 is the CEO. A company of about 3,000 usually works well with six or seven layers; every extra layer slows decisions and adds a manager’s pay without adding output.</p>'
+    + tbl([['Layer'],['People',1],[''],['Managers',1],['Avg span',1],['Avg pay',1]], Object.entries(L).map(([d,x]) => '<tr><td><b>Layer '+d+'</b>'+(d==1?'<span class="sub">CEO</span>':'')+'</td><td class="n">'+x.n.toLocaleString()+'</td><td style="width:30%">'+bar(x.n, maxN)+'</td><td class="n">'+x.m+'</td><td class="n">'+(x.m ? (x.r/x.m).toFixed(1) : '—')+'</td><td class="n">'+fmtK(x.pay/x.pn)+'</td></tr>'))
+    + '<h2>Levels: headcount and pay by grade</h2><p class="lead">The job architecture’s grades from the top down. Pay should rise steadily from grade to grade; managers sitting low in the grades, or the same grade landing at very different layers, are the things to look at.</p>'
+    + tbl([['Grade'],['People',1],[''],['Managers',1],['Avg layer',1],['Avg pay',1]], gs.map(g => { const x = G[g]; return '<tr><td><b>'+g+'</b><span class="sub">'+TRACK[g[0]]+'</span></td><td class="n">'+x.n.toLocaleString()+'</td><td style="width:30%">'+bar(x.n, maxG)+'</td><td class="n">'+x.m+'</td><td class="n">'+(x.d/x.n).toFixed(1)+'</td><td class="n">'+(x.pay ? fmtK(x.pay/x.n) : '—')+'</td></tr>'; }))
+    + '<div class="two" style="margin-top:16px"><div><h2>Layers by job family</h2>'
+    + tbl([['Family'],['People',1],['Deepest layer',1],['Avg layer',1],['People per manager',1]], Object.entries(F).sort((a,b) => b[1].n - a[1].n).map(([f,x]) => '<tr><td><b>'+f+'</b></td><td class="n">'+x.n.toLocaleString()+'</td><td class="n">'+x.max+'</td><td class="n">'+(x.sum/x.n).toFixed(1)+'</td><td class="n">'+(x.m ? (x.n/x.m).toFixed(1) : '—')+'</td></tr>'))
+    + '</div><div><h2>Grades spread across layers</h2>'
+    + (spread.length ? tbl([['Grade'],['Highest layer',1],['Lowest layer',1]], spread.map(x => '<tr><td><b>'+x[0]+'</b></td><td class="n">'+x[1]+'</td><td class="n">'+x[2]+'</td></tr>')) : '<div class="card">Every grade sits within two layers of itself. The grades and the structure agree.</div>')
+    + '<p class="note">The same grade three or more layers apart usually means a title was graded by who it reports to rather than by the job, or a team has an extra layer the rest of the company doesn’t.</p></div></div>';
+}
+
+function mgmt(){
+  const B = [['1 report',1,1],['2 reports',2,2],['3 to 5',3,5],['6 to 10',6,10],['11 to 15',11,15],['16 to 30',16,30],['Over 30',31,1e9]];
+  const counts = B.map(b => mgrs.filter(p => p.kids.length >= b[1] && p.kids.length <= b[2]).length), maxC = Math.max(...counts);
+  const narrow = mgrs.filter(p => p.kids.length <= 2 && grade(p)[0] !== 'E').sort((a,b) => payOf(b) - payOf(a));
+  const wide = mgrs.filter(p => p.kids.length > 30).sort((a,b) => b.kids.length - a.kids.length);
+  const inv = []; mgrs.forEach(m => m.kids.forEach(k => { if (grade(k)[0] !== 'S' && grade(k) !== '—' && grade(m) !== '—' && rank(k) >= rank(m)) inv.push([m, k]); }));
+  const mgrPay = mgrs.reduce((s,p) => s + payOf(p), 0);
+  const avgSpan = mgrs.reduce((s,p) => s + p.kids.length, 0) / mgrs.length;
+  const med = (a => a[a.length >> 1])(mgrs.map(p => p.kids.length).sort((a,b) => a-b));
+  const narrowPay = narrow.reduce((s,p) => s + payOf(p), 0);
+  const merge = Math.round(narrow.length / 4), mergeSave = merge * (narrowPay / (narrow.length || 1)) * LOAD;
+  $('#v-mgmt').innerHTML =
+    '<div class="kpis">'
+    + '<div class="kpi"><b>'+mgrs.length+'</b><span>people managers, one for every '+((P.length - mgrs.length)/mgrs.length).toFixed(1)+' individual contributors</span></div>'
+    + '<div class="kpi"><b>'+avgSpan.toFixed(1)+' <small style="font-size:13px;color:var(--muted)">median '+med+'</small></b><span>direct reports per manager</span></div>'
+    + '<div class="kpi"><b>'+Math.round(100*mgrPay/payroll)+'%</b><span>of base payroll goes to people managers ('+fmtK(mgrPay)+')</span></div>'
+    + '<div class="kpi warn"><b>'+narrow.length+'</b><span>managers below executive level with only one or two reports</span></div></div>'
+    + '<h2>Span of control</h2><p class="lead">A common guide is about 5 to 8 reports for managers of professionals and specialists, and 15 or more for supervisors of crews doing the same work. Very narrow spans add cost and layers; very wide ones leave people unmanaged and supervisors stretched.</p>'
+    + tbl([['Direct reports'],['Managers',1],[''],['Share',1]], B.map((b,i) => '<tr><td><b>'+b[0]+'</b></td><td class="n">'+counts[i]+'</td><td style="width:45%">'+bar(counts[i], maxC, i < 2 || i === 6)+'</td><td class="n">'+Math.round(100*counts[i]/mgrs.length)+'%</td></tr>'))
+    + '<div class="two" style="margin-top:6px"><div><h2>Narrow spans to review</h2><p class="lead">One or two reports, executives left out. A manager over a single manager (“one over one”) is an extra layer; a manager over one or two specialists is often a title given as a promotion, or a team that could merge with the one next to it.</p>'
+    + tbl([['Manager'],['Grade',1],['Reports',1],['Avg pay',1]], narrow.slice(0, 15).map(p => '<tr><td>'+link(p)+'<span class="sub">'+esc(p.t)+' · '+esc(p.loc)+'</span></td><td class="n">'+grade(p)+'</td><td class="n">'+p.kids.length+'</td><td class="n">'+fmtK(payOf(p))+'</td></tr>'))
+    + (narrow.length > 15 ? '<p class="note">Showing 15 of '+narrow.length+', highest paid first.</p>' : '')
+    + '</div><div><h2>Very wide spans to review</h2><p class="lead">More than 30 direct reports. Fine for a crew lead on one line; a sign a lead hand or second supervisor is missing anywhere else.</p>'
+    + (wide.length ? tbl([['Manager'],['Grade',1],['Reports',1]], wide.slice(0, 15).map(p => '<tr><td>'+link(p)+'<span class="sub">'+esc(p.t)+' · '+esc(p.loc)+'</span></td><td class="n">'+grade(p)+'</td><td class="n">'+p.kids.length+'</td></tr>')) : '<div class="card">No manager has more than 30 direct reports.</div>')
+    + '</div></div>'
+    + '<h2>Grade inversions</h2><p class="lead">A direct report graded at or above their own manager. Sometimes right (a top specialist under a general manager), often a grading mistake, and always a pay compression risk.</p>'
+    + (inv.length ? tbl([['Manager'],['Grade',1],['Direct report'],['Grade',1]], inv.slice(0, 20).map(([m,k]) => '<tr><td>'+link(m)+'<span class="sub">'+esc(m.t)+'</span></td><td class="n">'+grade(m)+'</td><td>'+link(k)+'<span class="sub">'+esc(k.t)+'</span></td><td class="n"><b>'+grade(k)+'</b></td></tr>')) + (inv.length > 20 ? '<p class="note">Showing 20 of '+inv.length+'.</p>' : '') : '<div class="card">No direct report is graded at or above their manager.</div>')
+    + '<h2>What it could be worth</h2><div class="card"><ul>'
+    + '<li>If one in four of the '+narrow.length+' narrow-span teams merged with a neighbouring team as managers leave or move, about <b>'+merge+'</b> manager roles would not be refilled: roughly <b>'+fmtK(mergeSave)+' a year</b> in pay and benefits (average pay of those managers × '+LOAD+' for benefits and taxes).</li>'
+    + '<li>Done through normal turnover and internal moves, not layoffs. The job architecture (Step 2) decides which merges make sense; this list is where to start looking.</li>'
+    + '<li>Wide spans go the other way: adding a lead hand where a supervisor has 40 or more people is usually cheaper than the turnover a stretched supervisor causes.</li></ul></div>'
+    + '<p class="note">Fictional demo data. Pay is the average for each job, not each person; people with no job code are left out of pay figures. Inversions compare grade numbers across tracks; a support grade reporting to a supervisor is not counted.</p>';
+  $('#v-mgmt').querySelectorAll('[data-go]').forEach(a => a.onclick = () => { tab('chart'); show(P[+a.dataset.go]); });
+}
+function tab(v){
+  document.querySelectorAll('.vtabs button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+  ['chart','levels','mgmt'].forEach(x => $('#v-'+x).hidden = x !== v);
+  if (v === 'levels' && !$('#v-levels').innerHTML) levels();
+  if (v === 'mgmt' && !$('#v-mgmt').innerHTML) mgmt();
+}
+document.querySelectorAll('.vtabs button').forEach(b => b.onclick = () => tab(b.dataset.v));
 show(root);
 })();
 </script>
