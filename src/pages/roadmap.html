@@ -7,7 +7,7 @@
 <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
 <script defer src="/_vercel/insights/script.js"></script>
 <style>
-  :root { --deep:#072A1F; --green:#0B4A36; --ink:#16241e; --muted:#5C6F66; --line:#DDE6E0; --soft:#F2F7F4; --s1:#0F8A5F; --s2:#65A30D; --s3:#0E7490; --s4:#B45309; --bg:#F5F7F6; }
+  :root { --deep:#072A1F; --green:#0B4A36; --ink:#16241e; --muted:#5C6F66; --line:#DDE6E0; --soft:#F2F7F4; --s1:#067451; --s2:#11A361; --s3:#B8923D; --s4:#2E6B57; --bg:#F5F7F6; }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.55 Inter, "Segoe UI", Arial, Helvetica, sans-serif; }
   header { background:linear-gradient(135deg,var(--deep),var(--green)); color:#fff; padding:28px 16px 30px; }
@@ -52,9 +52,14 @@
 </style>
 {{include:theme/head.html}}<style>{{include:theme/page.css}}</style>
 </head>
-<body>
-<header><div class="w">
-  <a href="/">&larr; Back to MGI Insight</a>
+<body class="has-rail">
+<header class="app"><div class="bar1">
+  <a class="wmk" href="/"><img src="/img/mgi/wordmark-light.svg" alt="MGI Insight, people and pay intelligence" width="150" height="34"></a>
+  <div class="crumb">Plan &rsaquo;<b>Roadmap</b></div>
+  <nav class="top" aria-label="Sections"><a href="/">Home</a><a href="/#grp-data">Market data</a><a href="/#grp-jobs">Jobs and careers</a><a href="/#grp-inc">Incentives</a><a href="/#grp-ana">Analytics</a><a href="/roadmap/" class="on" aria-current="true">Roadmap</a></nav>
+</div></header>
+<nav class="rail" aria-label="Tools"><a href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a><a href="/jdmatch/"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="11" height="15" rx="2"/><path d="M7 7h5M7 10h5M7 13h3"/><circle cx="17" cy="16" r="4"/><path d="M15.4 16l1.2 1.2 2.2-2.4"/></svg><span>Job Matcher</span></a><a href="/positioning/"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg><span>How competitive should we be</span></a><a href="/roadmap/" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20L9 4M20 20L15 4M12 6v2M12 11v2M12 16v2"/></svg><span>Roadmap</span></a></nav>
+<header class="intro"><div class="w">
   <div class="k">Total rewards roadmap</div>
   <h1>Where to start, in what order, and what it takes</h1>
   <p>Four steps in order of importance, with a competitive assessment as soon as the market data lands. Each one depends on the step before it: market data feeds the job architecture, the architecture sets the incentive targets, and analytics measures all of it.</p>
@@ -312,5 +317,6 @@
 </ul><p class="note">Prices as published by each vendor and checked October 2026; confirm before ordering.</p></div>
 
 </div></main>
-{{include:theme/page-end.html}}</body>
+{{include:theme/page-end.html}}<script>if (window.top !== window) document.documentElement.classList.add("framed");</script>
+</body>
 </html>

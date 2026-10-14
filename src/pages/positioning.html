@@ -8,7 +8,7 @@
 <script defer src="/_vercel/insights/script.js"></script>
 <style>
   :root { --deep:#072A1F; --green:#0B4A36; --accent:#0F8A5F; --ink:#16241e; --muted:#5C6F66; --line:#DDE6E0; --soft:#F2F7F4; --bg:#F5F7F6;
-          --lag:#94A3B8; --match:#0E7490; --lead:#0F8A5F; --leadp:#B45309; }
+          --lag:#8FA39A; --match:#005540; --lead:#11A361; --leadp:#B8923D; }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); font:14.5px/1.5 Inter, "Segoe UI", Arial, Helvetica, sans-serif; }
   header { background:linear-gradient(135deg,var(--deep),var(--green)); color:#fff; padding:22px 16px 24px; }
@@ -55,9 +55,14 @@
 </style>
 {{include:theme/head.html}}<style>{{include:theme/page.css}}</style>
 </head>
-<body>
-<header><div class="w">
-  <a href="/" target="_top">&larr; Back to MGI Insight</a>
+<body class="has-rail">
+<header class="app"><div class="bar1">
+  <a class="wmk" href="/"><img src="/img/mgi/wordmark-light.svg" alt="MGI Insight, people and pay intelligence" width="150" height="34"></a>
+  <div class="crumb">Market data &rsaquo;<b>How competitive should we be</b></div>
+  <nav class="top" aria-label="Sections"><a href="/">Home</a><a href="/#grp-data" class="on" aria-current="true">Market data</a><a href="/#grp-jobs">Jobs and careers</a><a href="/#grp-inc">Incentives</a><a href="/#grp-ana">Analytics</a><a href="/roadmap/">Roadmap</a></nav>
+</div></header>
+<nav class="rail" aria-label="Tools"><a href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a><a href="/jdmatch/"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="11" height="15" rx="2"/><path d="M7 7h5M7 10h5M7 13h3"/><circle cx="17" cy="16" r="4"/><path d="M15.4 16l1.2 1.2 2.2-2.4"/></svg><span>Job Matcher</span></a><a href="/positioning/" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg><span>How competitive should we be</span></a><a href="/roadmap/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20L9 4M20 20L15 4M12 6v2M12 11v2M12 16v2"/></svg><span>Roadmap</span></a></nav>
+<header class="intro"><div class="w">
   <div class="k">Step 1b · Competitive assessment</div>
   <h1>How competitive should we be?</h1>
   <p>Set what the company values most, and each job family or job gets a pay stance: lag, match or lead the market. Turnover and what it costs decide where paying more earns its keep.</p>
@@ -210,12 +215,13 @@ function render(){
   $('#note').innerHTML = 'Turnover is the last 12 months of demo data ('+WF.window+'). Replacement cost under $100,000 of pay follows the <a href="https://www.americanprogress.org/article/there-are-significant-business-costs-to-replacing-employees/">Center for American Progress</a> review (16% under $30,000, 20% under $50,000, 21% typical); higher levels are assumptions. Turnover saved assumes '+(SPLIT ? EL_HOURLY+'% (hourly) and '+EL_SALARIED+'% (salaried)' : ELASTIC+'%')+' fewer leavers for every 5% of pay above today’s market position; see how that is measured below. Market ratio compares each person with the market midpoint for their own country.';
 }
 document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { view = b.dataset.v; document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b)); render(); });
-if (window.top !== window) document.querySelector('header a').style.display = 'none';
+
 renderValues();
 $('#el').oninput = () => { ELASTIC = +$('#el').value || 0; SPLIT = false; $('#elm').value = [15,17,20].includes(ELASTIC) ? String(ELASTIC) : 'custom'; render(); };
 $('#elm').onchange = () => { const v = $('#elm').value; SPLIT = v === 'split'; $('#el').hidden = SPLIT; if (!SPLIT && v !== 'custom') { ELASTIC = +v; $('#el').value = v; } render(); };
 render();
 })();
 </script>
-{{include:theme/page-end.html}}</body>
+{{include:theme/page-end.html}}<script>if (window.top !== window) document.documentElement.classList.add("framed");</script>
+</body>
 </html>

@@ -97,7 +97,7 @@ input[type=range]{width:100%;accent-color:var(--blue);padding:0;height:18px}
    <div class="fld"><label>Jobs</label><select id="pop"><option value="all">All jobs</option><option value="hr">Hourly jobs</option><option value="sal">Salaried jobs</option></select></div>
    <div class="fld" id="towerF"><label data-i="r_tower">Tower</label><select id="tower"></select></div>
    <div class="fld" id="searchF"><label data-i="r_search">Search</label><input id="q" data-ip="r_search_ph" placeholder="Job title"></div>
-   <label style="display:flex;gap:6px;align-items:center;padding-bottom:8px"><input type="checkbox" id="supp"> <span data-i="r_supp">Hide pay of groups under 5 people (privacy rule)</span></label>
+   <label style="display:flex;gap:6px;align-items:center;padding-bottom:8px"><input type="checkbox" id="supp" checked> <span data-i="r_supp">Hide pay of groups under 5 people (privacy rule)</span></label>
    <div class="sp"></div>
    <button class="btn" id="exp" data-i="r_export">Export (CSV)</button>
   </div>
@@ -202,7 +202,7 @@ I18N = {
  below:{en:'below',pt:'abaixo',es:'bajo'}, above:{en:'above',pt:'acima',es:'sobre'}
 };
 var CTRY = ['CANADA', 'MEXICO', 'USA'];
-var V = {view: 'level', country: 'all', spread: 20, tower: 'all', q: '', supp: false, basis: 'annual', cur: 'usd', pop: 'all', sort: {level: ['rank', -1], job: ['rank', -1]}};
+var V = {view: 'level', country: 'all', spread: 20, tower: 'all', q: '', supp: true, basis: 'annual', cur: 'usd', pop: 'all', sort: {level: ['rank', -1], job: ['rank', -1]}};
 function titleC(s){ return titleCase(s); }
 /* pay basis and currency: values are held in USD per year; hourly = annual / 2080 hours; local currency needs one country */
 function fxo(){ return (V.cur === 'local' && V.country !== 'all') ? D.fx[V.country] : {cur: 'USD', per: 1}; }

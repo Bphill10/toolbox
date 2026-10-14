@@ -2,9 +2,8 @@
 (function(){
   var KEY = 'mgi-theme', root = document.documentElement;
   function saved(){ try { return localStorage.getItem(KEY); } catch(e) { return null; } }
-  function system(){ try { return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; } catch(e) { return 'light'; } }
   function apply(t){
-    t = t === 'dark' || t === 'light' ? t : system();
+    t = t === 'dark' || t === 'light' ? t : 'light';   // light unless someone picks dark
     want = t;
     root.setAttribute('data-theme', t);
     var bs = document.querySelectorAll('.mgi-tt');
@@ -51,6 +50,8 @@
   var want = null;
   /* a module that sets its own theme while it loads must not override the chosen one */
   ['DOMContentLoaded','load'].forEach(function(ev){ window.addEventListener(ev, function(){ if (want && root.getAttribute('data-theme') !== want) apply(want); }); });
+  /* the tool banners show a strip of the home-page photo; blob-loaded tools need an absolute address */
+  try { if (location.origin && location.origin !== 'null') root.style.setProperty('--mgi-img', 'url("' + location.origin + '/img/mgi/hero.jpg")'); } catch(e) {}
   var parentTheme = null;
   try { if (window.parent !== window && window.parent.document) parentTheme = window.parent.document.documentElement.getAttribute('data-theme'); } catch(e) {}
   apply(parentTheme || saved());

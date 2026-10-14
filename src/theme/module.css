@@ -19,3 +19,36 @@ html[data-theme=dark] :is(h1,h2,h3,h4){color:inherit}
 html[data-theme=dark] img:not([src*="svg"]){filter:brightness(.92)}
 html[data-theme=dark] :is(.jddoc,.paper,.doc,#jdDoc){--ink:#0B2219;--mut:#57705F;--line:#C3D6CC;--card:#fff;--soft:#EAF3EE;--navy:#00392D;--blue:#067451;color:#0B2219;color-scheme:light}
 html[data-theme] :is(.jddoc,.paper,.doc,#jdDoc) table{color:inherit}
+/* ---- approved-kit polish for the shared tool framework (not KPI Dashboards, which has its own design) ---- */
+html[data-theme]:not(.mgi-own){--bg:#F2F7F4;--line:#DCE9E2;--soft:#EAF5EF;--navy:#00392D;--blue:#067451;--green:#11A361;--amber:#B8860B;--red:#D9534F}
+html[data-theme=dark]:not(.mgi-own){--bg:#03120D;--card:#0A1E17;--line:#173A2C;--soft:#0D2A20;--navy:#BFE6D6;--blue:#3DD69C;--green:#4FD9A0}
+html[data-theme]:not(.mgi-own) .mast{background:linear-gradient(90deg,#00291F 0%,#00291F 45%,rgba(0,41,31,.55) 75%,rgba(0,41,31,.2) 100%),var(--mgi-img,none) right 38%/auto 330% no-repeat,radial-gradient(500px 160px at 90% 20%,#0A4A37,#00291F) !important;border-bottom:1px solid rgba(213,183,108,.35);padding:16px 24px 15px !important;min-height:84px !important}
+html[data-theme]:not(.mgi-own) .mast .kick{color:#D5B76C;letter-spacing:.22em}
+html[data-theme]:not(.mgi-own) .mast h1{font-family:"Source Serif 4",Georgia,serif;font-weight:500;font-size:24px;letter-spacing:-.01em;margin:3px 0 4px}
+html[data-theme]:not(.mgi-own) .mast p{color:rgba(231,248,240,.8);font-size:12.5px}
+html[data-theme]:not(.mgi-own) .card{border-radius:16px;padding:16px 18px;box-shadow:0 8px 26px rgba(2,53,35,.07);border-color:var(--line)}
+html[data-theme=dark]:not(.mgi-own) .card{box-shadow:none}
+html[data-theme]:not(.mgi-own) .card h2{color:#067451;letter-spacing:.14em}
+html[data-theme=dark]:not(.mgi-own) .card h2{color:#3DD69C}
+html[data-theme]:not(.mgi-own) .kpi{border-radius:14px;border:1px solid var(--line);border-top:0;box-shadow:0 8px 22px rgba(2,53,35,.07);padding:12px 14px;position:relative;overflow:hidden}
+html[data-theme]:not(.mgi-own) .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#11A361,#067451)}
+html[data-theme]:not(.mgi-own) .kpi.warn::before{background:#E6A31B}
+html[data-theme]:not(.mgi-own) .kpi.bad::before{background:#E96A4B}
+html[data-theme]:not(.mgi-own) .kpi b{font-size:21px;font-weight:700;letter-spacing:-.02em}
+html[data-theme]:not(.mgi-own) .btn{border-radius:10px;height:32px;padding:0 14px}
+html[data-theme]:not(.mgi-own) .btn.pri{background:#00392D;border-color:#00392D}
+html[data-theme]:not(.mgi-own) .btn.pri:hover{background:#005540}
+html[data-theme=dark]:not(.mgi-own) .btn.pri{background:#3DD69C;border-color:#3DD69C;color:#04120C}
+html[data-theme]:not(.mgi-own) .seg{border-radius:10px;height:32px}
+html[data-theme]:not(.mgi-own) .seg button.on{background:#067451;color:#fff}
+html[data-theme=dark]:not(.mgi-own) .seg button.on{background:#3DD69C;color:#04120C}
+html[data-theme]:not(.mgi-own) .fld input,html[data-theme]:not(.mgi-own) .fld select,html[data-theme]:not(.mgi-own) .inp{border-radius:8px;height:32px}
+html[data-theme]:not(.mgi-own) .fld input:focus,html[data-theme]:not(.mgi-own) .fld select:focus,html[data-theme]:not(.mgi-own) .inp:focus{outline:2px solid rgba(17,163,97,.35);border-color:#11A361}
+html[data-theme]:not(.mgi-own) .tbl th{background:var(--soft);text-transform:none;letter-spacing:.02em;font-size:11px;font-weight:600;padding:7px 10px}
+html[data-theme]:not(.mgi-own) .tbl td{padding:7px 10px;border-bottom-color:var(--line)}
+html[data-theme]:not(.mgi-own) .tbl tr:hover td{background:var(--soft)}
+html[data-theme]:not(.mgi-own) .chip.ok{background:#E3F6EC;color:#0B6B43}
+html[data-theme]:not(.mgi-own) .chip.info{background:#E7F8F0;color:#005540}
+html[data-theme]:not(.mgi-own) .bar i{background:linear-gradient(90deg,#11A361,#067451)}
+html[data-theme]:not(.mgi-own) .scroll{border-radius:12px}
+html[data-theme]:not(.mgi-own) .note{border-radius:12px}
