@@ -68,6 +68,22 @@ FAM = {"CORPORATE FUNCTIONS": "Corporate functions", "GREENHOUSE OPERATIONS": "G
        "SUPPLY CHAIN AND LOGISTICS": "Supply chain and logistics"}
 # per job: family name and whether the job is paid hourly
 jobs = {k: [FAM.get(r["tw"], r["tw"].title()), 1 if r["hr"] else 0] for k, r in roles.items()}
-out = {"asof": d["asof"], "survey": d["mkt"]["survey"], "jobs": jobs, "people": rows}
+# Each job's survey family and the levels that family has, lowest to highest, for the "by level" view.
+R = json.loads((ROOT / "src/data/survey-lib.json").read_text())["radford"]
+ORDER = ["S1", "S2", "S3", "S4", "P1", "P2", "P3", "M1", "M2", "M3", "M5", "M6", "E1", "E2"]
+LVLNAME = {}
+for nm in R["lvl"]:
+    code = nm[nm.find("(") + 1:nm.find(")")]
+    LVLNAME[code] = nm[:nm.find("(")].strip()
+ladders = {}
+for k, r in roles.items():
+    fam, lvl = r["code"].rsplit(".", 1)
+    rows_ = [j for j in R["jobs"] if j[0].startswith(fam + ".")]
+    if not rows_:
+        continue
+    lv = sorted({j[0].rsplit(".", 1)[1] for j in rows_}, key=ORDER.index)
+    ladders[k] = [fam, R["area"][rows_[0][2]], lvl, lv]
+codes = {r["code"]: k for k, r in roles.items()}
+out = {"asof": d["asof"], "survey": d["mkt"]["survey"], "jobs": jobs, "ladders": ladders, "codes": codes, "levelNames": LVLNAME, "people": rows}
 (ROOT / "src/data/benchmark.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")))
 print(len(rows), "employees")

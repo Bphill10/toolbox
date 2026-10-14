@@ -69,6 +69,8 @@
   .chg .q { border:1px solid var(--line2); border-radius:999px; color:var(--green); padding:7px 12px; }
   table.cmp td:first-child { color:var(--muted); }
   .cost { margin:10px 0 0; font-size:14px; }
+  .est { font-size:10.5px; font-weight:700; color:var(--or); background:var(--tint-o); border-radius:4px; padding:1px 4px; }
+  table.fam .sub { display:inline; font-size:12px; }
   @media (max-width:760px) {
     .kpis { grid-template-columns:1fr; } .two { grid-template-columns:1fr; }
     .who .pay { text-align:left; } .card { padding:16px; }
@@ -228,7 +230,7 @@ function show(p){
       '<div style="overflow-x:auto"><table class="cmp"><thead><tr><th></th><th class="n">Now</th><th class="n">After</th></tr></thead><tbody id="chgRows"></tbody></table></div><p class="cost" id="chgCost"></p></div>' +
     '<div class="card"><h3>Same job, same country</h3><p class="hs">Click a name to benchmark that person.</p><div style="overflow-x:auto"><table><thead><tr><th>Name</th><th class="hide-sm">Site</th><th class="hide-sm">Time with company</th><th class="n">Pay</th><th class="n">Vs market</th></tr></thead><tbody>' +
       rows.map(x => '<tr data-i="' + x.i + '"' + (x === p ? ' class="me"' : '') + ' tabindex="0"><td>' + esc(x.name) + '</td><td class="hide-sm">' + esc(x.site) + '</td><td class="hide-sm">' + esc(x.ten) + '</td><td class="n">' + money(x.pay, x.ccy) + '</td><td class="n">' + pct(x.pay / x.p50 - 1) + '</td></tr>').join('') +
-    '</tbody></table></div>' + (g.length > 8 ? '<button class="more" id="more">' + (SHOWALL ? 'Show fewer' : 'Show all ' + g.length) + '</button>' : '') + '</div>' + familyCard(p);
+    '</tbody></table></div>' + (g.length > 8 ? '<button class="more" id="more">' + (SHOWALL ? 'Show fewer' : 'Show all ' + g.length) + '</button>' : '') + '</div>' + ladderCard(p);
   CUR = p; draw(); chgInit(p, g);
   const m = $('#more'); if (m) m.onclick = () => { SHOWALL = !SHOWALL; show(p); };
   document.querySelectorAll('#out tbody tr[data-i]').forEach(tr => { const go = () => { if (+tr.dataset.i !== p.i) { show(P[+tr.dataset.i]); $('#out').scrollIntoView({ behavior:'smooth', block:'start' }); } }; tr.onclick = go; tr.onkeydown = e => { if (e.key === 'Enter') go(); }; });
@@ -250,13 +252,25 @@ function chgInit(p, g){
   run();
 }
 
-// ---------- pay ranges for the job family ----------
-function familyCard(p){
-  const fam = FAMILY(p.k), c = p.ccy;
-  const jobs = Object.keys(groups).filter(k => k.endsWith('|' + p.ctry) && FAMILY(k.split('|')[0]) === fam).map(k => { const g = groups[k], x = g[0]; return { k, x, n:g.length, avg:g.reduce((a, y) => a + y.pay, 0) / g.length }; }).sort((a, b) => a.x.mid - b.x.mid);
-  return '<div class="card"><h3>Pay ranges: ' + esc(fam.toLowerCase()) + ', ' + CTRY[p.ctry] + '</h3><p class="hs">Every job in this family. Click a job to see someone in it.</p><div style="overflow-x:auto"><table class="fam"><thead><tr><th>Job</th><th class="hide-sm">Grade</th><th class="n">Range</th><th class="n hide-sm">Midpoint</th><th class="n">People</th><th class="n" title="Average pay against the range midpoint">Avg position</th></tr></thead><tbody>' +
-    jobs.map(j => '<tr data-job="' + j.k + '"' + (j.x.k === p.k ? ' class="me"' : '') + ' tabindex="0"><td>' + esc(j.x.title) + '</td><td class="hide-sm">' + esc(j.x.grade) + '</td><td class="n">' + short(j.x.min, c) + '&ndash;' + short(j.x.max, c) + '</td><td class="n hide-sm">' + money(j.x.mid, c) + '</td><td class="n">' + j.n + '</td><td class="n">' + (j.avg / j.x.mid).toFixed(2) + '</td></tr>').join('') +
-    '</tbody></table></div><p class="note">Ranges are built around the market median for each job. Position 1.00 means average pay sits at the midpoint.</p></div>';
+// ---------- this job, level by level ----------
+// Levels the survey has for this job, lowest to highest. Where the company has people at a level, the market and range
+// are that level's own; elsewhere the midpoint is estimated from this job's market with a typical step between levels.
+const STEP = { S:1.12, P:1.22, M:1.25, E:1.35 };
+const lvNum = l => +l.slice(1);
+function ladderCard(p){
+  const L = BM.ladders[p.k]; if (!L) return '';
+  const [fam, name, at, levels] = L, c = p.ccy;
+  const rows = levels.map(l => {
+    const k = BM.codes[fam + '.' + l], g = k && groups[k + '|' + p.ctry];
+    if (g) { const x = g[0], pays = g.map(y => y.pay); return { l, k, real:true, mid:x.mid, min:x.min, max:x.max, n:g.length, lo:Math.min(...pays), avg:pays.reduce((a, b) => a + b, 0) / g.length, hi:Math.max(...pays) }; }
+    const f = Math.pow(STEP[l[0]] || 1.15, lvNum(l) - lvNum(at)), mid = p.mid * f;
+    return { l, real:false, mid, min:mid * p.min / p.mid, max:mid * p.max / p.mid, n:0 };
+  });
+  const est = rows.some(r => !r.real);
+  return '<div class="card"><h3>' + esc(name) + ' by level, ' + CTRY[p.ctry] + '</h3><p class="hs">Lowest to highest level. Internal pay is shown where the level has people; click a level to see someone in it.</p><div style="overflow-x:auto"><table class="fam"><thead><tr><th>Level</th><th class="n">Market midpoint</th><th class="n hide-sm">Range</th><th class="n">People</th><th class="n hide-sm">Internal min</th><th class="n">Internal avg</th><th class="n hide-sm">Internal max</th><th class="n" title="Average pay against the range midpoint">Avg position</th></tr></thead><tbody>' +
+    rows.map(r => '<tr' + (r.n ? ' data-job="' + r.k + '|' + p.ctry + '" tabindex="0"' : '') + (r.l === at ? ' class="me"' : '') + '><td>' + r.l + ' <span class="sub">' + esc(BM.levelNames[r.l] || '') + '</span></td><td class="n">' + money(r.mid, c) + (r.real ? '' : ' <span class="est">est.</span>') + '</td><td class="n hide-sm">' + short(r.min, c) + '&ndash;' + short(r.max, c) + '</td><td class="n">' + (r.n || '&mdash;') + '</td>' +
+      (r.n ? '<td class="n hide-sm">' + money(r.lo, c) + '</td><td class="n">' + money(r.avg, c) + '</td><td class="n hide-sm">' + money(r.hi, c) + '</td><td class="n">' + (r.avg / r.mid).toFixed(2) + '</td>' : '<td class="n hide-sm">&mdash;</td><td class="n">&mdash;</td><td class="n hide-sm">&mdash;</td><td class="n">&mdash;</td>') + '</tr>').join('') +
+    '</tbody></table></div><p class="note">Position 1.00 means average pay sits at the range midpoint.' + (est ? ' <span class="est">est.</span> marks a level with no one at the company yet; its midpoint is estimated from this job&rsquo;s market and the usual step between levels.' : '') + '</p></div>';
 }
 document.addEventListener('click', e => { const tr = e.target.closest('tr[data-job]'); if (!tr) return; const g = groups[tr.dataset.job], m = median(g.map(x => x.pay)); const pick = g.reduce((a, x) => Math.abs(x.pay - m) < Math.abs(a.pay - m) ? x : a, g[0]); if (pick !== CUR) { SHOWALL = false; show(pick); $('#out').scrollIntoView({ behavior:'smooth', block:'start' }); } });
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches && e.target.matches('tr[data-job]')) e.target.click(); });
