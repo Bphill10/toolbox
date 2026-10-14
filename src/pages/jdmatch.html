@@ -22,6 +22,16 @@
   .drop.over { background:var(--hisoft); border-color:var(--accent); }
   .drop h2 { font:600 19px Inter, "Segoe UI", Arial, sans-serif; margin:0 0 6px; }
   .drop p { margin:0 0 14px; color:var(--muted); }
+  .cleanup { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:0 0 16px; scroll-margin-top:70px; }
+  .cu-h { display:flex; flex-wrap:wrap; gap:8px; justify-content:space-between; align-items:center; }
+  .cu-h h2 { font:600 18px Inter, "Segoe UI", Arial, sans-serif; margin:0; }
+  .cu-k { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; margin:12px 0 6px; }
+  .cu-k b { display:block; font:700 24px/1.1 Inter, "Segoe UI", Arial, sans-serif; color:var(--ink); }
+  .cu-k span { font-size:12.5px; color:var(--muted); display:block; max-width:170px; }
+  .cu-k .ar { font-size:20px; color:var(--accent); }
+  .cu-k .sep { width:1px; align-self:stretch; background:var(--line); }
+  .cu-n { font-size:12.5px; color:var(--muted); margin:6px 0 10px; }
+  .cu-t { overflow-x:auto; } .cu-t td.ex { font-size:12.5px; color:var(--muted); }
   .est { font-size:10px; font-weight:700; color:var(--or, #9A7A2E); background:var(--tint-o); border-radius:4px; padding:1px 4px; }
   .drop textarea { display:block; width:100%; max-width:460px; margin:14px auto 8px; box-sizing:border-box; font:inherit; font-size:14px; padding:10px 12px; border:1px solid var(--line, #cfe3d8); border-radius:10px; background:var(--bg, #fff); color:inherit; resize:vertical; }
   .btns { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
@@ -164,6 +174,7 @@
   <div class="btns">
     <label class="btn primary">Upload files<input id="pickFiles" type="file" multiple accept=".docx,.pdf,.txt,.md,.html,.htm,.xlsx,.xls,.csv,.zip" hidden></label>
     <button id="samples">Try a sample</button>
+    <button id="messy">Clean up a messy HR job list</button>
   </div>
   <textarea id="paste" rows="3" placeholder="Or paste job titles, one per line" aria-label="Paste job titles, one per line"></textarea>
   <div class="btns"><button id="pasteGo" hidden>Match these titles</button></div>
@@ -171,6 +182,7 @@
   <div class="busy" id="busy"></div>
 </div>
 
+<div class="cleanup" id="cleanup" hidden></div>
 <div class="kring" id="kpis"></div>
 
 <div class="filters" id="flt">
@@ -196,6 +208,7 @@
 const LIB = {{include:data/survey-lib.json}};
 const LITE = {{include:data/shared-lite.json}};
 const WF = {{include:data/workforce.json}};
+const MESSY = {{include:data/messy-titles.json}};
 </script>
 <script>
 (function(){
@@ -574,12 +587,106 @@ async function readList(file){
   const head = rows[0].map(h => h.toLowerCase());
   let ti = head.findIndex(h => /title|job|position|role/.test(h) && !/code|id|family|level|grade|desc/.test(h));
   const di = head.findIndex(h => /desc|summary|duties|responsib/.test(h));
+  const col = re => head.findIndex(h => re.test(h));
+  const ni = col(/employee|headcount|incumbent|^#|people|^count$/), li = col(/level|grade|band/), ci = col(/country/), ki = col(/code/), dpi = col(/dept|department/);
   const hasHead = ti >= 0;
   if (!hasHead) ti = 0;
-  return rows.slice(hasHead ? 1 : 0).filter(r => r[ti]).map(r => [r[ti], di >= 0 ? r[di] : '']);
+  return rows.slice(hasHead ? 1 : 0).filter(r => r[ti]).map(r => Object.assign([r[ti], di >= 0 ? r[di] : ''], { n: ni >= 0 ? parseInt(r[ni], 10) || 1 : 1, lvl: li >= 0 ? r[li] : '', ctry: ci >= 0 ? r[ci] : '', code: ki >= 0 ? r[ki] : '', dept: dpi >= 0 ? r[dpi] : '' }));
 }
 function addTitles(list, src){
-  list.forEach(([t, d]) => { const k = src + '/' + t; if (!RESULTS.some(r => r.file === k)) RESULTS.push(match(k, t + (d ? '\n\n' + d : ''))); });
+  // titles are tidied and checked against the company's own jobs first, as in the HR list clean-up
+  list.forEach(([t, d]) => { const k = src + '/' + t; if (RESULTS.some(r => r.file === k)) return; const ct = cleanTitle(t), r = match(k, ct + (d ? '\n\n' + d : '')), cat = catalogue(ct, '');
+    if (cat) { r.fam = famByCode[cat.fam]; r.lvl = cat.code.split('.').pop(); r.code = cat.code; r.conf = 'High'; r.overall = 95; r.cat = cat; }
+    RESULTS.push(r); });
+}
+// ---------- clean-up of messy HR titles ----------
+// Strip what is not the job (codes, sites, shifts), spell out abbreviations, translate Spanish titles
+// and write levels one way, then match the clean title.
+const ABBR = [[/\bsnr\.?|\bsr\.?(?=\s|$)/g, 'senior'], [/\bsupv\.?|\bsup\.(?=\s|$)/g, 'supervisor'], [/\bmgr\.?(?=\s|$)/g, 'manager'], [/\btechn?\.?(?=\s|$)/g, 'technician'],
+  [/\bmaint\.?(?=\s|$)/g, 'maintenance'], [/\bdir\.?(?=\s|$)/g, 'director'], [/\brep\.?(?=\s|$)/g, 'representative'], [/\basst\.?(?=\s|$)/g, 'assistant'], [/\bco-?ord(inator)?\b/g, 'coordinator'],
+  [/\banlst\b/g, 'analyst'], [/\bwkr\b/g, 'worker'], [/\bops\b|\boper\.(?=\s|$)/g, 'operations'], [/\bv\.p\.|\bvp\b/g, 'vice president'], [/\bqlty\b|\bqa\b/g, 'quality']];
+const ES_T = [[/trabajador de cultivo/, 'crop care worker'], [/empacador/, 'packer'], [/seleccionador/, 'production grader'], [/ayudante general/, 'production associate'], [/montacarguista/, 'hi-lo driver'],
+  [/\bchofer\b/, 'delivery driver'], [/supervisor de cultivo/, 'crop care supervisor'], [/supervisor de almacen/, 'warehouse supervisor'], [/gerente de almacen/, 'warehouse manager'], [/gerente de invernadero/, 'greenhouse manager'],
+  [/agronomo asistente/, 'assistant grower'], [/\bagronomo\b/, 'grower'], [/tecnico de calidad/, 'quality technician'], [/tecnico de sanidad/, 'sanitation technician'], [/tecnico de mantenimiento/, 'maintenance technician'],
+  [/generalista de rh/, 'hr generalist'], [/coordinador de inocuidad/, 'food safety coordinator']];
+const NOISE = /\s*[-(]\s*(nights?|days|seasonal|pt|temp|weekend|we+ke?nd)\)?\s*$/;
+const SITEW = new Set(['coldwater','oneida','morehead','richmond','laredo','utah','kingsville','leamington','surrey','wheatley','sinaloa','jalisco','culiacan','dc']);
+// Typos are fixed against the words the company's own job titles use (English and Spanish).
+const VOCAB = [...new Set(LITE.roles.map(r => r.t).concat(ES_T.map(x => x[0].source.replace(/\\b/g, ''))).join(' ').toLowerCase().split(/[^a-z-]+/).filter(w => w.length > 3)
+  .concat([...SITEW].filter(w => w.length > 3), ['night', 'nights', 'days', 'seasonal', 'temp', 'weekend']))];
+function dist(a, b){   // Damerau-Levenshtein, small strings only
+  const d = Array.from({ length:a.length + 1 }, (_, i) => [i].concat(Array(b.length).fill(0))); for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) { d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1)); if (i > 1 && j > 1 && a[i-1] === b[j-2] && a[i-2] === b[j-1]) d[i][j] = Math.min(d[i][j], d[i-2][j-2] + 1); }
+  return d[a.length][b.length];
+}
+function spell(w){
+  if (w.length < 4 || VOCAB.includes(w)) return w;
+  let best = w, bd = w.length >= 8 ? 2 : 1;
+  for (const v of VOCAB) { if (Math.abs(v.length - w.length) > bd) continue; const x = dist(w, v); if (x < bd || (x === bd && best === w)) { best = v; bd = x; } }
+  return best;
+}
+function cleanTitle(raw){
+  let t = ' ' + raw.toLowerCase().replace(/[–—]/g, '-') + ' ';
+  t = t.replace(/^\s*[a-z]{2,4}\d?-\d+\s+/, ' ');
+  t = t.replace(/co-ordinator/g, 'coordinator').replace(/[a-z]{4,}/g, spell);
+  for (let i = 0; i < 3; i++) t = t.replace(NOISE, ' ').trim();
+  t = t.split(/\s+-\s+/).filter(part => !part.split(/\s+/).every(w => SITEW.has(w))).join(' - ');
+  for (let i = 0; i < 2; i++) t = t.replace(NOISE, ' ').trim();
+  ES_T.forEach(([re, en]) => { t = t.replace(re, en); });
+  ABBR.forEach(([re, en]) => { t = t.replace(re, en); });
+  t = t.replace(/\s*(\(i\)|-1|\blvl\s*1|\s1)$/, ' i').replace(/\s*(\(ii\)|-2|\blvl\s*2|\s2)$/, ' ii');
+  t = t.replace(/\s+/g, ' ').trim();
+  return t.replace(/\b([a-z])/g, c => c.toUpperCase()).replace(/\bIi\b/g, 'II').replace(/\bI\b/g, 'I').replace(/\bHr\b/g, 'HR').replace(/\bIt\b/g, 'IT').replace(/\bErp\b/g, 'ERP').replace(/\bHi-lo\b/g, 'Hi-Lo').replace(/\bVp\b/g, 'VP').replace(/\bIpm\b/g, 'IPM');
+}
+// The company's own job catalogue first: a tidied title that names one of its jobs takes that job and level.
+// A title without a numeral ("Crop Care Worker") takes the level the HR system wrote down, when it has one.
+const CAT = LITE.roles.map(r => ({ r, key: r.t.toLowerCase().replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim() }));
+function catalogue(ct, lvlRaw){
+  const k = ct.toLowerCase().replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim();
+  const exact = CAT.find(c => c.key === k); if (exact) return exact.r;
+  const num = (String(lvlRaw).match(/\d+/) || [])[0];
+  const fam = CAT.filter(c => c.key.replace(/ i+$/, '') === k);
+  if (!fam.length) return null;
+  return (num && fam.find(c => c.r.code.endsWith(num))) || fam.sort((a, b) => a.key.length - b.key.length)[0].r;
+}
+let CLEAN = null;
+function runCleanup(rows, src){
+  const t0 = performance.now();
+  RESULTS = RESULTS.filter(r => !r.raw);
+  (rows || MESSY.rows).forEach(([code, raw, dept, ctry, lvl, n, truth]) => {
+    const ct = cleanTitle(raw), r = match('HR list/' + raw, ct), cat = catalogue(ct, lvl);
+    if (cat) { const cl = cat.code.split('.').pop(); r.fam = famByCode[cat.fam]; r.lvl = cl; r.code = cat.code; r.conf = 'High'; r.overall = 95; r.cat = cat; }
+    r.raw = raw; r.clean = ct; r.n = n || 1; r.truth = truth; r.ctry = ctry; r.dept = dept; r.lvlRaw = lvl; r.codeRaw = code;
+    RESULTS.push(r);
+  });
+  const rs = RESULTS.filter(r => r.raw), emp = rs.reduce((a, r) => a + r.n, 0);
+  const known = rs.every(r => r.truth), right = rs.filter(r => r.code === r.truth), famRight = known ? rs.filter(r => r.code.split('.').slice(0, 2).join('.') === r.truth.split('.').slice(0, 2).join('.')) : [];
+  const empRight = right.reduce((a, r) => a + r.n, 0), review = rs.filter(r => r.conf === 'Low' || (known && r.code !== r.truth));
+  const by = {}; rs.forEach(r => { const g = by[r.code] = by[r.code] || { code:r.code, r, titles:[], n:0, cleans:new Set() }; g.titles.push(r.raw); g.n += r.n; g.cleans.add(r.clean); });
+  const clean = Object.values(by).sort((a, b) => b.n - a.n);
+  CLEAN = { src: src || 'Demo HR job list', known, rs, emp, right, famRight, empRight, review, clean, ms: Math.round(performance.now() - t0), uniqClean: new Set(rs.map(r => r.clean.toLowerCase())).size };
+  showCleanup();
+  $('#fLvl').value = 'file'; PAGE = 0; render();
+}
+function showCleanup(){
+  const c = CLEAN, el = $('#cleanup'); if (!c) { el.hidden = true; return; }
+  const pct = (a, b) => Math.round(100 * a / b) + '%';
+  el.hidden = false;
+  el.innerHTML = '<div class="cu-h"><h2>Clean-up of ' + esc(c.src) + '</h2><button type="button" id="cuCsv">Download the clean list</button></div>' +
+    '<div class="cu-k"><div><b>' + c.rs.length.toLocaleString() + '</b><span>job titles in the HR system</span></div><div class="ar" aria-hidden="true">&rarr;</div>' +
+    '<div><b>' + c.uniqClean.toLocaleString() + '</b><span>after tidying the wording</span></div><div class="ar" aria-hidden="true">&rarr;</div>' +
+    '<div><b>' + c.clean.length + '</b><span>clean jobs matched to the survey</span></div>' +
+    '<div class="sep"></div>' + (c.known ? '<div><b>' + pct(c.empRight, c.emp) + '</b><span>of ' + c.emp.toLocaleString() + ' employees placed in the right job and level</span></div>' : '<div><b>' + c.emp.toLocaleString() + '</b><span>employees covered</span></div>') +
+    '<div><b>' + c.review.length + '</b><span>titles flagged for a person to check</span></div></div>' +
+    '<p class="cu-n">Titles are tidied first (codes, sites and shifts removed, abbreviations spelled out, Spanish titles translated, levels written one way), then matched to the company&rsquo;s own jobs first and the salary survey second.' + (c.known ? ' The demo knows the right answer for every title, so the accuracy above is measured, not claimed.' : ' Check the flagged titles before using the result.') + '</p>' +
+    '<div class="cu-t"><table><thead><tr><th>Clean job</th><th class="n">Titles merged</th><th class="n">Employees</th><th>Examples from the HR system</th></tr></thead><tbody>' +
+    c.clean.slice(0, 8).map(g => '<tr><td><b>' + esc(g.r.cat ? g.r.cat.t : g.r.fam.area + ' ' + g.r.lvl) + '</b><span class="sub">' + esc(saCode(g.r.fam, g.r.lvl)) + '</span></td><td class="n">' + g.titles.length + '</td><td class="n">' + g.n.toLocaleString() + '</td><td class="ex">' + g.titles.slice(0, 4).map(esc).join(' &middot; ') + (g.titles.length > 4 ? ' &middot; &hellip;' : '') + '</td></tr>').join('') +
+    '</tbody></table></div>';
+  $('#cuCsv').onclick = () => {
+    const q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+    const rows = [['Job code','HR title','Department','Country','Level as written','Employees','Clean title','Survey job','Survey code','Level','Confidence','US market P50']].concat(c.rs.map(r => { const m = mktOf(r); return [r.codeRaw, r.raw, r.dept, r.ctry, r.lvlRaw, r.n, r.clean, r.fam.area, saCode(r.fam, r.lvl), r.lvl, r.conf, m ? Math.round(m.mid) : '']; }));
+    dl(new Blob([rows.map(r => r.map(q).join(',')).join('\n')], {type:'text/csv'}), 'hr-job-list-cleaned.csv');
+  };
 }
 async function handle(files){
   files = files.filter(f => !f.name.startsWith('~$'));
@@ -593,7 +700,7 @@ async function handle(files){
   let done = 0, failed = [];
   for (const f of lists) {
     $('#busy').textContent = 'Reading job list: ' + f.name;
-    try { const l = await readList(f); if (l.length) addTitles(l, f.name); else failed.push(f.name + ' (no job titles found)'); }
+    try { const l = await readList(f); if (l.length >= 40) runCleanup(l.map(x => [x.code, x[0], x.dept, x.ctry, x.lvl, x.n, null]), f.name); else if (l.length) addTitles(l, f.name); else failed.push(f.name + ' (no job titles found)'); }
     catch (e) { failed.push(f.name + ' (' + e.message + ')'); }
   }
   for (const f of files) {
@@ -630,8 +737,9 @@ const SAMPLES = [
   ['Greenhouse_Crop_Supervisor.pdf.txt', 'Position: Crop Care Supervisor\n\nSupervise a crew of 25 crop care workers on the night shift. Schedule work, coach and train new hires, track harvest and pruning productivity, and enforce food safety and safety rules. Work with the head grower on the crop plan and scouting for pests and disease.\n\n2 to 3 years of experience in greenhouse operations, including time as a lead hand.'],
   ['Forklift_Operator.txt', 'Hi-Lo Driver (forklift)\nMove pallets of packed produce between the packing line, cold storage and shipping. Load and unload trucks, keep inventory counts accurate and complete daily equipment checks. Hourly, rotating shifts. Forklift certification required. 1 year of experience preferred.'],
 ];
-window.__jd = { match, nextStep };
+window.__jd = { match, nextStep, cleanTitle, clean: () => CLEAN };
 
+$('#messy').onclick = () => { $('#busy').textContent = 'Cleaning ' + MESSY.rows.length + ' titles...'; setTimeout(() => { runCleanup(); $('#busy').textContent = ''; $('#cleanup').scrollIntoView({ behavior:'smooth', block:'start' }); }, 30); };
 $('#samples').onclick = () => { SAMPLES.forEach(([n, t]) => { if (!RESULTS.some(r => r.file === 'sample/' + n)) RESULTS.push(match('sample/' + n, t)); }); addTitles([['Payroll Specialist', ''], ['Head Grower', ''], ['Food Safety Manager', ''], ['HR Business Partner', '']], 'sample job list'); $('#fLvl').value = 'file'; PAGE = 0; render(); };
 // Every company job, matched from its own description, so the table is full on arrival.
 LITE.roles.forEach(role => { const j = WFJ[role.k]; if (!j) return; const g = GRADES[role.g], t = role.t + '\n\n' + role.sum + '\n\nSkills: ' + (Array.isArray(role.skl) ? role.skl.join(', ') : role.skl) + (g && g.fw ? '\n\nQualifications: ' + g.fw.typ : ''); const r = match('company/' + role.k, t); r.role = role; r.job = j; r.title = role.t; RESULTS.push(r); });
