@@ -22,6 +22,7 @@
   .drop.over { background:var(--hisoft); border-color:var(--accent); }
   .drop h2 { font:600 19px Inter, "Segoe UI", Arial, sans-serif; margin:0 0 6px; }
   .drop p { margin:0 0 14px; color:var(--muted); }
+  .est { font-size:10px; font-weight:700; color:var(--or, #9A7A2E); background:var(--tint-o); border-radius:4px; padding:1px 4px; }
   .drop textarea { display:block; width:100%; max-width:460px; margin:14px auto 8px; box-sizing:border-box; font:inherit; font-size:14px; padding:10px 12px; border:1px solid var(--line, #cfe3d8); border-radius:10px; background:var(--bg, #fff); color:inherit; resize:vertical; }
   .btns { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
   button, .btn { font:600 13.5px Inter, "Segoe UI", Arial, sans-serif; border-radius:8px; padding:9px 14px; cursor:pointer; border:1px solid var(--green); background:var(--card); color:var(--green); }
@@ -159,9 +160,9 @@
 
 <div class="drop" id="drop" hidden>
   <h2>Add your jobs</h2>
-  <p>Job descriptions (Word, PDF) or a list of job titles (Excel, CSV). Or paste titles below.</p>
+  <p>Many files at once, or a zipped folder: job descriptions (Word, PDF) or a list of job titles (Excel, CSV). Each one is matched and priced against the market. Or paste titles below.</p>
   <div class="btns">
-    <label class="btn primary">Upload files<input id="pickFiles" type="file" multiple accept=".docx,.pdf,.txt,.md,.html,.htm,.xlsx,.xls,.csv" hidden></label>
+    <label class="btn primary">Upload files<input id="pickFiles" type="file" multiple accept=".docx,.pdf,.txt,.md,.html,.htm,.xlsx,.xls,.csv,.zip" hidden></label>
     <button id="samples">Try a sample</button>
   </div>
   <textarea id="paste" rows="3" placeholder="Or paste job titles, one per line" aria-label="Paste job titles, one per line"></textarea>
@@ -299,7 +300,10 @@ function match(file, raw){
   // A title with little or no description: weigh the title's own words against each survey job title.
   const bare = toks(text).length < 25;
   const tlow = title.toLowerCase(), extra = SYN.filter(x => x[0].test(tlow)).map(x => x[1]).join(' ');
-  const tWords = [...new Set(toks(SYN.reduce((t, x) => t.replace(x[0], ' '), tlow) + ' ' + extra))].filter(w => !LEVEL_WORDS.has(w));
+  // the title's own words count double; synonym words only help
+  const own = [...new Set(toks(SYN.reduce((t, x) => t.replace(x[0], ' '), tlow)))].filter(w => !LEVEL_WORDS.has(w));
+  const syn = [...new Set(toks(extra))].filter(w => !LEVEL_WORDS.has(w) && !own.includes(w));
+  const tWords = own.concat(syn), tW = w => own.includes(w) ? 2 : 1, tTot = tWords.reduce((a, w) => a + tW(w), 0);
   const low = title.toLowerCase();
   // level signals
   const sig = []; let tSen = null, tTrack = null;
@@ -333,7 +337,7 @@ function match(file, raw){
     else if (track === 'E' && f.track === 'M' && f.levels.includes('M6')) s *= 1.1;
     else if ((track === 'M' && f.track === 'P') || (track === 'P' && f.track === 'M')) s *= .85;
     else s *= .7;
-    if (bare && tWords.length) { const fi = fams.indexOf(f), hit = tWords.filter(w => famTitleToks[fi].has(w)).length / tWords.length; s = s * .5 + hit * .45; }
+    if (bare && tWords.length) { const fi = fams.indexOf(f), hit = tWords.filter(w => famTitleToks[fi].has(w)).reduce((a, w) => a + tW(w), 0) / tTot; s = s * .5 + hit * .45; }
     return { f, s };
   }).sort((a,b) => b.s - a.s);
   const top = scored[0], second = scored[1];
@@ -411,10 +415,33 @@ const fmtK = v => '$' + Math.round(v / 1000) + 'K';
 let PER = 10, PAGE = 0, SORT = { k:'hc', d:-1 }; const PICK = new Set();
 function syncCk(){ const cs = [...document.querySelectorAll('#rows [data-ck]')]; const n = cs.filter(c => c.checked).length; $('#ckAll').checked = cs.length > 0 && n === cs.length; $('#ckAll').indeterminate = n > 0 && n < cs.length; const vis = view().filter(x => PICK.has(x.i)).length; $('#csv').lastChild.textContent = vis ? 'Export ' + vis + ' selected' : 'Export'; }
 const famName = t => t ? t.charAt(0) + t.slice(1).toLowerCase() : '';
+// US market median for a matched survey job and level. The company's own job at that code when there is one;
+// otherwise estimated from the nearest company job in the same survey family with a typical step between levels.
+const STEP = { S:1.12, P:1.22, M:1.25, E:1.35 };
+function mktOf(r){
+  const own = LITE.roles.find(x => x.code === r.code);
+  if (own) return { mid: own.mc.USA || own.mid, est: false };
+  const fr = LITE.roles.filter(x => x.fam === r.fam.code && x.code.split('.').pop()[0] === r.lvl[0]);
+  const base = fr[0] || LITE.roles.find(x => x.fam === r.fam.code); if (!base) return null;
+  const bl = base.code.split('.').pop();
+  const steps = bl[0] === r.lvl[0] ? (+r.lvl.slice(1)) - (+bl.slice(1)) : SEN[r.lvl] - SEN[bl];
+  return { mid: (base.mc.USA || base.mid) * Math.pow(STEP[r.lvl[0]] || 1.15, steps), est: true };
+}
+// Keyword search: each word must start a word in the job's text, or one of its everyday synonyms must
+// (so "payroll", "forklift" or "tomato" still find the right jobs, and "IT" does not match "quality").
+const KW_SYN = { payroll:'accountant accounts finance', accounting:'accountant accounts finance', accountant:'accounts finance', bookkeeper:'accounts accountant', forklift:'hi-lo', lift:'hi-lo', truck:'driver', shipping:'warehouse driver logistics', receiving:'warehouse', inventory:'warehouse logistics', tomato:'grower crop greenhouse', tomatoes:'grower crop greenhouse', pepper:'grower crop greenhouse', cucumber:'grower crop greenhouse', strawberry:'grower crop greenhouse', produce:'grower crop packer', farm:'grower crop greenhouse', picker:'crop', harvest:'crop', hr:'hr human compensation recruiter people', people:'hr human people', talent:'recruiter', hiring:'recruiter', pay:'compensation', comp:'compensation', it:'it erp', tech:'technician it', computer:'it', software:'erp it', packing:'packer production grader', production:'production packer grader', food:'food quality', qa:'quality', sales:'sales account commercial', buyer:'procurement', purchasing:'procurement', supply:'supply logistics procurement', mechanic:'maintenance technician', electrician:'maintenance', engineer:'engineering', ceo:'chief executive', cfo:'chief financial', coo:'chief operating', chro:'chief human', boss:'chief vp director manager', leader:'chief vp director manager', executive:'chief vp executive', lead:'lead supervisor', clean:'sanitation', cleaning:'sanitation', climate:'climate', customer:'customer' };
+function kwMatch(text, query){
+  const words = query.toLowerCase().split(/[^a-z0-9-]+/).filter(Boolean);
+  if (!words.length) return true;
+  const has = w => new RegExp('(^|[^a-z])' + w.replace(/[-]/g, '\\-')).test(text);
+  text = text.toLowerCase();
+  return words.every(w => has(w) || (KW_SYN[w] || '').split(' ').some(s => s && has(s)));
+}
+
 function view(){
   const q = $('#q').value.trim().toLowerCase(), ff = $('#fFam').value, fl = $('#fLvl').value, fc = $('#fConf').value;
   return RESULTS.map((r, i) => ({ r, i })).filter(({ r }) => {
-    if (q && !(r.title + ' ' + r.fam.area + ' ' + saCode(r.fam, r.lvl)).toLowerCase().includes(q)) return false;
+    if (q && !kwMatch(r.title + ' ' + r.fam.area + ' ' + r.fam.fn + ' ' + saCode(r.fam, r.lvl) + ' ' + (r.job ? r.job.tw : ''), q)) return false;
     if (ff && (!r.job || r.job.tw !== ff)) return false;
     if (fl === 'file' ? r.job : (fl && (!r.job || r.job.cat !== fl))) return false;
     if (fc === 'diff' ? !(r.role && r.role.code !== r.code) : (fc && r.conf !== fc)) return false;
@@ -438,14 +465,16 @@ function render(){
     + '<button type="button" class="kr'+($('#fConf').value==='diff'?' on':'')+'" data-c="diff" aria-pressed="'+($('#fConf').value==='diff')+'">'+ring(100*diff/n, '#8FA39A')+'<div><b>'+diff+'</b><span>Differ from mapping</span><small>one level off; worth a look</small></div></button>';
   $('#kpis').querySelectorAll('[data-c]').forEach(el => el.onclick = () => { $('#fConf').value = $('#fConf').value === el.dataset.c ? '' : el.dataset.c; PAGE = 0; render(); });
   const v = view(), pages = Math.max(1, Math.ceil(v.length / PER)); if (PAGE >= pages) PAGE = pages - 1;
-  const pg = v.slice(PAGE * PER, PAGE * PER + PER).filter(x => x.r.job).map(x => x.r.job);   // scale to the jobs on this page
+  const pg = v.slice(PAGE * PER, PAGE * PER + PER).map(x => x.r.job || ((m => m && { mid: m.mid, ratio: 1 })(mktOf(x.r)))).filter(Boolean);   // scale to the jobs on this page
   const lo = pg.length ? Math.min(...pg.map(j => j.mid * Math.min(.8, (j.ratio || 1) - .04))) * .97 : 1, hi = pg.length ? Math.max(...pg.map(j => j.mid * Math.max(1.2, (j.ratio || 1) + .04))) * 1.03 : 2;
   const pos = x => Math.max(0, Math.min(100, 100 * (Math.log(x) - Math.log(lo)) / (Math.log(hi) - Math.log(lo))));
   $('#rows').innerHTML = v.slice(PAGE * PER, PAGE * PER + PER).map(({ r, i }) => {
     const j = r.job, agree = r.role ? r.role.code === r.code : null, small = j && j.hc < 5;
-    const rng = j ? '<div class="rg"><div class="rgb"><i style="left:'+pos(j.mid*.8).toFixed(1)+'%;width:'+(pos(j.mid*1.2)-pos(j.mid*.8)).toFixed(1)+'%"></i>'+(small ? '' : '<b style="left:'+pos(j.mid*(j.ratio||1)).toFixed(1)+'%"></b>')+'</div><span>'+fmtK(j.mid*.8)+' – '+fmtK(j.mid*1.2)+'</span></div>' : '<span class="sub">added file</span>';
+    const mk = j ? null : mktOf(r), est = mk && mk.est ? ' <span class="est" title="Estimated from the same survey job at another level">est.</span>' : '';
+    const rng = j ? '<div class="rg"><div class="rgb"><i style="left:'+pos(j.mid*.8).toFixed(1)+'%;width:'+(pos(j.mid*1.2)-pos(j.mid*.8)).toFixed(1)+'%"></i>'+(small ? '' : '<b style="left:'+pos(j.mid*(j.ratio||1)).toFixed(1)+'%"></b>')+'</div><span>'+fmtK(j.mid*.8)+' – '+fmtK(j.mid*1.2)+'</span></div>'
+      : mk ? '<div class="rg"><div class="rgb"><i style="left:'+pos(mk.mid*.8).toFixed(1)+'%;width:'+(pos(mk.mid*1.2)-pos(mk.mid*.8)).toFixed(1)+'%"></i></div><span>'+fmtK(mk.mid*.8)+' – '+fmtK(mk.mid*1.2)+'</span></div>' : '<span class="sub">no market data</span>';
     return '<tr data-i="'+i+'" class="'+(i===SEL?'sel':'')+'"><td class="ck"><input type="checkbox" data-ck="'+i+'"'+(PICK.has(i)?' checked':'')+' aria-label="Select '+esc(r.title)+'"></td><td><b>'+esc(r.title)+'</b><span class="sub">'+(j ? esc(famName(j.tw)) + ' · ' + j.g : esc(r.file))+'</span></td>'
-      + '<td class="n">'+(j ? j.hc.toLocaleString() : '—')+'</td><td>'+rng+'</td><td class="n">'+(j ? '$' + Math.round(j.mid).toLocaleString() : '—')+'</td>'
+      + '<td class="n">'+(j ? j.hc.toLocaleString() : '—')+'</td><td>'+rng+'</td><td class="n">'+(j ? '$' + Math.round(j.mid).toLocaleString() : mk ? '$' + Math.round(mk.mid).toLocaleString() + est : '—')+'</td>'
       + '<td class="n '+(j && !small && j.ratio < .97 ? 'cr-lo' : '')+'">'+(small ? '<span class="sub" title="Pay is not shown for fewer than 5 people">n&lt;5</span>' : j && j.ratio ? j.ratio.toFixed(2) : '—')+'</td>'
       + '<td><span class="sm">'+esc(r.fam.area)+' · '+r.lvl+'</span><span class="sub">'+saCode(r.fam, r.lvl)+(agree === null ? '' : agree ? ' · <span class="ok">✓ agrees</span>' : ' · <span class="df">≠ current</span>')+'</span></td>'
       + '<td class="n mt">'+Math.round(100*r.lvlScore)+'%</td>'
@@ -501,7 +530,7 @@ function renderDetail(){
 function dl(blob, name){ const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); }
 $('#csv').onclick = () => {
   const q = s => '"' + String(s).replace(/"/g,'""') + '"';
-  const rows = [['File','Title','Survey job','Survey A code','Survey B code','Level','Company grade','Family fit','Level fit','Overall confidence','Score','Next step']].concat((() => { const v = view(); const p = v.filter(x => PICK.has(x.i)); return (p.length ? p : v).map(x => x.r); })().map(r => { const n = nextStep(r); return [r.file, r.title, r.fam.area, saCode(r.fam, r.lvl), r.fam.sb, LVL_NAME[r.lvl]||r.lvl, GRADE_OF[r.lvl], r.famConf, r.lvlConf, r.conf, r.overall, n ? n.fam.area + ' ' + n.lvl : '']; }));
+  const rows = [['File','Title','Survey job','Survey A code','Survey B code','Level','Company grade','Family fit','Level fit','Overall confidence','Score','Next step','US market P50','US market range','Market estimated']].concat((() => { const v = view(); const p = v.filter(x => PICK.has(x.i)); return (p.length ? p : v).map(x => x.r); })().map(r => { const n = nextStep(r); return [r.file, r.title, r.fam.area, saCode(r.fam, r.lvl), r.fam.sb, LVL_NAME[r.lvl]||r.lvl, GRADE_OF[r.lvl], r.famConf, r.lvlConf, r.conf, r.overall, n ? n.fam.area + ' ' + n.lvl : ''].concat((m => m ? [Math.round(m.mid), Math.round(m.mid * .8) + '-' + Math.round(m.mid * 1.2), m.est ? 'yes' : 'no'] : ['', '', ''])(r.job ? { mid: r.job.mid, est: false } : mktOf(r))); }));
   dl(new Blob([rows.map(r => r.map(q).join(',')).join('\n')], {type:'text/csv'}), 'jd-matches.csv');
 };
 
@@ -517,7 +546,21 @@ async function readFile(file){
   if (n.endsWith('.html') || n.endsWith('.htm')) { const d = new DOMParser().parseFromString(await file.text(), 'text/html'); return d.body.innerText || d.body.textContent; }
   return file.text();
 }
-const OK = /\.(docx|pdf|txt|md|html?)$/i, LIST = /\.(xlsx|xls|csv)$/i;
+const OK = /\.(docx|pdf|txt|md|html?)$/i, LIST = /\.(xlsx|xls|csv)$/i, ZIP = /\.zip$/i;
+let zipP = null;
+function jszip(){ return zipP || (zipP = loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js').then(() => window.JSZip)); }
+// A zipped folder: every job description or job list inside it, at any depth.
+async function unzip(file){
+  const Z = await jszip(), z = await Z.loadAsync(await file.arrayBuffer()), out = [];
+  for (const e of Object.values(z.files)) {
+    const nm = e.name.split('/').pop();
+    if (e.dir || !nm || nm.startsWith('._') || nm.startsWith('~$') || e.name.includes('__MACOSX') || !(OK.test(nm) || LIST.test(nm))) continue;
+    const f = new File([await e.async('blob')], nm);
+    try { Object.defineProperty(f, 'webkitRelativePath', { value: file.name + '/' + e.name }); } catch (_) {}
+    out.push(f);
+  }
+  return out;
+}
 let xlsxP = null;
 function xlsx(){ return xlsxP || (xlsxP = loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js').then(() => window.XLSX)); }
 function csvRows(t){ const out = []; let row = [], cell = '', q = false; for (let i = 0; i < t.length; i++) { const c = t[i]; if (q) { if (c === '"' && t[i+1] === '"') { cell += '"'; i++; } else if (c === '"') q = false; else cell += c; } else if (c === '"') q = true; else if (c === ',') { row.push(cell); cell = ''; } else if (c === '\n' || c === '\r') { if (c === '\r' && t[i+1] === '\n') i++; row.push(cell); out.push(row); row = []; cell = ''; } else cell += c; } if (cell || row.length) { row.push(cell); out.push(row); } return out; }
@@ -540,9 +583,13 @@ function addTitles(list, src){
 }
 async function handle(files){
   files = files.filter(f => !f.name.startsWith('~$'));
+  for (const zf of files.filter(f => ZIP.test(f.name))) {
+    $('#busy').textContent = 'Opening ' + zf.name;
+    try { files = files.concat(await unzip(zf)); } catch (e) { $('#busy').textContent = 'Could not open ' + zf.name + ' (' + e.message + ')'; }
+  }
   const lists = files.filter(f => LIST.test(f.name));
   files = files.filter(f => OK.test(f.name));
-  if (!files.length && !lists.length) { $('#busy').textContent = 'Nothing to read. Use Word, PDF or text job descriptions, or an Excel or CSV list of job titles.'; return; }
+  if (!files.length && !lists.length) { $('#busy').textContent = 'Nothing to read. Use Word, PDF or text job descriptions, an Excel or CSV list of job titles, or a zip of them.'; return; }
   let done = 0, failed = [];
   for (const f of lists) {
     $('#busy').textContent = 'Reading job list: ' + f.name;

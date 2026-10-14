@@ -135,12 +135,22 @@ const QL = ['Learning the role', 'Developing in the role', 'Fully proficient', '
 function quart(pay, j){ if (pay < j.min) return { q:'Below range', l:'Below the range minimum' }; if (pay > j.max) return { q:'Above range', l:'Above the range maximum' }; const i = Math.min(3, Math.floor((pay - j.min) / (j.max - j.min) * 4)); return { q:'Q' + (i + 1), l:QL[i] }; }
 let CTY = 'USA', CUR = null, lastW = 0;
 
+// Keyword search: each word must start a word in the job's text, or one of its everyday synonyms must
+// (so "payroll", "forklift" or "tomato" still find the right jobs, and "IT" does not match "quality").
+const KW_SYN = { payroll:'accountant accounts finance', accounting:'accountant accounts finance', accountant:'accounts finance', bookkeeper:'accounts accountant', forklift:'hi-lo', lift:'hi-lo', truck:'driver', shipping:'warehouse driver logistics', receiving:'warehouse', inventory:'warehouse logistics', tomato:'grower crop greenhouse', tomatoes:'grower crop greenhouse', pepper:'grower crop greenhouse', cucumber:'grower crop greenhouse', strawberry:'grower crop greenhouse', produce:'grower crop packer', farm:'grower crop greenhouse', picker:'crop', harvest:'crop', hr:'hr human compensation recruiter people', people:'hr human people', talent:'recruiter', hiring:'recruiter', pay:'compensation', comp:'compensation', it:'it erp', tech:'technician it', computer:'it', software:'erp it', packing:'packer production grader', production:'production packer grader', food:'food quality', qa:'quality', sales:'sales account commercial', buyer:'procurement', purchasing:'procurement', supply:'supply logistics procurement', mechanic:'maintenance technician', electrician:'maintenance', engineer:'engineering', ceo:'chief executive', cfo:'chief financial', coo:'chief operating', chro:'chief human', boss:'chief vp director manager', leader:'chief vp director manager', executive:'chief vp executive', lead:'lead supervisor', clean:'sanitation', cleaning:'sanitation', climate:'climate', customer:'customer' };
+function kwMatch(text, query){
+  const words = query.toLowerCase().split(/[^a-z0-9-]+/).filter(Boolean);
+  if (!words.length) return true;
+  const has = w => new RegExp('(^|[^a-z])' + w.replace(/[-]/g, '\\-')).test(text);
+  text = text.toLowerCase();
+  return words.every(w => has(w) || (KW_SYN[w] || '').split(' ').some(s => s && has(s)));
+}
 // ---------- picking a job ----------
 const q = $('#q'), sug = $('#sug'); let hits = [], hi = -1;
 function find(t){
-  t = t.trim().toLowerCase(); if (t.length < 2) return [];
-  const w = t.split(/\s+/), seen = {};
-  return J.filter(j => j.ctry === CTY && w.every(x => j.title.toLowerCase().includes(x))).concat(J.filter(j => j.ctry !== CTY && w.every(x => j.title.toLowerCase().includes(x))))
+  t = t.trim(); if (t.length < 2) return [];
+  const seen = {}, txt = j => j.title + ' ' + (BM.jobs[j.k] || [''])[0] + ' ' + ((BM.ladders[j.k] || [])[1] || ''), ok = j => kwMatch(txt(j), t);
+  return J.filter(j => j.ctry === CTY && ok(j)).concat(J.filter(j => j.ctry !== CTY && ok(j)))
     .filter(j => seen[j.k] ? false : (seen[j.k] = 1)).slice(0, 8);
 }
 function showSug(){
