@@ -208,7 +208,7 @@
   <div class="btns">
     <label class="btn primary">Upload files<input id="pickFiles" type="file" multiple accept=".docx,.pdf,.txt,.md,.html,.htm,.xlsx,.xls,.csv,.zip" hidden></label>
     <button id="samples">Try a sample</button>
-    <button id="messy">Clean up a messy HR job list</button>
+    <button id="messy">Clean up the HR job list</button>
   </div>
   <textarea id="paste" rows="3" placeholder="Or paste job titles, one per line" aria-label="Paste job titles, one per line"></textarea>
   <div class="btns"><button id="pasteGo" hidden>Match these titles</button></div>
@@ -710,7 +710,7 @@ function showCleanup(){
   const ring = acc === null ? '<div class="accr"><b data-count="' + c.emp + '">' + c.emp.toLocaleString() + '</b><span>employees covered</span></div>'
     : '<div class="accr"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" class="rt"/><circle cx="60" cy="60" r="50" class="rv" style="--p:' + (acc * 314.16).toFixed(1) + '"/></svg><div class="rl"><b data-count="' + Math.round(acc * 100) + '" data-suffix="%">' + Math.round(acc * 100) + '%</b><span>right job and level</span></div></div>';
   el.innerHTML =
-    '<div class="cu-band"><div class="cu-h"><div><span class="cu-k1">HR job list clean-up</span><h2>' + n0.toLocaleString() + ' messy titles &rarr; ' + c.clean.length + ' clean jobs</h2><p>' + esc(c.src) + ' &middot; ' + c.emp.toLocaleString() + ' employees &middot; done in ' + Math.max(1, c.ms) + ' ms</p></div><button type="button" id="cuCsv">Download the clean list</button></div>' +
+    '<div class="cu-band"><div class="cu-h"><div><span class="cu-k1">HR job list clean-up</span><h2>' + n0.toLocaleString() + ' HR job titles &rarr; ' + c.clean.length + ' clean jobs</h2><p>' + esc(c.src) + ' &middot; ' + c.emp.toLocaleString() + ' employees &middot; done in ' + Math.max(1, c.ms) + ' ms</p></div><button type="button" id="cuCsv">Download the clean list</button></div>' +
     '<div class="cu-grid"><div class="fn">' + stage(n0, 'job titles in the HR system', 0) + stage(c.uniqClean, 'after tidying the wording', 1) + stage(c.clean.length, 'clean jobs, matched to the survey', 2) + '</div>' +
     '<div class="cu-side">' + ring + '<div class="flag"><b>' + c.review.length + '</b> titles flagged for a person to check</div></div></div>' +
     '<div class="steps">' + ['Codes, sites and shifts removed', 'Typos fixed', 'Spanish titles translated', 'Abbreviations spelled out', 'Levels written one way', 'Matched to company jobs, then the survey'].map((t, k) => '<span style="--d:' + (.6 + k * .12) + 's">' + t + '</span>').join('') + '</div></div>' +
