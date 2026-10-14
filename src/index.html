@@ -588,8 +588,9 @@ function renderCards(){
   var out='',last='';
   MODS.forEach(function(m){
     if(m.group&&m.group!==last){ last=m.group; out+='<div class="grp" id="grp-'+m.group+'">'+(GROUPS[m.group]||'')+'</div>'; }
-    if(m.soon){ out+='<div class="card soon" aria-disabled="true" data-g="'+(m.group||'')+'"><span class="soonTag">Coming soon</span><h3>'+t('m_'+m.id)+'</h3><p>'+t('m_'+m.id+'_d')+'</p><div class="cf"><span class="arr" aria-hidden="true">&rarr;</span>'+(window.MGI_ILL?MGI_ILL(m.id):'')+'</div></div>'; return; }
-    out+='<div class="card" role="button" tabindex="0" data-g="'+(m.group||'')+'" onclick="openMod(\''+m.id+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openMod(\''+m.id+'\')}"><h3>'+t('m_'+m.id)+'</h3><p>'+t('m_'+m.id+'_d')+'</p><div class="cf"><span class="arr" aria-hidden="true">&rarr;</span>'+(window.MGI_ILL?MGI_ILL(m.id):'')+'</div></div>';
+    var _pv=/[?&]preview=1/.test(location.search);
+    if(m.soon && !_pv){ out+='<div class="card soon" aria-disabled="true" data-g="'+(m.group||'')+'"><span class="soonTag">Coming soon</span><h3>'+t('m_'+m.id)+'</h3><p>'+t('m_'+m.id+'_d')+'</p><div class="cf"><span class="arr" aria-hidden="true">&rarr;</span>'+(window.MGI_ILL?MGI_ILL(m.id):'')+'</div></div>'; return; }
+    out+='<div class="card" role="button" tabindex="0" data-g="'+(m.group||'')+'" onclick="openMod(\''+m.id+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openMod(\''+m.id+'\')}">'+(m.soon?'<span class="soonTag">Preview only</span>':'')+'<h3>'+t('m_'+m.id)+'</h3><p>'+t('m_'+m.id+'_d')+'</p><div class="cf"><span class="arr" aria-hidden="true">&rarr;</span>'+(window.MGI_ILL?MGI_ILL(m.id):'')+'</div></div>';
   });
   $('#cards').innerHTML=out;
 }
