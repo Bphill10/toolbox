@@ -448,7 +448,9 @@ const CAT={
   m_pricing:{en:'Pricing',pt:'Precifica\u00e7\u00e3o',es:'Precios'},
  m_comp_d:{en:'Benchmark any role against the market: pay ranges, internal comparators and skill premiums.',pt:'Benchmark any role against the market: pay ranges, internal comparators and skill premiums.',es:'Benchmark any role against the market: pay ranges, internal comparators and skill premiums.'},
  m_jdmatch:{en:'JD Matcher',pt:'JD Matcher',es:'JD Matcher'},
- m_jdmatch_d:{en:'Drop in a folder of job descriptions: each is matched to a survey job and level with a confidence score, plus a career path and an expanded job description for the next level.',pt:'Drop in a folder of job descriptions: each is matched to a survey job and level with a confidence score, plus a career path and an expanded job description for the next level.',es:'Drop in a folder of job descriptions: each is matched to a survey job and level with a confidence score, plus a career path and an expanded job description for the next level.'},
+ m_benchmark:{en:'Benchmarking',pt:'Benchmarking',es:'Benchmarking'},
+ m_benchmark_d:{en:'Pull up any employee and see their pay against the market and against the people in the same job.',pt:'Pull up any employee and see their pay against the market and against the people in the same job.',es:'Pull up any employee and see their pay against the market and against the people in the same job.'},
+ m_jdmatch_d:{en:'The starting point for a job structure: load your job descriptions or a list of job titles and each is matched to a survey job and level with a confidence score.',pt:'Drop in a folder of job descriptions: each is matched to a survey job and level with a confidence score, plus a career path and an expanded job description for the next level.',es:'Drop in a folder of job descriptions: each is matched to a survey job and level with a confidence score, plus a career path and an expanded job description for the next level.'},
  m_aisavings:{en:'AI Time Savings',pt:'AI Time Savings',es:'AI Time Savings'},
  m_aisavings_d:{en:'Hours AI gives back to every job, what they are worth, and the roles that need not be refilled as people leave or the company grows. Savings come from turnover, not layoffs.',pt:'Hours AI gives back to every job, what they are worth, and the roles that need not be refilled as people leave or the company grows. Savings come from turnover, not layoffs.',es:'Hours AI gives back to every job, what they are worth, and the roles that need not be refilled as people leave or the company grows. Savings come from turnover, not layoffs.'},
  m_trs:{en:'Total Rewards Statement',pt:'Total Rewards Statement',es:'Total Rewards Statement'},
@@ -552,7 +554,8 @@ const CAT={
 const MODS=[
   /* soon:true shows the tool greyed out with "Coming soon"; delete soon:true to release it */
   {id:'jdmatch', url:'/jdmatch/', icon:'⇄', grad:'linear-gradient(135deg,#0F7A57,#067451)', desktop:true, group:'data'},
-  {id:'positioning', url:'/positioning/', icon:'◎', grad:'linear-gradient(135deg,#0F7A57,#067451)', desktop:true, group:'data'},
+  {id:'benchmark', url:'/benchmark/', icon:'▮', grad:'linear-gradient(135deg,#0F7A57,#067451)', desktop:true, group:'data'},
+  {id:'positioning', soon:true, url:'/positioning/', icon:'◎', grad:'linear-gradient(135deg,#0F7A57,#067451)', desktop:true, group:'data'},
   {id:'archbuild', icon:'▤', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
   {id:'jdlib', icon:'✎', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
   {id:'ranges', icon:'▥', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
@@ -561,14 +564,14 @@ const MODS=[
   {id:'orgchart', soon:true, url:'/orgchart/', icon:'⊤', grad:'linear-gradient(135deg,#3DD69C,#1E9E6E)', desktop:true, group:'jobs'},
   {id:'lti', icon:'◔', grad:'linear-gradient(135deg,#E3C27A,#B8923D)', desktop:true, group:'inc'},
   {id:'sti', soon:true, icon:'◈', grad:'linear-gradient(135deg,#E3C27A,#B8923D)', desktop:true, group:'inc'},
-  {id:'perf', icon:'◎', grad:'linear-gradient(135deg,#E3C27A,#B8923D)', desktop:true, group:'inc'},
-  {id:'analysis', icon:'◫', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
+  {id:'perf', soon:true, icon:'◎', grad:'linear-gradient(135deg,#E3C27A,#B8923D)', desktop:true, group:'inc'},
+  {id:'analysis', soon:true, icon:'◫', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
   {id:'ghr', icon:'▦', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
-  {id:'merit', icon:'▲', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
+  {id:'merit', soon:true, icon:'▲', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
   {id:'aisavings', soon:true, url:'/aisavings/', icon:'⌛', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
   {id:'trs', soon:true, url:'/trs/', icon:'★', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
-  {id:'offer', icon:'✉', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
-  {id:'harvest', icon:'❖', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
+  {id:'offer', soon:true, icon:'✉', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
+  {id:'harvest', soon:true, icon:'❖', grad:'linear-gradient(135deg,#2E6B57,#0F3A2B)', desktop:true, group:'ana'},
 ];
 let LANG='en', REG='all', CURMOD=null, JAMEMBER=null;
 let JAMEMBERDOC=null;

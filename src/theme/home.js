@@ -62,7 +62,7 @@
     + '<button type="button" class="crow" data-r="all"><span class="flag f-ALL" aria-hidden="true">ALL</span><span class="cn"><b>All regions</b><small>the whole company</small></span><span class="chev" aria-hidden="true">›</span></button>';
 
   /* ---- featured modules (artwork from the approved design kit) ---- */
-  var FEAT = [['jdmatch','Job Matcher','Benchmark every job against the market.','job_matcher'],['archbuild','Job Architecture','Build a connected career framework.','job_architecture'],['jdlib','JD Creator','Write job descriptions from one template.','jd_creator'],['career','Career Pathing','Show what is possible for every employee.','career_pathing'],['lti','Long-Term Incentive','Design an executive LTI plan.','lti'],['ghr','Analytics','Workforce and pay KPIs in one view.','analytics']];
+  var FEAT = [['jdmatch','Job Matcher','Start here: match your jobs to the market.','job_matcher'],['archbuild','Job Architecture','Build a connected career framework.','job_architecture'],['career','Career Pathing','Show what is possible for every employee.','career_pathing'],['benchmark','Benchmarking','See any employee against market and peers.','market_positioning'],['lti','Long-Term Incentive','Design an executive LTI plan.','lti'],['ghr','Analytics','Workforce and pay KPIs in one view.','analytics']];
 
   var ov = document.getElementById('mgiOverview');
   ov.innerHTML = '<div class="kcards">' + K.map(function(k){ return '<div class="kc"><div class="kt"><span class="ki" aria-hidden="true">' + ICON[k[0]] + '</span><div><b data-n="' + k[1] + '">' + fmt(k[1]) + '</b><span>' + k[2] + '</span></div></div><div class="kb"><small>' + k[3] + '</small>' + k[4] + '</div></div>'; }).join('') + '</div>'
@@ -107,12 +107,13 @@
 
   /* ---- quick tour ---- */
   var TOUR = [
-    ['Step 1 · Market data', 'Start with the market', 'Every job is matched to the salary survey with a confidence score and a market pay range, so pay decisions start from evidence.', 'job_matcher', 'jdmatch', 'Open Job Matcher'],
+    ['Step 1 · Job Matcher', 'Start with your jobs', 'Load your job descriptions or a list of job titles. Each one is matched to the salary survey with a confidence score, the starting point for the job structure.', 'job_matcher', 'jdmatch', 'Open Job Matcher'],
     ['Step 2 · Job architecture', 'One framework for every job', 'Families, levels and ranges across the US, Canada and Mexico, so offers and promotions follow the same rules everywhere.', 'job_architecture', 'archbuild', 'Open Job Architecture'],
     ['Step 2 · Job descriptions', 'Every job, described the same way', 'Job descriptions from one approved template, with the training, certifications and next-step criteria for each grade.', 'jd_creator', 'jdlib', 'Open JD Creator'],
     ['Step 2 · Careers', 'Show people where they can go', 'Every role\u2019s next steps, what each move is worth, the skills to build and who is ready now.', 'career_pathing', 'career', 'Open Career Pathing'],
-    ['Step 3 · Long-term incentive', 'Keep the leaders who build the future', 'Stock options, phantom shares or deferred cash for a private company, with grants, cost and retention modeled.', 'lti', 'lti', 'Open the LTI designer'],
-    ['Step 4 · Analytics', 'See it all in one view', 'Workforce and pay KPIs, pay analysis and market position, live on one company dataset.', 'analytics', 'ghr', 'Open Analytics']
+    ['Step 3 · Benchmarking', 'See any employee against the market', 'Pull up an employee and see their pay against the market median, their pay range and the people in the same job.', 'market_positioning', 'benchmark', 'Open Benchmarking'],
+    ['Step 4 · Long-term incentive', 'Keep the leaders who build the future', 'Stock options, phantom shares or deferred cash for a private company, with grants, cost and retention modeled.', 'lti', 'lti', 'Open the LTI designer'],
+    ['Step 5 · Analytics', 'See it all in one view', 'Workforce and pay KPIs, pay analysis and market position, live on one company dataset.', 'analytics', 'ghr', 'Open Analytics']
   ];
   var tour = document.createElement('div'); tour.className = 'tour'; tour.hidden = true; tour.setAttribute('role', 'dialog'); tour.setAttribute('aria-modal', 'true'); tour.setAttribute('aria-label', 'Quick tour');
   document.body.appendChild(tour);

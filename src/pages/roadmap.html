@@ -20,7 +20,7 @@
   h2 { font:600 22px/1.25 Inter, "Segoe UI", Arial, sans-serif; margin:34px 0 10px; color:var(--deep); }
   .lead { color:var(--muted); margin:0 0 14px; max-width:820px; }
   .gantt { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; overflow-x:auto; }
-  .gr { display:grid; grid-template-columns:200px repeat(12, minmax(40px,1fr)); align-items:center; min-width:700px; }
+  .gr { display:grid; grid-template-columns:200px repeat(18, minmax(28px,1fr)); align-items:center; min-width:700px; }
   .gr + .gr { margin-top:8px; }
   .gh { font-size:11px; color:var(--muted); text-align:center; }
   .gl { font-size:13px; font-weight:700; padding-right:10px; }
@@ -52,7 +52,7 @@
   /* phones: the timeline compresses to fit, and each table row becomes a small card */
   @media (max-width:600px) {
     .gantt { padding:12px; overflow:visible; }
-    .gr { grid-template-columns:78px repeat(12, minmax(0,1fr)); min-width:0; }
+    .gr { grid-template-columns:78px repeat(18, minmax(0,1fr)); min-width:0; }
     .gl { font-size:10.5px; line-height:1.2; padding-right:6px; }
     .gh { font-size:8.5px; }
     .bar { font-size:9px; padding:0 4px; height:20px; overflow:hidden; text-overflow:ellipsis; min-width:0; }
@@ -83,16 +83,17 @@
 </div></header>
 <main><div class="w">
 
-<h2>The first 12 months at a glance</h2>
+<h2>18 months at a glance</h2>
 <div class="gantt">
-  <div class="gr"><div></div><div class="gh">M1</div><div class="gh">M2</div><div class="gh">M3</div><div class="gh">M4</div><div class="gh">M5</div><div class="gh">M6</div><div class="gh">M7</div><div class="gh">M8</div><div class="gh">M9</div><div class="gh">M10</div><div class="gh">M11</div><div class="gh">M12</div></div>
-  <div class="gr"><div class="gl">1 · Market data</div><div class="bar" style="grid-column:2 / span 1;background:var(--s1)">Weeks 1–4</div></div>
-  <div class="gr"><div class="gl">1b · Competitive assessment</div><div class="bar" style="grid-column:2 / span 2;margin-left:50%;background:#0B7A55">Weeks 4–8</div></div>
-  <div class="gr"><div class="gl">2 · Job architecture</div><div class="bar" style="grid-column:2 / span 4;background:var(--s2)">Levels, families, ranges</div></div>
-  <div class="gr"><div class="gl">3 · Long-term incentive</div><div class="bar" style="grid-column:4 / span 6;background:var(--s3)">LTI design, cost and plan documents</div></div>
-  <div class="gr"><div class="gl">4 · Analytics</div><div class="bar" style="grid-column:3 / span 2;background:var(--s4);opacity:.6">Quick reads</div><div class="bar" style="grid-column:7 / span 7;background:var(--s4);margin-left:4px">Dashboards and annual cycle</div></div>
+  <div class="gr"><div></div><div class="gh" style="grid-column:2 / span 3">Q1</div><div class="gh" style="grid-column:5 / span 3">Q2</div><div class="gh" style="grid-column:8 / span 3">Q3</div><div class="gh" style="grid-column:11 / span 3">Q4</div><div class="gh" style="grid-column:14 / span 3">Q5</div><div class="gh" style="grid-column:17 / span 3">Q6</div></div>
+  <div class="gr"><div class="gl">1 · Market data</div><div class="bar" style="grid-column:2 / span 1;background:var(--s1)" title="Weeks 1 to 4">4 wks</div></div>
+  <div class="gr"><div class="gl">1b · Competitive assessment</div><div class="bar" style="grid-column:3 / span 1;background:#0B7A55" title="Weeks 4 to 8">4 wks</div></div>
+  <div class="gr"><div class="gl">2 · Job architecture</div><div class="bar" style="grid-column:2 / span 6;background:var(--s2)" title="Match jobs, then levels, families and ranges">Levels and ranges</div></div>
+  <div class="gr"><div class="gl">2b · Benchmarking</div><div class="bar" style="grid-column:7 / span 2;background:var(--s2);opacity:.75" title="Every employee against market and peers">Employees</div></div>
+  <div class="gr"><div class="gl">3 · Long-term incentive</div><div class="bar" style="grid-column:5 / span 9;background:var(--s3)" title="LTI design, cost and plan documents">LTI design and plan</div></div>
+  <div class="gr"><div class="gl">4 · Analytics</div><div class="bar" style="grid-column:3 / span 2;background:var(--s4);opacity:.6">Quick reads</div><div class="bar" style="grid-column:8 / span 12;background:var(--s4);margin-left:4px" title="Dashboards and the first full annual cycle">Dashboards, annual cycle</div></div>
 </div>
-<p class="note">LTI grants follow the fiscal year and need legal plan documents in each country, so the grant date sets the real deadline for step 3.</p>
+<p class="note">The job architecture is done by month 6. The whole program takes about 18 months, so the first full pay and grant cycle runs on the new structure. LTI grants follow the fiscal year and need legal plan documents in each country, so the grant date sets the real deadline for step 3.</p>
 
 <h2>Which industry Mastronardi really sits in</h2>
 <p class="lead">Mastronardi is three businesses under one roof, so no single survey cut fits. Each part of the workforce is benchmarked against the market it actually hires from.</p>
@@ -178,7 +179,7 @@
 </div>
 
 <div class="step" style="--c:var(--s2)">
-  <div class="sh"><span class="sn">Step 2 · months 1 to 4</span><h3>Build the global job architecture</h3></div>
+  <div class="sh"><span class="sn">Step 2 · months 1 to 6</span><h3>Build the global job architecture</h3></div>
   <div class="meta"><span class="pill"><b>Budget</b> $0 to $10,000 built in-house with AI; consultants only if needed</span><span class="pill"><b>Output</b> job families, levels, leveling guide, salary ranges by country</span></div>
   <p class="why">The foundation for consistent pay. Every job gets a family, a level and a range, so offers, promotions and merit follow one set of rules across the US, Canada and Mexico.</p>
   <div class="cols">
@@ -187,6 +188,7 @@
       <li>Start basic: support, professional, management and executive, with a short plain-language guide for each level. Add detail only where it is needed.</li>
       <li>Level the top layers (ELT and directors) and the largest populations first, then fill in the rest.</li>
       <li>Match each job to survey codes from step 1, then build ranges: midpoints from the market, wider ranges at senior levels, and country differentials.</li>
+      <li>Months 6 and 7: benchmark every employee against the market and their peers before the new ranges go live, so the cost of any adjustments is known up front.</li>
       <li>Load the structure into the HRIS so ranges show up in everyday decisions.</li>
       <li>Career paths for every job family: the next step from each role, what the move is worth and the skills to build, in the Career Pathing tool.</li>
     </ul></div>
@@ -200,7 +202,7 @@
 </div>
 
 <div class="step" style="--c:var(--s3)">
-  <div class="sh"><span class="sn">Step 3 · months 3 to 9</span><h3>Design the long-term incentive</h3></div>
+  <div class="sh"><span class="sn">Step 3 · months 4 to 12</span><h3>Design the long-term incentive</h3></div>
   <div class="meta"><span class="pill"><b>Budget</b> $0 to $10,000 in-house; $40,000 to $150,000 with an executive pay consultant; $15,000 to $50,000 legal for LTI plan documents</span><span class="pill"><b>Output</b> an LTI framework for leaders and critical talent, with cost and plan documents</span></div>
   <p class="why">With levels in place, LTI eligibility and grant sizes can be set by level instead of by negotiation, so the leaders who build the business have a reason to stay for it.</p>
   <div class="cols">
@@ -218,7 +220,7 @@
 </div>
 
 <div class="step" style="--c:var(--s4)">
-  <div class="sh"><span class="sn">Step 4 · months 6 to 12, with quick reads from month 2</span><h3>Analytics and dashboards</h3></div>
+  <div class="sh"><span class="sn">Step 4 · months 7 to 18, with quick reads from month 2</span><h3>Analytics and dashboards</h3></div>
   <div class="meta"><span class="pill"><b>Budget</b> covered by the AI tools below; no packaged software</span><span class="pill"><b>Output</b> leader dashboards and an annual pay cycle on one dataset</span></div>
   <p class="why">Once the data and structure exist, analytics shows whether it is working: who is paid where in their range, what incentives cost, where pay equity or retention risk sits.</p>
   <div class="cols">

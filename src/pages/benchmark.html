@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Benchmarking · MGI Insight</title>
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14.5px/1.5 Inter, "Segoe UI", Arial, Helvetica, sans-serif; }
+  main { padding:20px 16px 48px; }
+  .w { max-width:1080px; margin:0 auto; }
+  .pt { font:600 26px/1.2 Inter, "Segoe UI", Arial, sans-serif; margin:4px 0 4px; }
+  .ps { color:var(--muted); margin:0 0 16px; max-width:720px; }
+  .find { position:relative; max-width:560px; }
+  .find input { width:100%; font:inherit; font-size:15px; padding:12px 14px 12px 40px; border:1px solid var(--line2); border-radius:12px; background:var(--card); color:var(--ink); }
+  .find svg { position:absolute; left:13px; top:13px; width:18px; height:18px; fill:none; stroke:var(--muted); stroke-width:2; }
+  .sug { position:absolute; left:0; right:0; top:calc(100% + 4px); background:var(--card); border:1px solid var(--line2); border-radius:12px; box-shadow:0 12px 30px rgba(0,0,0,.12); z-index:5; margin:0; padding:4px; list-style:none; max-height:340px; overflow:auto; }
+  .sug li { padding:8px 10px; border-radius:8px; cursor:pointer; }
+  .sug li span { display:block; color:var(--muted); font-size:12.5px; }
+  .sug li:hover, .sug li.on { background:var(--soft); }
+  .try { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:10px 0 18px; color:var(--muted); font-size:13px; }
+  .try button { font:600 13px Inter, "Segoe UI", Arial, sans-serif; border:1px solid var(--line2); background:var(--card); color:var(--green); border-radius:999px; padding:6px 12px; cursor:pointer; }
+  .try button:hover { border-color:var(--green); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px; margin-bottom:16px; }
+  .who { display:flex; flex-wrap:wrap; gap:12px 24px; justify-content:space-between; align-items:flex-start; }
+  .who h2 { font:700 22px/1.2 Inter, "Segoe UI", Arial, sans-serif; margin:0 0 4px; }
+  .who .meta { color:var(--muted); font-size:13.5px; }
+  .who .pay { text-align:right; }
+  .who .pay b { display:block; font:700 24px/1.1 Inter, "Segoe UI", Arial, sans-serif; }
+  .who .pay span { color:var(--muted); font-size:12.5px; }
+  .kpis { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:18px 0 14px; }
+  .kpi { background:var(--card2); border:1px solid var(--line); border-radius:12px; padding:12px 14px; }
+  .kpi .l { font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+  .kpi .v { font:700 22px/1.25 Inter, "Segoe UI", Arial, sans-serif; margin-top:2px; }
+  .kpi .s { font-size:12.5px; color:var(--muted); }
+  .v.up { color:var(--good); } .v.dn { color:var(--bad); }
+  .say { background:var(--tint-g); border-radius:12px; padding:12px 14px; font-size:14.5px; }
+  .say.warn { background:var(--tint-o); }
+  h3 { font:700 15px Inter, "Segoe UI", Arial, sans-serif; margin:0 0 2px; }
+  .hs { color:var(--muted); font-size:12.5px; margin:0 0 10px; }
+  svg.ch { width:100%; height:auto; display:block; overflow:visible; }
+  .ch text { font:12px Inter, "Segoe UI", Arial, sans-serif; fill:var(--muted); }
+  .ch .lbl { fill:var(--ink); font-weight:700; }
+  .ch .band { fill:var(--tint-g); stroke:var(--accent); stroke-width:1; }
+  .ch .rng { stroke:var(--line2); stroke-width:6; stroke-linecap:round; }
+  .ch .med { stroke:var(--green); stroke-width:2.5; }
+  .ch .axis { stroke:var(--line); }
+  .ch .me { fill:var(--hl); stroke:var(--deep); stroke-width:2; }
+  .ch .peer { fill:var(--accent); opacity:.45; }
+  .ch .pmed { stroke:var(--muted); stroke-width:1.5; stroke-dasharray:4 3; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  table { border-collapse:collapse; width:100%; font-size:13.5px; }
+  th { text-align:left; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--line2); padding:7px 8px; }
+  td { border-bottom:1px solid var(--line); padding:7px 8px; }
+  td.n, th.n { text-align:right; font-variant-numeric:tabular-nums; }
+  tbody tr { cursor:pointer; } tbody tr:hover td { background:var(--soft); } tbody tr.me td { background:var(--tint-o); font-weight:700; }
+  .more { margin-top:10px; font:600 13px Inter, "Segoe UI", Arial, sans-serif; background:none; border:0; color:var(--green); cursor:pointer; padding:4px 0; }
+  .note { color:var(--muted); font-size:12px; margin-top:8px; }
+  .legend { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:12px; color:var(--muted); margin-top:6px; }
+  .legend i { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:-2px; margin-right:5px; }
+  @media (max-width:760px) {
+    .kpis { grid-template-columns:1fr; } .two { grid-template-columns:1fr; }
+    .who .pay { text-align:left; } .card { padding:16px; }
+    .hide-sm { display:none; }
+  }
+</style>
+{{include:theme/head.html}}<style>{{include:theme/page.css}}</style>
+</head>
+<body class="has-rail">
+<header class="app"><div class="bar1">
+  <a class="wmk" href="/"><img src="/img/mgi/wordmark-light.svg" alt="MGI Insight, people and pay intelligence" width="150" height="34"></a>
+  <div class="crumb">Market data &rsaquo;<b>Benchmarking</b></div>
+  <nav class="top" aria-label="Sections"><a href="/">Home</a><a href="/#grp-data" class="on" aria-current="true">Market data</a><a href="/#grp-jobs">Jobs and careers</a><a href="/#grp-inc">Incentives</a><a href="/#grp-ana">Analytics</a><a href="/roadmap/">Roadmap</a></nav>
+</div></header>
+<nav class="rail" aria-label="Tools"><a href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a><a href="/jdmatch/"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="11" height="15" rx="2"/><path d="M7 7h5M7 10h5M7 13h3"/><circle cx="17" cy="16" r="4"/><path d="M15.4 16l1.2 1.2 2.2-2.4"/></svg><span>Job Matcher</span></a><a href="/benchmark/" class="on" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16"/><path d="M7 16V9M12 16V5M17 16v-4"/><circle cx="12" cy="5" r="1.6"/></svg><span>Benchmarking</span></a><a href="/roadmap/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20L9 4M20 20L15 4M12 6v2M12 11v2M12 16v2"/></svg><span>Roadmap</span></a></nav>
+<main><div class="w">
+
+<h1 class="pt">Benchmarking</h1>
+<p class="ps">Pick an employee to see their pay against the market and against the people in the same job.</p>
+
+<div class="find">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+  <input id="q" type="search" autocomplete="off" placeholder="Search by name or job title" aria-label="Search by name or job title" role="combobox" aria-expanded="false" aria-controls="sug">
+  <ul class="sug" id="sug" role="listbox" hidden></ul>
+</div>
+<div class="try">Try: <button data-ex="below">Paid below market</button><button data-ex="at">At market</button><button data-ex="above">Paid above market</button></div>
+
+<div id="out"></div>
+
+<p class="note">Fictional employees and an illustrative salary survey. Market means the same job in the employee&rsquo;s own country. Part-time pay is shown on a full-time basis. Pay and market figures are in each employee&rsquo;s local currency.</p>
+
+</div></main>
+
+<script>
+const BM = {{include:data/benchmark.json}};
+</script>
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+// [name, job key, title, grade, country, site, tenure, currency, pay, fte, p25, p50, p75, min, mid, max]
+const P = BM.people.map((r, i) => ({ i, name:r[0], k:r[1], title:r[2], grade:r[3], ctry:r[4], site:r[5], ten:r[6], ccy:r[7], pay:r[8], fte:r[9], p25:r[10], p50:r[11], p75:r[12], min:r[13], mid:r[14], max:r[15] }));
+const CTRY = { USA:'United States', CANADA:'Canada', MEXICO:'Mexico' };
+const SYM = { USD:'$', CAD:'C$', MXN:'MX$' };
+const money = (v, c) => SYM[c] + Math.round(v).toLocaleString('en-US');
+const short = (v, c) => SYM[c] + (v >= 1e6 ? (v/1e6).toFixed(2) + 'M' : v >= 1e4 ? Math.round(v/1000) + 'K' : Math.round(v).toLocaleString('en-US'));
+const pct = x => (x > 0 ? '+' : '') + Math.round(x * 100) + '%';
+const groups = {}; P.forEach(p => { (groups[p.k + '|' + p.ctry] = groups[p.k + '|' + p.ctry] || []).push(p); });
+Object.values(groups).forEach(g => g.sort((a, b) => b.pay - a.pay));
+const median = a => { const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m-1] + s[m]) / 2; };
+let SHOWALL = false;
+
+// ---------- search ----------
+const q = $('#q'), sug = $('#sug'); let hits = [], hi = -1;
+function find(t){
+  t = t.trim().toLowerCase(); if (t.length < 2) return [];
+  const w = t.split(/\s+/);
+  return P.filter(p => { const h = (p.name + ' ' + p.title + ' ' + p.site).toLowerCase(); return w.every(x => h.includes(x)); }).slice(0, 8);
+}
+function showSug(){
+  hits = find(q.value); hi = -1;
+  sug.innerHTML = hits.length ? hits.map((p, j) => '<li role="option" data-j="' + j + '">' + esc(p.name) + '<span>' + esc(p.title) + ' · ' + esc(p.site) + '</span></li>').join('') : (q.value.trim().length > 1 ? '<li aria-disabled="true"><span>No one found</span></li>' : '');
+  sug.hidden = !sug.innerHTML; q.setAttribute('aria-expanded', !sug.hidden);
+}
+function pick(p){ sug.hidden = true; q.setAttribute('aria-expanded', 'false'); q.value = ''; SHOWALL = false; show(p); }
+q.addEventListener('input', showSug);
+q.addEventListener('keydown', e => {
+  if (sug.hidden || !hits.length) return;
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); hi = (hi + (e.key === 'ArrowDown' ? 1 : -1) + hits.length) % hits.length; [...sug.children].forEach((li, j) => li.classList.toggle('on', j === hi)); }
+  else if (e.key === 'Enter') { e.preventDefault(); pick(hits[hi < 0 ? 0 : hi]); }
+  else if (e.key === 'Escape') { sug.hidden = true; }
+});
+sug.addEventListener('mousedown', e => { const li = e.target.closest('li[data-j]'); if (li) { e.preventDefault(); pick(hits[+li.dataset.j]); } });
+document.addEventListener('click', e => { if (!e.target.closest('.find')) sug.hidden = true; });
+
+// ---------- examples: someone in a job with a handful of peers ----------
+function example(kind){
+  const ok = p => { const n = groups[p.k + '|' + p.ctry].length; return n >= 6 && n <= 40 && p.fte === 1; };
+  const r = p => p.pay / p.p50;
+  const pool = P.filter(ok).filter(kind === 'below' ? p => r(p) < .9 : kind === 'above' ? p => r(p) > 1.1 : p => Math.abs(r(p) - 1) < .02);
+  const aim = kind === 'below' ? .88 : kind === 'above' ? 1.12 : 1;
+  pool.sort((a, b) => Math.abs(r(a) - aim) - Math.abs(r(b) - aim));
+  return pool[0] || P[0];
+}
+document.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => { SHOWALL = false; show(example(b.dataset.ex)); });
+
+// ---------- charts ----------
+function marketChart(p, W){
+  const x0 = 20, x1 = W - 20;
+  const lo = Math.min(p.min, p.p25, p.pay) * .94, hi = Math.max(p.max, p.p75, p.pay) * 1.04;
+  const X = v => x0 + (v - lo) / (hi - lo) * (x1 - x0);
+  const c = p.ccy;
+  return '<svg class="ch" viewBox="0 0 ' + W + ' 150" role="img" aria-label="Pay ' + money(p.pay, c) + ' against market 25th ' + money(p.p25, c) + ', median ' + money(p.p50, c) + ', 75th ' + money(p.p75, c) + '">' +
+    '<text x="' + X(p.p50) + '" y="14" text-anchor="middle">Market median ' + short(p.p50, c) + '</text>' +
+    '<rect class="band" x="' + X(p.p25) + '" y="26" width="' + (X(p.p75) - X(p.p25)) + '" height="34" rx="6"/>' +
+    '<line class="med" x1="' + X(p.p50) + '" x2="' + X(p.p50) + '" y1="20" y2="66"/>' +
+    '<text x="' + X(p.p25) + '" y="78" text-anchor="middle">25th ' + short(p.p25, c) + '</text>' +
+    '<text x="' + X(p.p75) + '" y="78" text-anchor="middle">75th ' + short(p.p75, c) + '</text>' +
+    '<line class="rng" x1="' + X(p.min) + '" x2="' + X(p.max) + '" y1="104" y2="104"/>' +
+    '<text x="' + X(p.min) + '" y="126" text-anchor="start">Range min ' + short(p.min, c) + '</text>' +
+    '<text x="' + X(p.max) + '" y="126" text-anchor="end">max ' + short(p.max, c) + '</text>' +
+    '<line x1="' + X(p.pay) + '" x2="' + X(p.pay) + '" y1="36" y2="104" stroke="var(--deep)" stroke-width="1" stroke-dasharray="2 3"/>' +
+    '<circle class="me" cx="' + X(p.pay) + '" cy="43" r="9"/><circle class="me" cx="' + X(p.pay) + '" cy="104" r="7"/>' +
+    '<text class="lbl" x="' + Math.min(Math.max(X(p.pay), 60), W - 60) + '" y="146" text-anchor="middle">' + esc(p.name.split(' ')[0]) + ' ' + short(p.pay, p.ccy) + '</text>' +
+    '</svg><div class="legend"><span><i style="background:var(--tint-g);border:1px solid var(--accent)"></i>Market 25th to 75th</span><span><i style="background:var(--line2)"></i>Company pay range</span><span><i style="background:var(--hl);border-radius:50%"></i>This employee</span></div>';
+}
+function peerChart(p, g, W){
+  const x0 = 20, x1 = W - 20, pays = g.map(x => x.pay);
+  const lo = Math.min(...pays, p.p50) * .95, hi = Math.max(...pays, p.p50) * 1.04;
+  const X = v => x0 + (v - lo) / (hi - lo) * (x1 - x0);
+  const pm = median(pays), c = p.ccy;
+  let dots = '';
+  g.forEach((x, j) => { if (x === p) return; const y = 52 + ((j * 37) % 7 - 3) * 5; dots += '<circle class="peer" cx="' + X(x.pay).toFixed(1) + '" cy="' + y + '" r="' + (g.length > 120 ? 3.5 : 6) + '"/>'; });
+  return '<svg class="ch" viewBox="0 0 ' + W + ' 120" role="img" aria-label="' + g.length + ' people in this job; this employee ' + money(p.pay, c) + ', company median ' + money(pm, c) + '">' +
+    '<line class="axis" x1="' + x0 + '" x2="' + x1 + '" y1="84" y2="84"/>' +
+    '<line class="med" x1="' + X(p.p50) + '" x2="' + X(p.p50) + '" y1="18" y2="84"/><text x="' + X(p.p50) + '" y="12" text-anchor="middle">Market ' + short(p.p50, c) + '</text>' +
+    '<line class="pmed" x1="' + X(pm) + '" x2="' + X(pm) + '" y1="24" y2="84"/><text x="' + X(pm) + '" y="102" text-anchor="middle">Company median ' + short(pm, c) + '</text>' +
+    dots + '<circle class="me" cx="' + X(p.pay) + '" cy="52" r="9"/>' +
+    '</svg><div class="legend"><span><i style="background:var(--accent);opacity:.45;border-radius:50%"></i>Others in this job</span><span><i style="background:var(--hl);border-radius:50%"></i>This employee</span></div>';
+}
+
+// ---------- the view ----------
+function show(p){
+  const g = groups[p.k + '|' + p.ctry], c = p.ccy;
+  const vsMkt = p.pay / p.p50 - 1, compa = p.pay / p.mid;
+  const below = g.filter(x => x.pay < p.pay).length, others = g.length - 1;
+  const rank = others ? Math.round(100 * below / others) : null;
+  let say = vsMkt < -.1 ? 'Paid ' + Math.round(-vsMkt * 100) + '% below the market median. Worth a look at the next pay review.'
+          : vsMkt < -.03 ? 'A little below the market median, within the normal range.'
+          : vsMkt <= .03 ? 'Paid right at the market median.'
+          : vsMkt <= .1 ? 'A little above the market median, within the normal range.'
+          : 'Paid ' + Math.round(vsMkt * 100) + '% above the market median. Check the reasons, such as experience or skills.';
+  if (p.pay < p.min) say += ' Below the bottom of the pay range.'; else if (p.pay > p.max) say += ' Above the top of the pay range.';
+  const warn = Math.abs(vsMkt) > .1 || p.pay < p.min || p.pay > p.max;
+  const rows = SHOWALL ? g : (() => { const at = g.indexOf(p), s = Math.max(0, Math.min(at - 3, g.length - 8)); return g.slice(s, s + 8); })();
+  $('#out').innerHTML =
+    '<div class="card"><div class="who"><div><h2>' + esc(p.name) + '</h2><div class="meta">' + esc(p.title) + ' · Grade ' + esc(p.grade) + '<br>' + esc(p.site) + ', ' + CTRY[p.ctry] + ' · ' + esc(p.ten) + ' with the company</div></div>' +
+    '<div class="pay"><b>' + money(p.pay, c) + '</b><span>annual base' + (p.fte < 1 ? ', full-time basis (works ' + Math.round(p.fte * 100) + '%)' : '') + '</span></div></div>' +
+    '<div class="kpis">' +
+      '<div class="kpi"><div class="l">Against market median</div><div class="v ' + (vsMkt < -.03 ? 'dn' : vsMkt > .03 ? 'up' : '') + '">' + pct(vsMkt) + '</div><div class="s">market median ' + money(p.p50, c) + '</div></div>' +
+      '<div class="kpi"><div class="l">Position in pay range</div><div class="v">' + compa.toFixed(2) + '</div><div class="s">1.00 is the range midpoint (' + money(p.mid, c) + ')</div></div>' +
+      '<div class="kpi"><div class="l">Against peers</div><div class="v">' + (rank === null ? '&mdash;' : below === 0 ? 'Lowest paid' : below === others ? 'Highest paid' : 'Paid more than ' + rank + '%') + '</div><div class="s">' + (others ? 'of the ' + others + ' other ' + esc(p.title) + (others > 1 ? 's' : '') + ' in ' + CTRY[p.ctry] : 'only person in this job in ' + CTRY[p.ctry]) + '</div></div>' +
+    '</div><div class="say' + (warn ? ' warn' : '') + '">' + say + '</div></div>' +
+    '<div class="two"><div class="card"><h3>Against the market</h3><p class="hs">' + esc(p.title) + ', ' + CTRY[p.ctry] + '</p><div id="c1"></div></div>' +
+    '<div class="card"><h3>Inside the company</h3><p class="hs">' + g.length + ' ' + (g.length > 1 ? 'people' : 'person') + ' in this job in ' + CTRY[p.ctry] + '</p><div id="c2"></div></div></div>' +
+    '<div class="card"><h3>Same job, same country</h3><p class="hs">Click a name to benchmark that person.</p><div style="overflow-x:auto"><table><thead><tr><th>Name</th><th class="hide-sm">Site</th><th class="hide-sm">Time with company</th><th class="n">Pay</th><th class="n">Vs market</th></tr></thead><tbody>' +
+      rows.map(x => '<tr data-i="' + x.i + '"' + (x === p ? ' class="me"' : '') + ' tabindex="0"><td>' + esc(x.name) + '</td><td class="hide-sm">' + esc(x.site) + '</td><td class="hide-sm">' + esc(x.ten) + '</td><td class="n">' + money(x.pay, x.ccy) + '</td><td class="n">' + pct(x.pay / x.p50 - 1) + '</td></tr>').join('') +
+    '</tbody></table></div>' + (g.length > 8 ? '<button class="more" id="more">' + (SHOWALL ? 'Show fewer' : 'Show all ' + g.length) + '</button>' : '') + '</div>';
+  CUR = p; draw();
+  const m = $('#more'); if (m) m.onclick = () => { SHOWALL = !SHOWALL; show(p); };
+  document.querySelectorAll('#out tbody tr').forEach(tr => { const go = () => { if (+tr.dataset.i !== p.i) { show(P[+tr.dataset.i]); $('#out').scrollIntoView({ behavior:'smooth', block:'start' }); } }; tr.onclick = go; tr.onkeydown = e => { if (e.key === 'Enter') go(); }; });
+}
+let CUR = null, lastW = 0;
+function draw(){ if (!CUR) return; const g = groups[CUR.k + '|' + CUR.ctry]; const w = Math.max(280, $('#c1').clientWidth); lastW = innerWidth; $('#c1').innerHTML = marketChart(CUR, w); $('#c2').innerHTML = peerChart(CUR, g, Math.max(280, $('#c2').clientWidth)); }
+addEventListener('resize', () => { if (innerWidth !== lastW) draw(); });
+window.__bm = { P, groups, example, show };
+show(example('below'));
+})();
+</script>
+{{include:theme/page-end.html}}<script>if (window.top !== window) document.documentElement.classList.add("framed");</script></body>
+</html>
