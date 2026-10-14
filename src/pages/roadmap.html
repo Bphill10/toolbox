@@ -49,6 +49,23 @@
   .note { color:var(--muted); font-size:12.5px; margin-top:10px; }
   .wrap { overflow-x:auto; }
   @media (max-width:760px) { .cols { grid-template-columns:1fr; gap:0; } h1 { font-size:24px; } }
+  /* phones: the timeline compresses to fit, and each table row becomes a small card */
+  @media (max-width:600px) {
+    .gantt { padding:12px; overflow:visible; }
+    .gr { grid-template-columns:78px repeat(12, minmax(0,1fr)); min-width:0; }
+    .gl { font-size:10.5px; line-height:1.2; padding-right:6px; }
+    .gh { font-size:8.5px; }
+    .bar { font-size:9px; padding:0 4px; height:20px; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+    table.stack, table.stack tbody, table.stack tr, table.stack td { display:block; width:auto; }
+    table.stack tr.hd { display:none; }
+    table.stack tr { padding:10px 0; border-bottom:1px solid var(--line); }
+    table.stack tr:last-child { border-bottom:0; }
+    table.stack td { border:0 !important; padding:2px 0 !important; text-align:left !important; }
+    table.stack td[data-label]::before { content:attr(data-label); display:block; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-top:4px; }
+    table.stack td:first-child::before { display:none; }
+    table.stack td:first-child { font-weight:700; font-size:14.5px; }
+    table.stack tr.tot td:first-child { color:var(--green); }
+  }
 </style>
 {{include:theme/head.html}}<style>{{include:theme/page.css}}</style>
 </head>
@@ -318,5 +335,8 @@
 
 </div></main>
 {{include:theme/page-end.html}}<script>if (window.top !== window) document.documentElement.classList.add("framed");</script>
+<script>/* label every table cell with its column name so rows can stack as cards on phones */
+document.querySelectorAll('main table').forEach(t => { const h = t.querySelector('tr'); if (!h || !h.querySelector('th')) return; h.classList.add('hd'); const names = [...h.children].map(c => c.textContent.trim()); t.classList.add('stack'); [...t.querySelectorAll('tr')].slice(1).forEach(r => [...r.children].forEach((c, k) => { if (names[k]) c.setAttribute('data-label', names[k]); })); });
+document.querySelectorAll('.bar').forEach(b => { if (!b.title) b.title = b.textContent; });</script>
 </body>
 </html>
