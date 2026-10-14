@@ -25,7 +25,9 @@
   .gh { font-size:11px; color:var(--muted); text-align:center; }
   .gl { font-size:13px; font-weight:700; padding-right:10px; }
   .bar { height:22px; border-radius:6px; color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; padding:0 8px; white-space:nowrap; }
-  .steps { display:grid; gap:16px; }
+  .steps { display:grid; gap:16px; grid-template-columns:minmax(0,1fr); }
+  .step { min-width:0; }
+  .cols > div { min-width:0; }
   .step { background:#fff; border:1px solid var(--line); border-left:6px solid var(--c); border-radius:12px; padding:18px 20px; }
   .sh { display:flex; flex-wrap:wrap; gap:8px 16px; align-items:baseline; }
   .sn { font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:800; color:var(--c); }
@@ -72,39 +74,53 @@
 <div class="steps">
 
 <div class="step" style="--c:var(--s1)">
-  <div class="sh"><span class="sn">Step 1 · weeks 1 to 4</span><h3>Get the market data</h3></div>
-  <div class="meta"><span class="pill"><b>Budget</b> about $20,000 to $60,000 a year</span><span class="pill"><b>Output</b> priced benchmark jobs and a market read for the ELT</span></div>
-  <p class="why">Nothing else can be built without it. Ranges, incentive targets and every dashboard rest on a defensible market number, so this starts on day one.</p>
+  <div class="sh"><span class="sn">Step 1 · weeks 1 to 4</span><h3>Get the market data and the job descriptions</h3></div>
+  <div class="meta"><span class="pill"><b>Budget</b> about $30,000 to $40,000 a year at participant prices</span><span class="pill"><b>Output</b> priced benchmark jobs and a market read for the ELT</span></div>
+  <p class="why">Nothing else can be built without it. Survey licenses belong to the company that buys them, so Mastronardi needs its own. Start with a small, well-matched set and add sources only where a gap shows up.</p>
   <div class="cols">
     <div><h4>Starting points</h4><ul>
-      <li>Inventory what already exists: survey subscriptions, past participation, any pay studies.</li>
+      <li><b>Collect every job description we have,</b> whatever the quality. A few sentences beat a job title alone. Run them through the JD Matcher to get first survey matches and levels.</li>
       <li>Pick 30 to 50 benchmark jobs that cover most of the headcount: greenhouse operations, packing, distribution, plus the corporate and leadership roles.</li>
-      <li>Choose two core surveys and one cross-check, covering the US, Canada and Mexico.</li>
-      <li>Participate where possible: participants pay less and get results sooner. Check submission deadlines now.</li>
+      <li><b>Start lean, then participate.</b> Mercer's 2026 window closed on April 24, and buying its 2026 data now costs about three times the participant price. So start with AgCareers, CompData and the free government data now, buy only the Mercer modules that fill a real gap, and participate in Mercer's spring 2027 cycle (about March to April) for full participant pricing.</li>
+      <li>For IT roles, use skill premiums on top of the general market rather than a separate tech survey.</li>
     </ul></div>
-    <div><h4>Tool options</h4><ul>
-      <li><b>General industry, all three countries:</b> Mercer total remuneration surveys or WTW general industry.</li>
-      <li><b>Industry cut:</b> food, beverage and consumer products cuts from the same vendors, for operations roles.</li>
-      <li><b>Technical and analytics roles:</b> Aon Radford.</li>
-      <li><b>Quick early reads while orders process:</b> Salary.com, Payscale or ERI.</li>
+    <div><h4>Free cross-checks for hourly roles</h4><ul>
+      <li><b>US:</b> BLS Occupational Employment and Wage Statistics.</li>
+      <li><b>Canada:</b> Job Bank wage tables. Ontario greenhouse labourers: $20.50 an hour median; greenhouse supervisors: $30.00.</li>
+      <li><b>Mexico:</b> IMSS registered wages and INEGI's employment survey.</li>
     </ul></div>
   </div>
+  <h4>Surveys and published costs</h4>
+  <div class="wrap"><table>
+    <tr><th>Survey</th><th>Covers</th><th>When to use</th><th class="n">Published cost</th></tr>
+    <tr><td><b>Mercer Benchmark Database, US</b> (all modules)</td><td>General industry, incl. manufacturing and operations, logistics and supply chain, executive</td><td>Core</td><td class="n">$14,400 participant</td></tr>
+    <tr><td><b>Mercer Benchmark Database, Canada</b> (all modules)</td><td>Same structure, Canadian data</td><td>Core</td><td class="n">CAD $14,000 participant</td></tr>
+    <tr><td><b>Mercer Total Remuneration Survey, Mexico</b></td><td>Mexico pay and benefits</td><td>Core</td><td class="n">Quote needed</td></tr>
+    <tr><td><b>AgCareers Compensation Benchmark Review</b></td><td>Agriculture and food: 250+ US and 200+ Canadian roles, 150+ employers</td><td>Core, industry cut</td><td class="n">$4,000 US + Canada; $3,500 US only; $1,500 basic</td></tr>
+    <tr><td><b>Salary.com CompData Manufacturing &amp; Distribution</b></td><td>Plant, warehouse and distribution jobs, shift differentials (US)</td><td>Core, hourly cross-check</td><td class="n">$995 participant</td></tr>
+    <tr><td><b>Foote Partners IT Skills &amp; Certifications Pay Index</b></td><td>Pay premiums for 1,400+ IT skills and certifications</td><td>Add if needed, IT roles</td><td class="n">$6,300 a year</td></tr>
+    <tr><td><b>Mercer Agriculture Compensation Survey</b></td><td>Seed, crop-input and agri-trading roles; includes Mexico, not the US or Canada</td><td>Add if needed, Mexico agronomy roles</td><td class="n">$2,800 participant</td></tr>
+    <tr><td><b>WTW General Industry, or ERI</b></td><td>A second general-industry source</td><td>Add if needed</td><td class="n">Quote needed</td></tr>
+  </table></div>
+  <p class="note">Mercer non-participant prices run about three times the participant price per module (for example, Executive is $7,100 participant and $21,300 non-participant). AgCareers prices are from its 2023 to 2024 guide. Confirm all prices with the vendors.</p>
 </div>
 
 <div class="step" style="--c:var(--s2)">
   <div class="sh"><span class="sn">Step 2 · months 1 to 4</span><h3>Build the global job architecture</h3></div>
-  <div class="meta"><span class="pill"><b>Budget</b> $5,000 to $20,000 built in-house; $75,000 to $250,000 consultant-led</span><span class="pill"><b>Output</b> job families, levels, leveling guide, salary ranges by country</span></div>
+  <div class="meta"><span class="pill"><b>Budget</b> $0 to $10,000 built in-house with AI; consultants only if needed</span><span class="pill"><b>Output</b> job families, levels, leveling guide, salary ranges by country</span></div>
   <p class="why">The foundation for consistent pay. Every job gets a family, a level and a range, so offers, promotions and merit follow one set of rules across the US, Canada and Mexico.</p>
   <div class="cols">
     <div><h4>Starting points</h4><ul>
-      <li>Set the level framework first: support, professional, management and executive, with a plain-language guide for each level.</li>
+      <li>Follow the survey's own grading and career levels rather than inventing a method. That keeps every job matched the same way the market data is cut.</li>
+      <li>Start basic: support, professional, management and executive, with a short plain-language guide for each level. Add detail only where it is needed.</li>
       <li>Level the top layers (ELT and directors) and the largest populations first, then fill in the rest.</li>
       <li>Match each job to survey codes from step 1, then build ranges: midpoints from the market, wider ranges at senior levels, and country differentials.</li>
       <li>Load the structure into the HRIS so ranges show up in everyday decisions.</li>
     </ul></div>
     <div><h4>Tool options</h4><ul>
       <li><b>Build in-house with AI tools</b>, like the Job Architecture Builder, JD Creator and Job Titles and Pay Ranges tiles in this demo.</li>
-      <li><b>Vendor leveling methods:</b> Mercer IPE, WTW Global Grading or Korn Ferry Hay. Proven, but consulting fees apply.</li>
+      <li><b>The survey's career levels</b> (Mercer's framework comes with the Benchmark Database), at no extra cost.</li>
+      <li><b>Consultant-led methods</b> such as Mercer IPE or WTW Global Grading, only if the basic approach runs out.</li>
       <li><b>HRIS:</b> whichever system Mastronardi runs, to hold levels and ranges.</li>
     </ul></div>
   </div>
@@ -130,7 +146,7 @@
 
 <div class="step" style="--c:var(--s4)">
   <div class="sh"><span class="sn">Step 4 · months 6 to 12, with quick reads from month 2</span><h3>Analytics and dashboards</h3></div>
-  <div class="meta"><span class="pill"><b>Budget</b> about $14 per user per month for Power BI Pro; $25,000 to $100,000+ a year for compensation software</span><span class="pill"><b>Output</b> leader dashboards and an annual pay cycle on one dataset</span></div>
+  <div class="meta"><span class="pill"><b>Budget</b> $0 to $5,000 built in-house with AI; packaged software only if needed</span><span class="pill"><b>Output</b> leader dashboards and an annual pay cycle on one dataset</span></div>
   <p class="why">Once the data and structure exist, analytics shows whether it is working: who is paid where in their range, what incentives cost, where pay equity or retention risk sits.</p>
   <div class="cols">
     <div><h4>Starting points</h4><ul>
@@ -139,9 +155,8 @@
       <li>An annual pay equity review and a merit cycle run from the same data.</li>
     </ul></div>
     <div><h4>Tool options</h4><ul>
-      <li><b>Reporting:</b> Power BI if Mastronardi runs Microsoft 365, otherwise Tableau.</li>
-      <li><b>Compensation software:</b> Payscale, Salary.com or Workday Compensation, if a packaged system is wanted.</li>
-      <li><b>AI-built tools</b>, like this demo, at a fraction of the cost of packaged software.</li>
+      <li><b>AI-built dashboards and tools</b>, like this demo, built on the company's own data. No separate BI licenses needed.</li>
+      <li><b>Packaged compensation software</b> (Payscale, Salary.com, Workday Compensation) only if the company outgrows the in-house build.</li>
     </ul></div>
   </div>
 </div>
@@ -149,26 +164,38 @@
 </div>
 
 <h2>Budget at a glance, year one</h2>
-<p class="lead">Two ways to get there. The lean path builds in-house with AI tools and buys only the data and legal work; the buy path relies on consultants and packaged software.</p>
+<p class="lead">Start basic and expand only where a gap shows up. The basic path buys the core surveys and the legal work, and builds the rest in-house with AI.</p>
 <div class="box wrap"><table>
-  <tr><th>Step</th><th class="n">Lean path</th><th class="n">Buy path</th></tr>
-  <tr><td>1 · Market data</td><td class="n">$20,000 – $60,000</td><td class="n">$20,000 – $60,000</td></tr>
-  <tr><td>2 · Job architecture</td><td class="n">$5,000 – $20,000</td><td class="n">$75,000 – $250,000</td></tr>
+  <tr><th>Step</th><th class="n">Start basic</th><th class="n">Expand if needed</th></tr>
+  <tr><td>1 · Market data</td><td class="n">$30,000 – $40,000</td><td class="n">$45,000 – $75,000</td></tr>
+  <tr><td>2 · Job architecture</td><td class="n">$0 – $10,000</td><td class="n">$75,000 – $250,000</td></tr>
   <tr><td>3 · Incentives (incl. LTI legal)</td><td class="n">$15,000 – $60,000</td><td class="n">$55,000 – $200,000</td></tr>
-  <tr><td>4 · Analytics</td><td class="n">$5,000 – $10,000</td><td class="n">$25,000 – $100,000</td></tr>
-  <tr class="tot"><td>Year one total</td><td class="n">about $45,000 – $150,000</td><td class="n">about $175,000 – $610,000</td></tr>
+  <tr><td>4 · Analytics</td><td class="n">$0 – $5,000</td><td class="n">$25,000 – $100,000</td></tr>
+  <tr class="tot"><td>Year one total</td><td class="n">about $45,000 – $115,000</td><td class="n">about $200,000 – $625,000</td></tr>
 </table>
-<p class="note">Rough planning ranges to confirm with vendors; actual prices depend on headcount, countries and the number of surveys. Survey costs repeat every year; architecture and plan design are mostly one-time.</p></div>
+<p class="note">Survey costs repeat every year and are shown at participant prices; buying Mercer data before participating costs about three times as much. architecture and plan design are mostly one-time. "Expand" adds non-participant premiums, a second general-industry survey, IT skill premiums, consultants and packaged software.</p></div>
 
 <h2>The first 30 days</h2>
 <div class="box"><ol class="first">
   <li><b>Week 1:</b> meet the ELT and Finance; confirm the fiscal year, the budget cycle and when the next bonus plan year starts.</li>
   <li><b>Week 1:</b> pull an HRIS census: job, level, location, pay, bonus, hire date and manager for every employee.</li>
-  <li><b>Week 2:</b> inventory what exists: surveys, pay practices, offer approvals, bonus and retention plans.</li>
-  <li><b>Week 2:</b> order or renew surveys and note participation deadlines.</li>
+  <li><b>Weeks 1 and 2:</b> collect every job description in the company, whatever the quality, and run them through the JD Matcher.</li>
+  <li><b>Week 2:</b> inventory what exists: pay practices, offer approvals, bonus and retention plans.</li>
+  <li><b>Week 2:</b> order the core surveys and sign up for the spring 2027 participation cycles.</li>
   <li><b>Weeks 3 and 4:</b> match and price the 30 to 50 benchmark jobs.</li>
   <li><b>End of month 1:</b> a first market-position read for the ELT, and a confirmed plan for steps 2 to 4.</li>
 </ol></div>
+
+<h2>Sources</h2>
+<div class="box"><ul>
+  <li><a href="https://www.imercer.com/Portals/0/uploads/pdf/2026_Fundamentals_of_Survey_Participation_vF.pdf">Mercer, 2026 Fundamentals of Survey Participation</a>: US and Canada prices, 2026 deadline</li>
+  <li><a href="https://www.imercer.com/products/us-mercer-benchmark-database">Mercer Benchmark Database</a>: participant and non-participant module prices</li>
+  <li><a href="https://shop.mercer.com/agriculture-survey-europe.html">Mercer Agriculture Compensation Survey</a></li>
+  <li><a href="https://www.agcareers.com/compensation-benchmark-review/">AgCareers Compensation Benchmark Review</a> and its <a href="https://www.agcareers.com/compensation-benchmark-review/docs/2023-2024-CBR-US-User-Guide-II.pdf">2023 to 2024 user guide</a></li>
+  <li><a href="https://store.salary.com/manufacturing-distribution/">Salary.com CompData Manufacturing &amp; Distribution</a></li>
+  <li><a href="https://footepartners.com/products/2018-it-skills-and-certification-pay-index-tm">Foote Partners IT Skills and Certifications Pay Index</a></li>
+  <li><a href="https://www.jobbank.gc.ca/marketreport/wages-occupation/23339/ca">Job Bank, greenhouse labourer wages</a> and <a href="https://www.jobbank.gc.ca/marketreport/wages-occupation/26825/ON">greenhouse supervisor wages, Ontario</a></li>
+</ul><p class="note">Prices as published by each vendor and checked October 2026; confirm before ordering.</p></div>
 
 </div></main>
 </body>
