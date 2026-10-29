@@ -9,7 +9,7 @@ const OPEN = ['/analysis', '/_vercel', '/manifest.json', '/sw.js', '/icon-'];
 const login = { user: 'mastronardi', pass: 'demo', realm: 'MGI Insight demo' };
 
 // Switched off: every page answers "Not found" until this line is removed.
-const OFF = false;
+const OFF = true;
 
 export default function middleware(request) {
   if (OFF) return new Response('Not found', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' } });
